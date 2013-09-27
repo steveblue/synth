@@ -1,0 +1,241 @@
+html,body {
+    background-color: #000;
+    color: #fff;
+    margin: 0px;
+    overflow: scroll;
+}
+a:link, a:visited {
+	display:block;
+	color:#ABABAB;
+	opacity: 0.5;
+	font-family: 'Lato', sans-serif;
+	font-size:12px;
+	font-weight: 300;
+	letter-spacing: 0.2em;
+	text-transform: none;
+	text-decoration: none;
+	text-align:left;
+	padding: 4px 0px 4px 4px;
+	-webkit-transition: all 0.5s ease-in-out;
+}
+a:hover{
+	color:#FFF;
+	opacity: 1.0em;
+	text-transform: none;
+}
+a:active{
+	color:#FEE;
+	opacity: 1.0em;
+	text-transform: none;
+}
+.dg, .dg li.title, .dg.main .close-button {
+	color:#ABABAB;
+	font-family: 'Lato', sans-serif;
+	font-size:12px;
+	font-weight: 100;
+	letter-spacing: 0.1em;
+	text-transform: none;
+	text-decoration: none;
+	opacity:50%;
+}
+header {
+    color:#ABABAB;
+    position: absolute;
+    top: 50%; 
+    left:50%;
+    width: 30%;
+    margin-top: -250px;
+    margin-left: -250px;
+    padding: 5px;
+    z-index:1000;
+    opacity:0.9;
+}
+
+
+h1{
+    font-family: 'Exo', sans-serif;
+    font-size:96px;
+    color:#ABABAB;
+    font-weight: 100;
+}
+h2{
+	font-family: 'Exo', sans-serif;
+    color:#ABABAB;
+    font-weight: 300;
+}
+p,li{
+	color:#ABABAB;
+	font-family: 'Lato', sans-serif;
+	font-size:12px;
+	font-weight: 300;
+	letter-spacing: 0.2em;
+	text-transform: none;
+	text-decoration: none;
+	line-height:24px;
+	letter-spacing: 2px;
+	
+}
+article p,article li{
+	font-size:16px;
+	
+}
+header p, header a:link, header a:visited{
+	text-align:center;
+	padding-top:40px;
+}
+header h1, header h2{
+	text-align:center;
+}
+article{
+	display:block;
+	width:60%;
+	height:auto;
+	clear:both;
+	position:relative;
+	margin:0 auto;
+	padding-bottom:60px;
+}
+#drop_zone{
+	position: absolute;
+	top:0;
+	left:0;
+	display:block;
+	width:297px;
+	height:297px;
+	border:1px solid #101010;
+	z-index: 1000;
+	background: url('img/dropzone.png');
+	background-size: cover;
+	background-repeat: repeat;
+}
+#topfill{
+	position: absolute;
+	top:0;
+	left:297px;
+	width:100%;
+	display:block;
+	height:20px;
+	background:#010101; 
+}
+#drop_zone p{
+	  display:block; 
+      position: relative;
+      left:50%;
+	  margin-left: -300px;
+	  margin-top: 0px;
+}
+#close_drop{
+	position: absolute;
+	top: 326px;
+	left:0px;
+	display:block;
+	width:300px;
+	height:20px;
+	background:#010101;
+	text-align:center;
+	-webkit-transition: all 0.5s ease-in-out;
+}
+#close_drop:hover{
+	cursor:pointer; 
+	cursor:hand;
+}
+#close_drop p{
+	  color:rgb(171, 171, 171);
+	  opacity: 0.8;
+	  position:relative;
+	  top:-15px;
+	 
+}
+#close_drop p:hover{
+	color:#FFF;
+	opacity: 1.0;
+	text-transform: none;
+}
+audio{
+	position:absolute;
+	top:298px;
+	left:0;
+}
+    
+#playlist{
+	list-style-type: none;
+	display:block;
+	width:100%;
+	height:100%;
+	overflow-y:scroll;
+	margin:0;
+	padding:0;
+}
+#playlist li{
+	list-style-type: none;
+	display:block;
+	width:100%;
+	height:20px;
+	background:#010101;
+
+}
+#gui_container{
+	position:absolute;
+	display:block;
+	top:0;
+	right:0px;
+	width:245px;
+	height:auto;
+	background:#010101;
+}
+.cancel{
+	display:block;
+	width:4%;
+	height:20px;
+	background:#F00;
+	opacity: 0.5;
+	position:relative;
+	float:right;
+	top:0px;
+	z-index:9999;
+}
+.dg {
+	color:#ABABAB!important;
+	font: 10px 'Lato', sans-serif!important;
+	font-size:10px;
+	font-weight: 300;
+	letter-spacing: 0.2em;
+	text-transform: none;
+	text-decoration: none;
+	text-shadow:none!important;
+}
+.dg .has-slider input[type=text] {
+	width:26%!important;
+	color: #ABABAB!important;
+}
+.dg li.save-row .button{
+	margin-top:6px!important;
+}
+.dg.main .close-button {
+	color:#ABABAB!important;
+	opacity: 0.8!important;
+}
+.dg.main .close-button:hover{
+	color:#FFF!important;
+	opacity: 1.0em!important;
+	text-transform: none!important;
+	-webkit-transition: all 0.5s ease-in-out!important;
+}
+.dg li.save-row select {
+	position: relative!important;
+	top: -3px!important;
+}
+.dg li.save-row {
+background: #010101!important;
+}
+.dg .c .slider-fg{
+	background:transparent!important;
+	background-color:transparent!important;
+	border-right:1px solid #ABABAB!important;
+}
+.dg .cr.number {
+border-left: 1px solid #000000!important;
+}
+.dg .cr.boolean {
+border-left: 3px solid #000000!important;
+}
