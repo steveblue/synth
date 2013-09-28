@@ -186,42 +186,40 @@ gui.remember(ruttEtraParams);
 
 var f1 = gui.addFolder('Audio');
 
-
 f1.add(ruttEtraParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(audioChange);
 f1.add(ruttEtraParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(audioChange);
 f1.add(ruttEtraParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(audioChange);
-
 f1.open();	
 
-var f2 = gui.addFolder('Synthesizer');
+var f2 = gui.addFolder('Camera');
 
+f2.add(ruttEtraParams, 'cameraz', -6000.0,6000.0).step(100.0).listen().name("Zoom").onChange(moveCamera);
+f2.add(ruttEtraParams, 'camerax', -720,720.0).step(1.0).listen().name("Camera X").onChange(moveCamera);
+f2.add(ruttEtraParams, 'cameray', -720,720.0).step(1.0).listen().name("Camera Y").onChange(moveCamera);
+f2.open();
 
-f2.add(ruttEtraParams, 'cameraz', -4000.0,4000.0).step(100.0).listen().name("Zoom").onChange(moveCamera);
-f2.add(ruttEtraParams, 'camerax', -540,540.0).step(1.0).listen().name("Camera X").onChange(moveCamera);
-f2.add(ruttEtraParams, 'cameray', -540,540.0).step(1.0).listen().name("Camera Y").onChange(moveCamera);
-f2.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
-f2.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f2.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
-f2.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
-f2.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
-f2.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
-f2.open();	
+var f3 = gui.addFolder('Synthesizer');
 
-var f3 = gui.addFolder('Geometry');
+f3.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
+f3.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
+f3.open();	
 
+var f4 = gui.addFolder('Geometry');
 
-f3.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f3.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
-f3.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
-f3.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
-f3.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
-f3.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
-f3.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
-f3.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
-f3.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
-
-
-f3.open();
+f4.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
+f4.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
+f4.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
+f4.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
+f4.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
+f4.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
+f4.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
+f4.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
+f4.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
+f4.open();
 
 gui.close();
 
@@ -529,16 +527,19 @@ function init() {
 			return;
 		}
 		if($(this).text() === 'Zoom') {	
-			setting[pointerCount] = 'ruttEtraParams.cameraz = camera.position.z = pointer[i] * 100';	
+			//setting[pointerCount] = 'ruttEtraParams.cameraz = camera.position.z = pointer[i] * 100';	
 			//ruttEtraParams.cameraz = setting[pointerCount];
+			return;
 		}
 		if($(this).text() === 'Camera X') {
-			setting[pointerCount] = 'ruttEtraParams.camerax = camera.position.x = pointer[i] * 100';	
+			//setting[pointerCount] = 'ruttEtraParams.camerax = camera.position.x = pointer[i] * 100';	
 			//ruttEtraParams.camerax = setting[pointerCount];
+			return;
 		}
 		if($(this).text() === 'Camera Y') {
-			setting[pointerCount] = 'ruttEtraParams.cameray = camera.position.y = pointer[i] * 100';
+			//setting[pointerCount] = 'ruttEtraParams.cameray = camera.position.y = pointer[i] * 100';
 			//ruttEtraParams.cameray = setting[pointerCount];
+			return;
 		}
 		if($(this).text() === 'Displace') {
 			setting[pointerCount] = 'ruttEtraParams.displace = pointer[i] * 100';
@@ -564,7 +565,9 @@ function init() {
 			setting[pointerCount] = 'ruttEtraParams.opacity = pointer[i]';
 			//ruttEtraParams.opacity = setting[pointerCount];
 		}
-		
+		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
+			return;
+		}
 		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel"></div>');
 
 
@@ -617,17 +620,6 @@ function bgColorChange(){
 }
 
 function moveCamera(){
-	if( audioisplaying === true ) {
-		pointer[0] = ruttEtraParams.bass;
-		pointer[1] = ruttEtraParams.mid;
-		pointer[2] = ruttEtraParams.treble;
-		
-	for(var i=0; i<=2; i++){
-		
-		eval(setting[i]);
-		
-	   }
-	}
 
 	camera.position.x = ruttEtraParams.camerax;
 	camera.position.y = ruttEtraParams.cameray;
