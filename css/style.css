@@ -148,8 +148,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
+/* line 127, ../scss/style.scss */
+#drop_zone li {
+  padding-bottom: 0px;
+  padding-top: 10px;
+}
+/* line 131, ../scss/style.scss */
+#drop_zone li:first-child {
+  padding-top: 6px;
+}
 
-/* line 128, ../scss/style.scss */
+/* line 135, ../scss/style.scss */
 #topfill {
   position: absolute;
   top: 0;
@@ -160,7 +169,7 @@ article {
   background: #010101;
 }
 
-/* line 137, ../scss/style.scss */
+/* line 144, ../scss/style.scss */
 #read_files {
   position: relative;
   top: -45px;
@@ -170,7 +179,7 @@ article {
   cursor: hand;
 }
 
-/* line 145, ../scss/style.scss */
+/* line 152, ../scss/style.scss */
 #close_drop {
   position: absolute;
   top: 326px;
@@ -182,34 +191,34 @@ article {
   text-align: center;
 }
 
-/* line 155, ../scss/style.scss */
+/* line 162, ../scss/style.scss */
 #close_drop:hover {
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 160, ../scss/style.scss */
+/* line 167, ../scss/style.scss */
 #close_drop p {
   color: #ababab;
   opacity: 0.8;
   position: relative;
   top: -10px;
 }
-/* line 167, ../scss/style.scss */
+/* line 174, ../scss/style.scss */
 #close_drop p:hover {
   color: #FFF;
   opacity: 1.0;
   text-transform: none;
 }
 
-/* line 173, ../scss/style.scss */
+/* line 180, ../scss/style.scss */
 audio {
   position: absolute;
   top: 298px;
   left: 0;
 }
 
-/* line 178, ../scss/style.scss */
+/* line 185, ../scss/style.scss */
 #playlist {
   list-style-type: none;
   display: block;
@@ -219,7 +228,7 @@ audio {
   margin: 0;
   padding: 0;
 }
-/* line 186, ../scss/style.scss */
+/* line 193, ../scss/style.scss */
 #playlist li {
   list-style-type: none;
   display: block;
@@ -228,7 +237,7 @@ audio {
   background: #010101;
 }
 
-/* line 194, ../scss/style.scss */
+/* line 201, ../scss/style.scss */
 #gui_container {
   position: absolute;
   display: block;
@@ -239,7 +248,7 @@ audio {
   background: #010101;
 }
 
-/* line 203, ../scss/style.scss */
+/* line 210, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -252,7 +261,7 @@ audio {
   z-index: 9999;
 }
 
-/* line 214, ../scss/style.scss */
+/* line 221, ../scss/style.scss */
 .dg {
   color: #ababab !important;
   font: 10px "Lato", sans-serif !important;
@@ -263,45 +272,45 @@ audio {
   text-decoration: none;
   text-shadow: none !important;
 }
-/* line 224, ../scss/style.scss */
+/* line 231, ../scss/style.scss */
 .dg .has-slider input[type=text] {
   width: 26% !important;
   color: #ababab !important;
 }
-/* line 230, ../scss/style.scss */
+/* line 237, ../scss/style.scss */
 .dg li.save-row .button {
   margin-top: 6px !important;
 }
-/* line 236, ../scss/style.scss */
+/* line 243, ../scss/style.scss */
 .dg li.save-row select {
   position: relative !important;
   top: -3px !important;
 }
-/* line 242, ../scss/style.scss */
+/* line 249, ../scss/style.scss */
 .dg li.save-row {
   background: #010101 !important;
 }
-/* line 247, ../scss/style.scss */
+/* line 254, ../scss/style.scss */
 .dg .c .slider-fg {
   background: transparent !important;
   background-color: transparent !important;
   border-right: 1px solid #ababab !important;
 }
-/* line 254, ../scss/style.scss */
+/* line 261, ../scss/style.scss */
 .dg .cr.number {
   border-left: 1px solid black !important;
 }
-/* line 258, ../scss/style.scss */
+/* line 265, ../scss/style.scss */
 .dg .cr.boolean {
   border-left: 3px solid black !important;
 }
 
-/* line 263, ../scss/style.scss */
+/* line 270, ../scss/style.scss */
 .dg.main .close-button {
   color: #ababab !important;
   opacity: 0.8 !important;
 }
-/* line 267, ../scss/style.scss */
+/* line 274, ../scss/style.scss */
 .dg.main .close-button:hover {
   color: white !important;
   opacity: 1em !important;

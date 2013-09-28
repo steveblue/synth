@@ -254,9 +254,10 @@ function listResults(entries) {
 				   	  	
 				   	  	var li = document.createElement('li');
 				   	  	var name = unescape(entry.name);
-				   	  	var correctName = name.replace('%20', ' ');
+				   	  	var correctName = unescape(entry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
 				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
-				   	  	                  '" data-title="', name, '">', name, '</a>'].join('');
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
 				   	  	document.getElementById('playlist').insertBefore(li, null);
 				   	  	
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
@@ -333,9 +334,10 @@ function handleFileSelect(evt) {
 				   	  	
 				   	  	var li = document.createElement('li');
 				   	  	var name = unescape(fileEntry.name);
-				   	  	var correctName = name.replace('%20', ' ');
+				   	  	var correctName = unescape(fileEntry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
 				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
-				   	  	                  '" data-title="', name, '">', name, '</a>'].join('');
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
 				   	  	document.getElementById('playlist').insertBefore(li, null);
 				   	  	
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );

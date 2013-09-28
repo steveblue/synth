@@ -124,6 +124,13 @@ article{
 	  margin-left: -300px;
 	  margin-top: 0px;
 	}
+	li{
+		padding-bottom:0px;
+		padding-top:10px;
+	}
+	li:first-child{
+		padding-top:6px;
+	}
 }
 #topfill{
 	position: absolute;
