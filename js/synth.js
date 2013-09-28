@@ -65,8 +65,7 @@ var	ruttEtraParams = {
 		opacity : 1.0,
 		originX : 0.0,
 		originY: 0.0,
-		originZ : -2000.0,
-		dualmonitor: false
+		originZ : -2000.0
 		
 	}
 
@@ -177,11 +176,6 @@ f4.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
 f4.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
 f4.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
 f4.open();
-
-
-var f5 = gui.addFolder('Layout');
-f5.add(ruttEtraParams, 'dualmonitor').onChange(onToggleDualMonitor);
-f5.open();
 
 gui.close();
 
