@@ -529,15 +529,15 @@ function init() {
 			return;
 		}
 		if($(this).text() === 'Zoom') {	
-			setting[pointerCount] = 'ruttEtraParams.cameraz = pointer[i] * 10000';	
+			setting[pointerCount] = 'ruttEtraParams.cameraz = camera.position.z = pointer[i] * 100';	
 			//ruttEtraParams.cameraz = setting[pointerCount];
 		}
 		if($(this).text() === 'Camera X') {
-			setting[pointerCount] = 'ruttEtraParams.camerax = pointer[i] * 10000';	
+			setting[pointerCount] = 'ruttEtraParams.camerax = camera.position.x = pointer[i] * 100';	
 			//ruttEtraParams.camerax = setting[pointerCount];
 		}
 		if($(this).text() === 'Camera Y') {
-			setting[pointerCount] = 'ruttEtraParams.cameray = pointer[i] * 10000';
+			setting[pointerCount] = 'ruttEtraParams.cameray = camera.position.y = pointer[i] * 100';
 			//ruttEtraParams.cameray = setting[pointerCount];
 		}
 		if($(this).text() === 'Displace') {
@@ -625,7 +625,8 @@ function moveCamera(){
 	for(var i=0; i<=2; i++){
 		
 		eval(setting[i]);
-	}
+		
+	   }
 	}
 
 	camera.position.x = ruttEtraParams.camerax;
@@ -648,7 +649,8 @@ function onParamsChange(){
 	for(var i=0; i<=2; i++){
 		
 		eval(setting[i]);
-	}
+		
+	    }
 	}
 	//copy gui params into shader uniforms
 	videoMaterial.uniforms[ "displace" ].value = ruttEtraParams.displace;

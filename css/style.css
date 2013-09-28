@@ -63,15 +63,15 @@ h2{
 	font-family: 'Exo', sans-serif;
     color:#ABABAB;
     font-weight: 300;
-    text-rendering: optimizeLegibility;
+
 }
 h5{
 	font-family: 'Exo', sans-serif;
     color:#ABABAB;
     font-weight: 300;
     font-size:12px;
-    letter-spacing: 2px;
-    text-rendering: optimizeLegibility;
+    letter-spacing: 0.2em;
+ 
 }
 p,li{
 	color:#ABABAB;
@@ -81,9 +81,9 @@ p,li{
 	letter-spacing: 0.2em;
 	text-transform: none;
 	text-decoration: none;
-	line-height:24px;
+	padding-bottom:18px;
 	letter-spacing: 2px;
-	text-rendering: optimizeLegibility;
+
 	
 }
 article p,article li{
@@ -152,7 +152,6 @@ article{
 	height:20px;
 	background:#010101;
 	text-align:center;
-	-webkit-transition: all 0.5s ease-in-out;
 }
 #close_drop:hover{
 	cursor:pointer; 
@@ -162,7 +161,7 @@ article{
 	  color:rgb(171, 171, 171);
 	  opacity: 0.8;
 	  position:relative;
-	  top:-15px;
+	  top: -10px;
 	 
 }
 #close_drop p:hover{
