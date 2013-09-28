@@ -32,7 +32,7 @@
 	<div id="topfill"></div>
 	<div id="drop_zone">
 		<ul id="playlist"></ul>
-		
+		<h5 id="read_files">Read Files</h5>
 		
 	</div>
 	<div id="gui_container">
@@ -293,13 +293,75 @@ function playAudio(playlistId){
 
 }	
 
+function toArray(list) {
+  return Array.prototype.slice.call(list || [], 0);
+}
+
+function listResults(entries) {
+  // Document fragments can improve performance since they're only appended
+  // to the DOM once. Only one browser reflow occurs.
+  var fragment = document.createDocumentFragment();
+
+  entries.forEach(function(entry, i) {
+   						audio.playlist.push( entry.toURL() ); 
+				   	  	
+				   	  	var li = document.createElement('li');
+				   	  	var name = unescape(entry.name);
+				   	  	var correctName = name.replace('%20', ' ');
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
+				   	  	                  '" data-title="', name, '">', name, '</a>'].join('');
+				   	  	document.getElementById('playlist').insertBefore(li, null);
+				   	  	
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
+				   	  	var index = nodeList.indexOf( li );
+				   	  	
+				   	  	li.onclick=function(){
+				   	  		playAudio(index);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+  });
+
+  document.querySelector('#playlist').appendChild(fragment);
+  $('#read_files').fadeOut(1000);
+}
+
+function readFileSelect(evt) {
+
+	evt.stopPropagation();
+    evt.preventDefault();
+	
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
+	
+		var dirReader = fs.root.createReader();
+		var entries = [];
+		
+		// Call the reader.readEntries() until no more results are returned.
+		var readEntries = function() {
+		   dirReader.readEntries (function(results) {
+		    if (!results.length) {
+		      listResults(entries.sort());
+		    } else {
+		      entries = entries.concat(toArray(results));
+		      readEntries();
+		    }
+		  }, errorHandler);
+		};
+		
+		readEntries(); // Start reading dirs.
+
+
+
+	});
+  
+}
+
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 	
 	var files = evt.dataTransfer.files;
 
-	window.requestFileSystem(window.PERMANENT, 800*1024*1024, function(fs) {
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
 	    // Duplicate each file the user selected to the app's fs.
 	    
 	  //    alert("Welcome to Filesystem!"); // Just to check if everything is OK :)
@@ -323,10 +385,10 @@ function handleFileSelect(evt) {
 				   	  	audio.playlist.push( fileEntry.toURL() ); 
 				   	  	
 				   	  	var li = document.createElement('li');
-				   	  	var name = escape(fileEntry.name);
+				   	  	var name = unescape(fileEntry.name);
 				   	  	var correctName = name.replace('%20', ' ');
 				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
-				   	  	                  '" data-title="', escape(fileEntry.name), '">', escape(correctName), '</a>'].join('');
+				   	  	                  '" data-title="', name, '">', name, '</a>'].join('');
 				   	  	document.getElementById('playlist').insertBefore(li, null);
 				   	  	
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
@@ -335,8 +397,6 @@ function handleFileSelect(evt) {
 				   	  	li.onclick=function(){
 				   	  		playAudio(index);
 				   	  		$('#close_drop').trigger('click');
-				   	  		
-				   	  		
 				   	  	}
 			   	  };
 			   	
@@ -352,7 +412,7 @@ function handleFileSelect(evt) {
 		$('header h2').text('Change controls to achieve stunning new looks.');
 	    $('header').delay(8000).fadeOut(2000);
 	    $('#drop_zone').css('background', 'transparent');
-	    
+	    $('#read_files').fadeOut(1000);
 	    
 	    
 	});
@@ -372,8 +432,8 @@ function handleDragOver(evt) {
 var dropZone = document.getElementById('drop_zone');
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', handleFileSelect, false);
-  
-  
+var readFiles = document.getElementById('read_files');  
+readFiles.addEventListener('mousedown', readFileSelect, false); 
   
 function init() {
 

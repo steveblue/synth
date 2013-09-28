@@ -57,11 +57,21 @@ h1{
     font-size:96px;
     color:#ABABAB;
     font-weight: 100;
+    text-rendering: optimizeLegibility;
 }
 h2{
 	font-family: 'Exo', sans-serif;
     color:#ABABAB;
     font-weight: 300;
+    text-rendering: optimizeLegibility;
+}
+h5{
+	font-family: 'Exo', sans-serif;
+    color:#ABABAB;
+    font-weight: 300;
+    font-size:12px;
+    letter-spacing: 2px;
+    text-rendering: optimizeLegibility;
 }
 p,li{
 	color:#ABABAB;
@@ -73,6 +83,7 @@ p,li{
 	text-decoration: none;
 	line-height:24px;
 	letter-spacing: 2px;
+	text-rendering: optimizeLegibility;
 	
 }
 article p,article li{
@@ -123,6 +134,14 @@ article{
       left:50%;
 	  margin-left: -300px;
 	  margin-top: 0px;
+}
+#read_files{
+	position: relative;
+	top: -45px;
+	left: 50%;
+	margin-left: -42px;
+	cursor:pointer;
+	cursor:hand;
 }
 #close_drop{
 	position: absolute;
