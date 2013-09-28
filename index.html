@@ -26,7 +26,7 @@
 	<body>
 	<header>
 	    <h1>Synth</h1>
-	    <h2>v.1</h2>
+	    <h2>v.15</h2>
 		<a href="info/index.php">Learn More</a>
 	</header>
 	<div id="topfill"></div>
@@ -196,9 +196,9 @@ f1.open();
 var f2 = gui.addFolder('Synthesizer');
 
 
-f2.add(ruttEtraParams, 'cameraz', -8000.0,8000.0).step(100.0).listen().name("Zoom").onChange(moveCamera);
-f2.add(ruttEtraParams, 'camerax', -1080,1080.0).step(1.0).listen().name("Camera X").onChange(moveCamera);
-f2.add(ruttEtraParams, 'cameray', -1080,1080.0).step(1.0).listen().name("Camera Y").onChange(moveCamera);
+f2.add(ruttEtraParams, 'cameraz', -4000.0,4000.0).step(100.0).listen().name("Zoom").onChange(moveCamera);
+f2.add(ruttEtraParams, 'camerax', -540,540.0).step(1.0).listen().name("Camera X").onChange(moveCamera);
+f2.add(ruttEtraParams, 'cameray', -540,540.0).step(1.0).listen().name("Camera Y").onChange(moveCamera);
 f2.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
 f2.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
 f2.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
@@ -212,12 +212,12 @@ var f3 = gui.addFolder('Geometry');
 
 f3.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
 f3.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
-f3.add(ruttEtraParams, 'dimX', 1.0,400.0).step(1.0).listen().name("X Dimension");
-f3.add(ruttEtraParams, 'dimY', 1.0,400.0).step(1.0).listen().name("Y Dimension");
-f3.add(ruttEtraParams, 'dimZ', 1.0,400.0).step(1.0).listen().name("Z Dimension");
-f3.add(ruttEtraParams, 'segX', 1.0,400.0).step(1.0).listen().name("X Segments");
-f3.add(ruttEtraParams, 'segY', 1.0,400.0).step(1.0).listen().name("Y Segments");
-f3.add(ruttEtraParams, 'segZ', 1.0,400.0).step(1.0).listen().name("Z Segments");
+f3.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
+f3.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
+f3.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
+f3.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
+f3.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
+f3.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
 f3.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
 
 
