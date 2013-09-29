@@ -161,9 +161,9 @@ f2.open();
 
 var f3 = gui.addFolder('Camera');
 
-f3.add(ruttEtraParams, 'cameraz', -8000.0,8000.0).step(1.0).listen().name("Zoom");
-f3.add(ruttEtraParams, 'camerax', -2160.0,2160.0).step(1.0).listen().name("Camera X");
-f3.add(ruttEtraParams, 'cameray', -2160.0,2160.0).step(1.0).listen().name("Camera Y");
+f3.add(ruttEtraParams, 'cameraz', -8000.0,8000.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'camerax', -2160.0,2160.0).step(1.0).listen().name("Camera X").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'cameray', -2160.0,2160.0).step(1.0).listen().name("Camera Y").onChange(onParamsChange);
 f3.open();
 
 var f4 = gui.addFolder('Synthesizer');
@@ -379,7 +379,6 @@ function handleFileSelect(evt) {
 
 	
 }
-
 function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -394,16 +393,21 @@ var readFiles = document.getElementById('read_files');
 readFiles.addEventListener('mousedown', readFileSelect, false); 
   
 function init() {
-
-
-	
-
-	var light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( 1, 1, 1 ).normalize();
+	var light = new THREE.PointLight( 0xffffff );
+	light.position.set( 100, 100, 100 ).normalize();
+	light.shadowCameraVisible = true;
+	light.shadowDarkness = 0.25;
+	light.intensity = 12;
+	light.castShadow = true;
 	scene.add( light );
 	
 	var directionalLightFill = new THREE.DirectionalLight(0xffffff);
-	directionalLightFill.position.set(-1, 1, 2).normalize();
+	directionalLightFill.position.set(-1000, 1000, 2000).normalize();
+	directionalLightFill.position.set( 100, 100, 100 ).normalize();
+	directionalLightFill.shadowCameraVisible = true;
+	directionalLightFill.shadowDarkness = 0.25;
+	directionalLightFill.intensity = 6;
+	directionalLightFill.castShadow = true;
 	scene.add(directionalLightFill);
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -436,36 +440,12 @@ function init() {
 	navigator.getUserMedia ||
       (navigator.getUserMedia = navigator.mozGetUserMedia ||
       navigator.webkitGetUserMedia || navigator.msGetUserMedia);
-//	var htracker = new headtrackr.Tracker({ui : false, headPosition : false});
-//	htracker.init(videoInput, canvasInput);
-//	htracker.start();
 	
-	//add stats
-//	stats = new Stats();
-//	stats.domElement.style.position = 'absolute';
-//	stats.domElement.style.top = '0px';
-//	container.appendChild( stats.domElement );	
 	window.addEventListener( 'resize', onWindowResize, false );
 				
-//	document.addEventListener('headtrackrStatus', 
-//	  function (event) {
-//	    if (event.status == "detecting") {
-//	      //do something
-//	    }
-//	     if (event.status == "found") {
-//			 //	camera.position.x += ( event.x - camera.position.x ) * 0.1;
-//			 //	camera.position.y += ( - event.y - camera.position.y ) * 0.1;
-//			// $('header,#drop_zone').fadeOut(8000);
-//			 
-//	    }
-//	});
-	
-	var timeoutId = 0;
 	var pointTo = 0;
 	$('.property-name').mousedown(function() {
-		
 
-		
 	if( $(this).not('.active') ){
 	
 	    $(this).addClass('active');
