@@ -1,12 +1,15 @@
 /* line 1, ../scss/style.scss */
 html, body {
+  display: block;
   background-color: #000;
   color: #fff;
   margin: 0px;
-  overflow: scroll;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
-/* line 7, ../scss/style.scss */
+/* line 10, ../scss/style.scss */
 a:link, a:visited {
   display: block;
   color: #ABABAB;
@@ -22,21 +25,21 @@ a:link, a:visited {
   -webkit-transition: all 0.5s ease-in-out;
 }
 
-/* line 21, ../scss/style.scss */
+/* line 24, ../scss/style.scss */
 a:hover {
   color: #FFF;
   opacity: 1.0em;
   text-transform: none;
 }
 
-/* line 26, ../scss/style.scss */
+/* line 29, ../scss/style.scss */
 a:active {
   color: #FEE;
   opacity: 1.0em;
   text-transform: none;
 }
 
-/* line 31, ../scss/style.scss */
+/* line 34, ../scss/style.scss */
 .dg, .dg li.title, .dg.main .close-button {
   color: #ABABAB;
   font-family: 'Lato', sans-serif;
@@ -48,7 +51,7 @@ a:active {
   opacity: 50%;
 }
 
-/* line 41, ../scss/style.scss */
+/* line 44, ../scss/style.scss */
 header {
   color: #ABABAB;
   position: absolute;
@@ -62,7 +65,7 @@ header {
   opacity: 0.9;
 }
 
-/* line 55, ../scss/style.scss */
+/* line 58, ../scss/style.scss */
 h1 {
   font-family: 'Exo', sans-serif;
   font-size: 96px;
@@ -71,14 +74,14 @@ h1 {
   text-rendering: optimizeLegibility;
 }
 
-/* line 62, ../scss/style.scss */
+/* line 65, ../scss/style.scss */
 h2 {
   font-family: 'Exo', sans-serif;
   color: #ABABAB;
   font-weight: 300;
 }
 
-/* line 68, ../scss/style.scss */
+/* line 71, ../scss/style.scss */
 h5 {
   font-family: 'Exo', sans-serif;
   color: #ABABAB;
@@ -87,7 +90,7 @@ h5 {
   letter-spacing: 0.2em;
 }
 
-/* line 76, ../scss/style.scss */
+/* line 79, ../scss/style.scss */
 p, li {
   color: #ABABAB;
   font-family: 'Lato', sans-serif;
@@ -100,22 +103,22 @@ p, li {
   letter-spacing: 2px;
 }
 
-/* line 87, ../scss/style.scss */
+/* line 90, ../scss/style.scss */
 article p, article li {
   font-size: 16px;
 }
 
-/* line 91, ../scss/style.scss */
+/* line 94, ../scss/style.scss */
 header p, header a:link, header a:visited {
   text-align: center;
   padding-top: 40px;
 }
-/* line 95, ../scss/style.scss */
+/* line 98, ../scss/style.scss */
 header h1, header h2 {
   text-align: center;
 }
 
-/* line 99, ../scss/style.scss */
+/* line 102, ../scss/style.scss */
 article {
   display: block;
   width: 60%;
@@ -126,7 +129,7 @@ article {
   padding-bottom: 60px;
 }
 
-/* line 108, ../scss/style.scss */
+/* line 111, ../scss/style.scss */
 #drop_zone {
   position: absolute;
   top: 0;
@@ -140,7 +143,7 @@ article {
   background-size: cover;
   background-repeat: repeat;
 }
-/* line 120, ../scss/style.scss */
+/* line 123, ../scss/style.scss */
 #drop_zone p {
   display: block;
   position: relative;
@@ -148,17 +151,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
-/* line 127, ../scss/style.scss */
+/* line 130, ../scss/style.scss */
 #drop_zone li {
   padding-bottom: 0px;
   padding-top: 10px;
 }
-/* line 131, ../scss/style.scss */
+/* line 134, ../scss/style.scss */
 #drop_zone li:first-child {
   padding-top: 6px;
 }
 
-/* line 135, ../scss/style.scss */
+/* line 138, ../scss/style.scss */
 #topfill {
   position: absolute;
   top: 0;
@@ -169,7 +172,7 @@ article {
   background: #010101;
 }
 
-/* line 144, ../scss/style.scss */
+/* line 147, ../scss/style.scss */
 #read_files {
   position: relative;
   top: -45px;
@@ -179,7 +182,7 @@ article {
   cursor: hand;
 }
 
-/* line 152, ../scss/style.scss */
+/* line 155, ../scss/style.scss */
 #close_drop {
   position: absolute;
   top: 326px;
@@ -191,34 +194,34 @@ article {
   text-align: center;
 }
 
-/* line 162, ../scss/style.scss */
+/* line 165, ../scss/style.scss */
 #close_drop:hover {
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 167, ../scss/style.scss */
+/* line 170, ../scss/style.scss */
 #close_drop p {
   color: #ababab;
   opacity: 0.8;
   position: relative;
   top: -10px;
 }
-/* line 174, ../scss/style.scss */
+/* line 177, ../scss/style.scss */
 #close_drop p:hover {
   color: #FFF;
   opacity: 1.0;
   text-transform: none;
 }
 
-/* line 180, ../scss/style.scss */
+/* line 183, ../scss/style.scss */
 audio {
   position: absolute;
   top: 298px;
   left: 0;
 }
 
-/* line 185, ../scss/style.scss */
+/* line 188, ../scss/style.scss */
 #playlist {
   list-style-type: none;
   display: block;
@@ -228,7 +231,7 @@ audio {
   margin: 0;
   padding: 0;
 }
-/* line 193, ../scss/style.scss */
+/* line 196, ../scss/style.scss */
 #playlist li {
   list-style-type: none;
   display: block;
@@ -237,7 +240,7 @@ audio {
   background: #010101;
 }
 
-/* line 201, ../scss/style.scss */
+/* line 204, ../scss/style.scss */
 #gui_container {
   position: absolute;
   display: block;
@@ -248,7 +251,7 @@ audio {
   background: #010101;
 }
 
-/* line 210, ../scss/style.scss */
+/* line 213, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -261,7 +264,7 @@ audio {
   z-index: 9999;
 }
 
-/* line 221, ../scss/style.scss */
+/* line 224, ../scss/style.scss */
 .dg {
   color: #ababab !important;
   font: 10px "Lato", sans-serif !important;
@@ -272,45 +275,45 @@ audio {
   text-decoration: none;
   text-shadow: none !important;
 }
-/* line 231, ../scss/style.scss */
+/* line 234, ../scss/style.scss */
 .dg .has-slider input[type=text] {
   width: 26% !important;
   color: #ababab !important;
 }
-/* line 237, ../scss/style.scss */
+/* line 240, ../scss/style.scss */
 .dg li.save-row .button {
   margin-top: 6px !important;
 }
-/* line 243, ../scss/style.scss */
+/* line 246, ../scss/style.scss */
 .dg li.save-row select {
   position: relative !important;
   top: -3px !important;
 }
-/* line 249, ../scss/style.scss */
+/* line 252, ../scss/style.scss */
 .dg li.save-row {
   background: #010101 !important;
 }
-/* line 254, ../scss/style.scss */
+/* line 257, ../scss/style.scss */
 .dg .c .slider-fg {
   background: transparent !important;
   background-color: transparent !important;
   border-right: 1px solid #ababab !important;
 }
-/* line 261, ../scss/style.scss */
+/* line 264, ../scss/style.scss */
 .dg .cr.number {
   border-left: 1px solid black !important;
 }
-/* line 265, ../scss/style.scss */
+/* line 268, ../scss/style.scss */
 .dg .cr.boolean {
   border-left: 3px solid black !important;
 }
 
-/* line 270, ../scss/style.scss */
+/* line 273, ../scss/style.scss */
 .dg.main .close-button {
   color: #ababab !important;
   opacity: 0.8 !important;
 }
-/* line 274, ../scss/style.scss */
+/* line 277, ../scss/style.scss */
 .dg.main .close-button:hover {
   color: white !important;
   opacity: 1em !important;
