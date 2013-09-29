@@ -18,6 +18,7 @@ var camera, scene, renderer;
 var video, texture, material, mesh;
 
 var composer;
+var renderModel, effectBloom, effectCopy;
 
 var mouseX = 0;
 var mouseY = 0;
@@ -27,7 +28,7 @@ var windowHalfY = window.innerHeight / 2;
 
 var videoInput = document.getElementById('video');
 var canvasInput = document.getElementById('compare');
-
+var initComplete = false;
 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
 camera.position.z = 3600;
 
@@ -69,7 +70,8 @@ var	ruttEtraParams = {
 		opacity : 1.0,
 		originX : 0.0,
 		originY: 0.0,
-		originZ : -2000.0
+		originZ : -2000.0,
+		bloom: 1.8
 		
 	}
 
@@ -139,7 +141,6 @@ mesh.position.y = 0;
 
 mesh.visible = true;
 mesh.scale.x = mesh.scale.y = 16.0;
-
 	
 gui = new dat.GUI({autoPlace: false});
 var guiContainer = document.getElementById('gui_container');
@@ -174,6 +175,7 @@ f4.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Di
 f4.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
 f4.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
 f4.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
+//f4.add(ruttEtraParams, 'bloom', 0.0,500.0).step(25.0).listen().name("Bloom").onChange(onParamsChange);
 f4.open();	
 
 var f5 = gui.addFolder('Geometry');
@@ -425,10 +427,9 @@ function init() {
 
 	// postprocessing
 
-	var renderModel = new THREE.RenderPass( scene, camera );
-	var effectBloom = new THREE.BloomPass( 1.4 );
-    var effectCopy = new THREE.ShaderPass( THREE.CopyShader  );
-
+	renderModel = new THREE.RenderPass( scene, camera );
+	effectBloom = new THREE.BloomPass( 2.4, 50, 18.0, 256 );
+	effectCopy = new THREE.ShaderPass( THREE.CopyShader  );
 	effectCopy.renderToScreen = true;
 			
 	composer = new THREE.EffectComposer( renderer );
@@ -560,6 +561,7 @@ function init() {
 			$(this).children('p').text('Close Playlist');
 		}
 	});
+	initComplete = true;
 
 }
 
@@ -576,6 +578,21 @@ function audioChange(){
 
 function onParamsChange(){
 
+
+	ruttEtraParams.mousex = mouseX;   
+	ruttEtraParams.mousey = mouseY;
+	camera.position.x = ruttEtraParams.camerax;
+	camera.position.y = ruttEtraParams.cameray;
+	camera.position.z = ruttEtraParams.cameraz;
+	
+	videoMaterial.uniforms[ "displace" ].value = ruttEtraParams.displace;
+	videoMaterial.uniforms[ "multiplier" ].value = ruttEtraParams.multiplier;
+	videoMaterial.uniforms[ "opacity" ].value = ruttEtraParams.opacity;
+	videoMaterial.uniforms[ "originX" ].value = ruttEtraParams.originX;
+	videoMaterial.uniforms[ "originY" ].value = ruttEtraParams.originY;
+	videoMaterial.uniforms[ "originZ" ].value = ruttEtraParams.originZ;
+	//effectBloom = new THREE.BloomPass( 1.8, ruttEtraParams.bloom, 8.0 );
+	
 	pointer[0] = ruttEtraParams.bass;
 	pointer[1] = ruttEtraParams.mid;
 	pointer[2] = ruttEtraParams.treble;
@@ -588,19 +605,6 @@ function onParamsChange(){
 	
 	}
 	
-	ruttEtraParams.mousex = mouseX;   
-	ruttEtraParams.mousey = mouseY;
-	camera.position.x = ruttEtraParams.camerax;
-	camera.position.y = ruttEtraParams.cameray;
-	camera.position.z = ruttEtraParams.cameraz;
-	videoMaterial.uniforms[ "displace" ].value = ruttEtraParams.displace;
-	videoMaterial.uniforms[ "multiplier" ].value = ruttEtraParams.multiplier;
-	videoMaterial.uniforms[ "opacity" ].value = ruttEtraParams.opacity;
-	videoMaterial.uniforms[ "originX" ].value = ruttEtraParams.originX;
-	videoMaterial.uniforms[ "originY" ].value = ruttEtraParams.originY;
-	videoMaterial.uniforms[ "originZ" ].value = ruttEtraParams.originZ;
-	
-		
 	for (var i in gui.__controllers) {
 	   gui.__controllers[i].updateDisplay();
 	}
@@ -721,7 +725,8 @@ function render() {
 		
 
 	}
-
+	
+	
 	camera.lookAt( scene.position );
 	onParamsChange();
 	
