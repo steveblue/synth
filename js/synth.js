@@ -28,6 +28,8 @@ var windowHalfY = window.innerHeight / 2;
 var videoInput = document.getElementById('video');
 var canvasInput = document.getElementById('compare');
 
+camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.z = 3600;
 
 window.URL = window.URL || window.webkitURL;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -48,6 +50,8 @@ var	ruttEtraParams = {
 		bass: 0.0,
 		mid: 0.0,
 		treble: 0.0,
+		mousex: mouseX,
+		mousey: mouseY,
 		shape: null,
 		dimX: 100.0,
 		dimY: 100.0,
@@ -75,11 +79,14 @@ var pointer = [];
 pointer.push(ruttEtraParams.bass);
 pointer.push(ruttEtraParams.mid);
 pointer.push(ruttEtraParams.treble);
+pointer.push(ruttEtraParams.mousex);
+pointer.push(ruttEtraParams.mousey);
 var setting = [];
 setting.push('');
 setting.push('');
 setting.push('');
-var pointerCount = 0;
+setting.push('');
+setting.push('');
 
 container = document.createElement( 'div' );
 document.body.appendChild( container );
@@ -99,7 +106,6 @@ texture.generateMipmaps = true;
 
 videoMaterial = new THREE.ShaderMaterial( {
     uniforms: {
-
         "tDiffuse": { type: "t", value: texture },
         "multiplier":  { type: "f", value: 66.6 },
     	"displace":  { type: "f", value: 33.3 },
@@ -147,35 +153,40 @@ f1.add(ruttEtraParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(
 f1.add(ruttEtraParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(audioChange);
 f1.open();	
 
-var f2 = gui.addFolder('Camera');
+var f2 = gui.addFolder('Mouse');
 
-f2.add(ruttEtraParams, 'cameraz', -6000.0,6000.0).step(100.0).listen().name("Zoom").onChange(moveCamera);
-f2.add(ruttEtraParams, 'camerax', -720,720.0).step(1.0).listen().name("Camera X").onChange(moveCamera);
-f2.add(ruttEtraParams, 'cameray', -720,720.0).step(1.0).listen().name("Camera Y").onChange(moveCamera);
-f2.open();
+f2.add(ruttEtraParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(onParamsChange);
+f2.add(ruttEtraParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(onParamsChange);
+f2.open();	
 
-var f3 = gui.addFolder('Synthesizer');
+var f3 = gui.addFolder('Camera');
 
-f3.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f3.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
-f3.open();	
+f3.add(ruttEtraParams, 'cameraz', -8000.0,8000.0).step(1.0).listen().name("Zoom");
+f3.add(ruttEtraParams, 'camerax', -2160.0,2160.0).step(1.0).listen().name("Camera X");
+f3.add(ruttEtraParams, 'cameray', -2160.0,2160.0).step(1.0).listen().name("Camera Y");
+f3.open();
 
-var f4 = gui.addFolder('Geometry');
+var f4 = gui.addFolder('Synthesizer');
 
-f4.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f4.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
-f4.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
-f4.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
-f4.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
-f4.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
-f4.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
-f4.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
-f4.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
-f4.open();
+f4.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
+f4.open();	
+
+var f5 = gui.addFolder('Geometry');
+f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
+f5.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
+f5.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
+f5.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
+f5.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
+f5.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
+f5.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
+f5.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
+f5.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
+f5.open();
 
 gui.close();
 
@@ -220,7 +231,6 @@ function errorHandler(err){
 };
 
 function playAudio(playlistId){
-     	
     	audioisplaying = false;
     	dancer = new Dancer();
 		// Using an audio object
@@ -385,8 +395,7 @@ readFiles.addEventListener('mousedown', readFileSelect, false);
   
 function init() {
 
-	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 3600;
+
 	
 
 	var light = new THREE.DirectionalLight( 0xffffff );
@@ -438,103 +447,112 @@ function init() {
 //	container.appendChild( stats.domElement );	
 	window.addEventListener( 'resize', onWindowResize, false );
 				
-	document.addEventListener('headtrackrStatus', 
-	  function (event) {
-	    if (event.status == "detecting") {
-	      //do something
-	    }
-	     if (event.status == "found") {
-			 //	camera.position.x += ( event.x - camera.position.x ) * 0.1;
-			 //	camera.position.y += ( - event.y - camera.position.y ) * 0.1;
-			// $('header,#drop_zone').fadeOut(8000);
-			 
-	    }
-	});
+//	document.addEventListener('headtrackrStatus', 
+//	  function (event) {
+//	    if (event.status == "detecting") {
+//	      //do something
+//	    }
+//	     if (event.status == "found") {
+//			 //	camera.position.x += ( event.x - camera.position.x ) * 0.1;
+//			 //	camera.position.y += ( - event.y - camera.position.y ) * 0.1;
+//			// $('header,#drop_zone').fadeOut(8000);
+//			 
+//	    }
+//	});
 	
 	var timeoutId = 0;
-	
+	var pointTo = 0;
 	$('.property-name').mousedown(function() {
+		
 
 		
 	if( $(this).not('.active') ){
-	    if(pointerCount>2) pointerCount = 0;
 	
 	    $(this).addClass('active');
+	
 		
 		if($(this).text() === 'Bass') {
-			pointer[pointerCount] = ruttEtraParams.bass;
-			console.log(pointer[pointerCount]);
+			pointer[0] = ruttEtraParams.bass;
+			pointTo = 0;
+			console.log(pointer[0]);
 			return;
 		}
 		if($(this).text() === 'Mid') {
-			pointer[pointerCount] = ruttEtraParams.mid;
-			console.log(pointer);
+			pointer[1] = ruttEtraParams.mid;
+			pointTo = 1;
+			console.log(pointer[1]);
 			return;
 		}
 		if($(this).text() === 'Treble') {
-			pointer[pointerCount] = ruttEtraParams.treble;
-			console.log(pointer[pointerCount]);
+			pointer[2] = ruttEtraParams.treble;
+			pointTo = 2;
+			console.log(pointer[2]);
+			return;
+		}
+		if($(this).text() === 'Mouse X') {
+			pointer[3] = mouseX;
+			pointTo = 3;
+			console.log(pointer[3]);
+			return;
+		}
+		if($(this).text() === 'Mouse Y') {
+			pointer[4] = mouseY;
+			pointTo = 4;
+			console.log(pointer[4]);
 			return;
 		}
 		if($(this).text() === 'Zoom') {	
-			//setting[pointerCount] = 'ruttEtraParams.cameraz = camera.position.z = pointer[i] * 100';	
-			//ruttEtraParams.cameraz = setting[pointerCount];
-			return;
+			setting[pointTo] = 'ruttEtraParams.cameraz = pointer[i] * 4';	
+		//	ruttEtraParams.cameraz = setting[pointTo];
 		}
 		if($(this).text() === 'Camera X') {
-			//setting[pointerCount] = 'ruttEtraParams.camerax = camera.position.x = pointer[i] * 100';	
-			//ruttEtraParams.camerax = setting[pointerCount];
-			return;
+			setting[pointTo] = 'ruttEtraParams.camerax = pointer[i] * 2';	
+			//ruttEtraParams.camerax = setting[pointTo];
 		}
 		if($(this).text() === 'Camera Y') {
-			//setting[pointerCount] = 'ruttEtraParams.cameray = camera.position.y = pointer[i] * 100';
-			//ruttEtraParams.cameray = setting[pointerCount];
-			return;
+			setting[pointTo] = 'ruttEtraParams.cameray = pointer[i] * 10';
+			//ruttEtraParams.cameray = setting[pointTo];
 		}
 		if($(this).text() === 'Displace') {
-			setting[pointerCount] = 'ruttEtraParams.displace = pointer[i] * 100';
-			//ruttEtraParams.displace = setting[pointerCount];
+			setting[pointTo] = 'ruttEtraParams.displace = pointer[i] * 100';
+			//ruttEtraParams.displace = setting[pointTo];
 		}
 		if($(this).text() === 'Amplify') {
-			setting[pointerCount] = 'ruttEtraParams.multiplier = pointer[i] * 100';
-			//ruttEtraParams.multiplier = setting[pointerCount];
+			setting[pointTo] = 'ruttEtraParams.multiplier = pointer[i] * 100';
+			//ruttEtraParams.multiplier = setting[pointTo];
 		}
 		if($(this).text() === 'Distort X') {
-			setting[pointerCount] = 'ruttEtraParams.originX = pointer[i] * 100';
-			//ruttEtraParams.originX = setting[pointerCount];
+			setting[pointTo] = 'ruttEtraParams.originX = pointer[i] * 100';
+			//ruttEtraParams.originX = setting[pointTo];
 		}
 		if($(this).text() === 'Distort Y') {
-			setting[pointerCount] = 'ruttEtraParams.originY = pointer[i] * 100';
-			//ruttEtraParams.originY = setting[pointerCount];
+			setting[pointTo] = 'ruttEtraParams.originY = pointer[i] * 100';
+			//ruttEtraParams.originY = setting[pointTo];
 		}
 		if($(this).text() === 'Distort Z') {
-			setting[pointerCount] = 'ruttEtraParams.originZ = pointer[i] * 100';
-			//ruttEtraParams.originZ = setting[pointerCount];	
+			setting[pointTo] = 'ruttEtraParams.originZ = pointer[i] * 100';
+			//ruttEtraParams.originZ = setting[pointTo];	
 		}
 		if($(this).text() === 'Opacity') {
-			setting[pointerCount] = 'ruttEtraParams.opacity = pointer[i]';
-			//ruttEtraParams.opacity = setting[pointerCount];
+			setting[pointTo] = 'ruttEtraParams.opacity = pointer[i]';
+			//ruttEtraParams.opacity = setting[pointTo];
 		}
 		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
 			return;
 		}
-		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel"></div>');
-
+		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+pointTo+'"></div>');
 
 		$(this).parent('div').children('.c').children('.slider').children('.cancel').on('click',function(){	
 		
-			var command = setting[pointerCount];
+	
+			setting[ $(this).data('pointer') ] = "";
+				
 			
-			for (i=0;i<=3;i++){
-				if(setting[i] = command){
-					setting[i] = "";
-				}
-			}
 			$(this).parent('li').children('div:first-child').children('.property-name').removeClass('active');
 			$(this).remove();
 	
 		});
-		pointerCount++;
+	
 		}
 	});
 	
@@ -569,12 +587,6 @@ function bgColorChange(){
 	
 }
 
-function moveCamera(){
-
-	camera.position.x = ruttEtraParams.camerax;
-	camera.position.y = ruttEtraParams.cameray;
-	camera.position.z = ruttEtraParams.cameraz;
-}
 
 function audioChange(){
 	ruttEtraParams.bass = this.getFrequency( 140 ) * 100;
@@ -583,24 +595,36 @@ function audioChange(){
 }
 
 function onParamsChange(){
-	if( audioisplaying === true ) {
-		pointer[0] = ruttEtraParams.bass;
-		pointer[1] = ruttEtraParams.mid;
-		pointer[2] = ruttEtraParams.treble;
-		
-	for(var i=0; i<=2; i++){
-		
-		eval(setting[i]);
-		
-	    }
+
+	pointer[0] = ruttEtraParams.bass;
+	pointer[1] = ruttEtraParams.mid;
+	pointer[2] = ruttEtraParams.treble;
+	pointer[3] = ruttEtraParams.mousex;
+	pointer[4] = ruttEtraParams.mousey;
+	
+	for(var i=0; i<=4; i++){
+	
+	eval(setting[i]);
+	
 	}
-	//copy gui params into shader uniforms
+	
+	ruttEtraParams.mousex = mouseX;   
+	ruttEtraParams.mousey = mouseY;
+	camera.position.x = ruttEtraParams.camerax;
+	camera.position.y = ruttEtraParams.cameray;
+	camera.position.z = ruttEtraParams.cameraz;
 	videoMaterial.uniforms[ "displace" ].value = ruttEtraParams.displace;
 	videoMaterial.uniforms[ "multiplier" ].value = ruttEtraParams.multiplier;
 	videoMaterial.uniforms[ "opacity" ].value = ruttEtraParams.opacity;
 	videoMaterial.uniforms[ "originX" ].value = ruttEtraParams.originX;
 	videoMaterial.uniforms[ "originY" ].value = ruttEtraParams.originY;
 	videoMaterial.uniforms[ "originZ" ].value = ruttEtraParams.originZ;
+	
+		
+	for (var i in gui.__controllers) {
+	   gui.__controllers[i].updateDisplay();
+	}
+	
 
 }
 
@@ -709,10 +733,6 @@ function animate() {
 
 
 function render() {
-
-
-	camera.lookAt( scene.position );
-
 	
 	if ( videoInput.readyState === videoInput.HAVE_ENOUGH_DATA ) {
 
@@ -722,13 +742,8 @@ function render() {
 
 	}
 
-		onParamsChange();
-		
-   
-	
-	for (var i in gui.__controllers) {
-	   gui.__controllers[i].updateDisplay();
-	}
+	camera.lookAt( scene.position );
+	onParamsChange();
 	
 	
 	renderer.clear();
