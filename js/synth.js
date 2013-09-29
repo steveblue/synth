@@ -216,7 +216,7 @@ f4.addColor(ruttEtraParams, 'background').name("Background Color").onChange(onPa
 f4.open();	
 
 var f5 = gui.addFolder('Geometry');
-f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube' ] ).listen().name("Shape").onChange(meshChange);
+f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(meshChange);
 f5.add(ruttEtraParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onChange(onParamsChange);
 //f5.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
 //f5.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
@@ -660,8 +660,15 @@ function newMesh(geo,scale){
 
 	}
 	
+	else if (geo === 'cylinder') {
+	
+		geometry = new THREE.CylinderGeometry( scale*2, scale*2, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, true );
+	
+	}
+	
 	else if (geo === 'torus') {
-		geometry = new THREE.TorusKnotGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoWidth, scale);
+	//	geometry = new THREE.TorusKnotGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoWidth, scale);
+		geometry = new THREE.TorusGeometry( scale*2, videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2 );
 	}
 	drawNewMesh(geometry);
 	
