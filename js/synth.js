@@ -29,7 +29,7 @@ var windowHalfY = window.innerHeight / 2;
 var videoInput = document.getElementById('video');
 var canvasInput = document.getElementById('compare');
 var initComplete = false;
-
+var count = 0;
 var hex;
 
 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -39,14 +39,22 @@ window.URL = window.URL || window.webkitURL;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 //get webcam
 navigator.getUserMedia({
-    video: true
+    video: true,
+    audio: false
 }, function(stream) {
     //on webcam enabled
-    videoInput.src = window.URL.createObjectURL(stream);
+    if (navigator.mozGetUserMedia) {
+        videoInput.mozSrcObject = stream;
+    } 
+    else {
+        var vendorURL = window.URL || window.webkitURL;
+        videoInput.src = vendorURL.createObjectURL(stream);
+    }
+
     $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
     $('header p').delay(1000).fadeOut(2000);
 }, function(error) {
-    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page.';
+    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
 });
 var gui;
 //Init DAT GUI control panel
@@ -63,11 +71,11 @@ var	ruttEtraParams = {
 		segX: 100.0,
 		segY: 100.0,
 		segZ: 100.0,
-		wireframe: false,
+		wireframe: true,
 		camerax: 0.0,
 		cameray: 0.0,
 		cameraz: 3600.0,
-		scale : 1.0,
+		scale : 12.0,
 		multiplier :  66.6,
 		displace : 33.3,
 		opacity : 1.0,
@@ -129,7 +137,7 @@ videoMaterial = new THREE.ShaderMaterial( {
    
 });
 videoMaterial.renderToScreen = true;
-
+videoMaterial.wireframe = true;
 geometry = new THREE.PlaneGeometry(720, 480, 720, 480);
 geometry.overdraw = false;
 geometry.dynamic = true;
@@ -142,7 +150,7 @@ mesh.position.y = 0;
 
 
 mesh.visible = true;
-mesh.scale.x = mesh.scale.y = 16.0;
+mesh.scale.x = mesh.scale.y = 12.0;
 
 renderer = new THREE.WebGLRenderer( { clearColor: 0x000000, clearAlpha: 1, antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -208,14 +216,14 @@ f4.addColor(ruttEtraParams, 'background').name("Background Color").onChange(onPa
 f4.open();	
 
 var f5 = gui.addFolder('Geometry');
-f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f5.add(ruttEtraParams, 'scale', 0.1, 10.0).step(1.0).listen().name("Scale");
-f5.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
-f5.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
-f5.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
-f5.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
-f5.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
-f5.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
+f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube' ] ).listen().name("Shape").onChange(meshChange);
+f5.add(ruttEtraParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onChange(onParamsChange);
+//f5.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
+//f5.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
+//f5.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
+//f5.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
+//f5.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
+//f5.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
 f5.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
 f5.open();
 
@@ -230,8 +238,7 @@ var audio = [];
 audio.playlist = [];
 var audioisplaying = false;
 
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
- 
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem; 
 
 function errorHandler(err){
  var msg = 'An error occured: ';
@@ -425,7 +432,6 @@ readFiles.addEventListener('mousedown', readFileSelect, false);
   
 function init() {
 
-
 	var light = new THREE.PointLight( 0xffffff );
 	light.position.set( 100, 100, 100 ).normalize();
 	light.shadowCameraVisible = true;
@@ -579,9 +585,11 @@ function audioChange(){
 
 function onParamsChange(){
 
-
+	mesh.scale.x = mesh.scale.y = ruttEtraParams.scale;
+	
 	ruttEtraParams.mousex = mouseX;   
 	ruttEtraParams.mousey = mouseY;
+	
 	camera.position.x = ruttEtraParams.camerax;
 	camera.position.y = ruttEtraParams.cameray;
 	camera.position.z = ruttEtraParams.cameraz;
@@ -623,35 +631,37 @@ function onParamsChange(){
 
 function meshChange(geo){
 
-	
-	newMesh(ruttEtraParams.shape, ruttEtraParams.dimX, ruttEtraParams.dimY, ruttEtraParams.dimZ, ruttEtraParams.segX, ruttEtraParams.segY, ruttEtraParams.segZ, ruttEtraParams.scale);
+//	newMesh(ruttEtraParams.shape, ruttEtraParams.dimX, ruttEtraParams.dimY, ruttEtraParams.dimZ, ruttEtraParams.segX, ruttEtraParams.segY, ruttEtraParams.segZ, ruttEtraParams.scale);
+
+	newMesh(ruttEtraParams.shape, ruttEtraParams.scale);
 	
 }
 
-var count = 0;
-function newMesh(geo, sizeX, sizeY, sizeZ, segX, segY, segZ, scale){
 
+//function newMesh(geo, sizeX, sizeY, sizeZ, segX, segY, segZ, scale){
+
+function newMesh(geo,scale){
 
 	scene.remove(mesh);
 	
 	if(geo === 'plane') {
-		geometry = new THREE.PlaneGeometry(sizeX, sizeY, segX, segY);
+		geometry = new THREE.PlaneGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight);
 
 	}
 	
 	else if (geo === 'sphere') {
 	
-		geometry = new THREE.SphereGeometry(sizeX, segX, segY);
+		geometry = new THREE.SphereGeometry(videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2);
 
 	}
 	
 	else if (geo === 'cube') {
-		geometry = new THREE.CubeGeometry(sizeX, sizeY, sizeZ, segX, segY, segZ);
+		geometry = new THREE.CubeGeometry(videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3);
 
 	}
 	
 	else if (geo === 'torus') {
-		geometry = new THREE.TorusKnotGeometry(sizeX, sizeY, segX, segY, sizeZ, segZ, scale);
+		geometry = new THREE.TorusKnotGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoWidth, scale);
 	}
 	drawNewMesh(geometry);
 	
@@ -715,31 +725,21 @@ function onDocumentMouseMove(event) {
 
 function animate() {
 
-
 	requestAnimationFrame( animate );
-
 	render();
-	
 	//stats.update();
-
+	
 }
 
 
 function render() {
 	
 	if ( videoInput.readyState === videoInput.HAVE_ENOUGH_DATA ) {
-
 		if ( texture ) texture.needsUpdate = true;
 		if ( videoMaterial ) videoMaterial.needsUpdate = true;
-		
-
-	}
-	
-	
-	camera.lookAt( scene.position );
+	}	
+	camera.lookAt( scene.position );	
 	onParamsChange();
-	
-	
 	renderer.clear();
 	composer.render();
 
