@@ -32,7 +32,7 @@ var initComplete = false;
 var count = 0;
 var hex;
 
-camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
 camera.position.z = 3600;
 
 window.URL = window.URL || window.webkitURL;
@@ -52,7 +52,7 @@ navigator.getUserMedia({
     }
 
     $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
-    $('header p').delay(1000).fadeOut(2000);
+    $('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);
 }, function(error) {
     prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
 });
@@ -65,20 +65,20 @@ var	ruttEtraParams = {
 		mousex: mouseX,
 		mousey: mouseY,
 		shape: null,
-		dimX: 100.0,
-		dimY: 100.0,
-		dimZ: 100.0,
-		segX: 100.0,
-		segY: 100.0,
-		segZ: 100.0,
+	//	dimX: 100.0,
+	//	dimY: 100.0,
+	//	dimZ: 100.0,
+	//	segX: 100.0,
+	//	segY: 100.0,
+	//	segZ: 100.0,
 		wireframe: true,
 		camerax: 0.0,
 		cameray: 0.0,
-		cameraz: 3600.0,
-		scale : 12.0,
-		multiplier :  66.6,
-		displace : 33.3,
-		opacity : 1.0,
+		cameraz: 140.0,
+		scale : 1.0,
+		multiplier :  12.0,
+		displace : 6.0,
+		opacity : 0.8,
 		originX : 0.0,
 		originY: 0.0,
 		originZ : -2000.0,
@@ -150,7 +150,7 @@ mesh.position.y = 0;
 
 
 mesh.visible = true;
-mesh.scale.x = mesh.scale.y = 12.0;
+mesh.scale.x = mesh.scale.y = 1.0;
 
 renderer = new THREE.WebGLRenderer( { clearColor: 0x000000, clearAlpha: 1, antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -663,6 +663,7 @@ function newMesh(geo,scale){
 	else if (geo === 'cylinder') {
 	
 		geometry = new THREE.CylinderGeometry( scale*2, scale*2, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, true );
+		camera.position.z = ruttEtraParams.cameraz = 40;
 	
 	}
 	
