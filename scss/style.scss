@@ -152,6 +152,34 @@ article{
 		padding-top:6px;
 	}
 }
+#video_drop{
+	position: absolute;
+	top:328px;
+	left:0;
+	display:block;
+	width:297px;
+	height:297px;
+	border:1px solid #101010;
+	z-index: 1000;
+	
+	background: #000000; // url('img/dropzone.png');
+	background-size: cover;
+	background-repeat: repeat;
+	p{
+	  display:block; 
+      position: relative;
+      left:50%;
+	  margin-left: -300px;
+	  margin-top: 0px;
+	}
+	li{
+		padding-bottom:0px;
+		padding-top:10px;
+	}
+	li:first-child{
+		padding-top:6px;
+	}
+}
 #topfill{
 	position: absolute;
 	top:0;
@@ -165,13 +193,21 @@ article{
 	position: relative;
 	top: -45px;
 	left: 50%;
-	margin-left: -42px;
+	margin-left: -59px;
+	cursor:pointer;
+	cursor:hand;
+}
+#read_video{
+	position: relative;
+	top: -50px;
+	left: 50%;
+	margin-left: -60px;
 	cursor:pointer;
 	cursor:hand;
 }
 #close_drop{
 	position: absolute;
-	top: 326px;
+	top: 627px;
 	left:0px;
 	display:block;
 	width:300px;
@@ -202,7 +238,7 @@ audio{
 	top:298px;
 	left:0;
 }
-#playlist{
+#playlist,#videoplaylist{
 	list-style-type: none;
 	display:block;
 	width:100%;

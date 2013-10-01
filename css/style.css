@@ -181,6 +181,38 @@ article {
 }
 
 /* line 155, ../scss/style.scss */
+#video_drop {
+  position: absolute;
+  top: 328px;
+  left: 0;
+  display: block;
+  width: 297px;
+  height: 297px;
+  border: 1px solid #101010;
+  z-index: 1000;
+  background: #000000;
+  background-size: cover;
+  background-repeat: repeat;
+}
+/* line 168, ../scss/style.scss */
+#video_drop p {
+  display: block;
+  position: relative;
+  left: 50%;
+  margin-left: -300px;
+  margin-top: 0px;
+}
+/* line 175, ../scss/style.scss */
+#video_drop li {
+  padding-bottom: 0px;
+  padding-top: 10px;
+}
+/* line 179, ../scss/style.scss */
+#video_drop li:first-child {
+  padding-top: 6px;
+}
+
+/* line 183, ../scss/style.scss */
 #topfill {
   position: absolute;
   top: 0;
@@ -191,20 +223,30 @@ article {
   background: #010101;
 }
 
-/* line 164, ../scss/style.scss */
+/* line 192, ../scss/style.scss */
 #read_files {
   position: relative;
   top: -45px;
   left: 50%;
-  margin-left: -42px;
+  margin-left: -59px;
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 172, ../scss/style.scss */
+/* line 200, ../scss/style.scss */
+#read_video {
+  position: relative;
+  top: -50px;
+  left: 50%;
+  margin-left: -60px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+/* line 208, ../scss/style.scss */
 #close_drop {
   position: absolute;
-  top: 326px;
+  top: 627px;
   left: 0px;
   display: block;
   width: 300px;
@@ -213,35 +255,35 @@ article {
   text-align: center;
 }
 
-/* line 182, ../scss/style.scss */
+/* line 218, ../scss/style.scss */
 #close_drop:hover {
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 187, ../scss/style.scss */
+/* line 223, ../scss/style.scss */
 #close_drop p {
   color: #ababab;
   opacity: 0.8;
   position: relative;
   top: -10px;
 }
-/* line 194, ../scss/style.scss */
+/* line 230, ../scss/style.scss */
 #close_drop p:hover {
   color: #FFF;
   opacity: 1.0;
   text-transform: none;
 }
 
-/* line 200, ../scss/style.scss */
+/* line 236, ../scss/style.scss */
 audio {
   position: absolute;
   top: 298px;
   left: 0;
 }
 
-/* line 205, ../scss/style.scss */
-#playlist {
+/* line 241, ../scss/style.scss */
+#playlist, #videoplaylist {
   list-style-type: none;
   display: block;
   width: 100%;
@@ -250,8 +292,8 @@ audio {
   margin: 0;
   padding: 0;
 }
-/* line 213, ../scss/style.scss */
-#playlist li {
+/* line 249, ../scss/style.scss */
+#playlist li, #videoplaylist li {
   list-style-type: none;
   display: block;
   width: 100%;
@@ -259,7 +301,7 @@ audio {
   background: #010101;
 }
 
-/* line 221, ../scss/style.scss */
+/* line 257, ../scss/style.scss */
 #gui_container {
   position: absolute;
   display: block;
@@ -270,7 +312,7 @@ audio {
   background: #010101;
 }
 
-/* line 230, ../scss/style.scss */
+/* line 266, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -283,7 +325,7 @@ audio {
   z-index: 9999;
 }
 
-/* line 241, ../scss/style.scss */
+/* line 277, ../scss/style.scss */
 .dg {
   color: #ababab !important;
   font: 10px "Lato", sans-serif !important;
@@ -294,56 +336,56 @@ audio {
   text-decoration: none;
   text-shadow: none !important;
 }
-/* line 251, ../scss/style.scss */
+/* line 287, ../scss/style.scss */
 .dg .has-slider input[type=text] {
   width: 26% !important;
   color: #ababab !important;
 }
-/* line 257, ../scss/style.scss */
+/* line 293, ../scss/style.scss */
 .dg li.save-row .button {
   margin-top: 6px !important;
 }
-/* line 263, ../scss/style.scss */
+/* line 299, ../scss/style.scss */
 .dg li.save-row select {
   position: relative !important;
   top: -3px !important;
 }
-/* line 269, ../scss/style.scss */
+/* line 305, ../scss/style.scss */
 .dg li.save-row {
   background: #010101 !important;
 }
-/* line 271, ../scss/style.scss */
+/* line 307, ../scss/style.scss */
 .dg li.save-row .button {
   background-color: #303030 !important;
   box-shadow: none !important;
 }
-/* line 279, ../scss/style.scss */
+/* line 315, ../scss/style.scss */
 .dg .c .slider-fg {
   background: transparent !important;
   background-color: transparent !important;
   border-right: 1px solid #ababab !important;
 }
-/* line 286, ../scss/style.scss */
+/* line 322, ../scss/style.scss */
 .dg .cr.number {
   border-left: 1px solid black !important;
 }
-/* line 290, ../scss/style.scss */
+/* line 326, ../scss/style.scss */
 .dg .cr.boolean {
   border-left: 3px solid black !important;
 }
-/* line 293, ../scss/style.scss */
+/* line 329, ../scss/style.scss */
 .dg .c select {
   width: 100%;
   height: 19px;
   margin-left: -4px;
 }
 
-/* line 300, ../scss/style.scss */
+/* line 336, ../scss/style.scss */
 .dg.main .close-button {
   color: #ababab !important;
   opacity: 0.8 !important;
 }
-/* line 304, ../scss/style.scss */
+/* line 340, ../scss/style.scss */
 .dg.main .close-button:hover {
   color: white !important;
   opacity: 1em !important;

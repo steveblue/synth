@@ -26,12 +26,14 @@ var mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
+var videoPlayer = document.getElementById('videoplayer');
 var videoInput = document.getElementById('video');
 var canvasInput = document.getElementById('compare');
+var videoObject;
 var initComplete = false;
 var count = 0;
 var hex;
-
+var webcamEnabled = false;
 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
 camera.position.z = 3600;
 
@@ -48,7 +50,9 @@ navigator.getUserMedia({
     } 
     else {
         var vendorURL = window.URL || window.webkitURL;
-        videoInput.src = vendorURL.createObjectURL(stream);
+        webcamEnabled = true;
+        videoObject = vendorURL.createObjectURL(stream);
+		videoInput.src = videoObject;
     }
 
     $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
@@ -85,7 +89,8 @@ var	ruttEtraParams = {
 		//bloom: 1.8,
 		hue: 0.0,
 		saturation: 0.1,
-		background: "#000"
+		background: "#000",
+		webcam: true
 		
 	}
 
@@ -225,6 +230,7 @@ f5.add(ruttEtraParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onCh
 //f5.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
 //f5.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
 f5.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
+f5.add(ruttEtraParams, 'webcam').onChange(onToggleWebcam);
 f5.open();
 
 gui.close();
@@ -237,6 +243,9 @@ animate();
 var audio = [];
 audio.playlist = [];
 var audioisplaying = false;
+var video = [];
+video.playlist = [];
+var videoisplaying = false;
 
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem; 
 
@@ -287,12 +296,21 @@ function playAudio(playlistId){
 		dancer.play();
 		audioisplaying = true; 	
 }	
+function playVideo(playlistId){
+    	videoisplaying = false;
+    	
+		video.nowPlaying = video.playlist[playlistId]; 
+		videoInput.loop = true; 
+		// play the damn thing here.
+		videoInput.play();
+		videoisplaying = true; 	
+}
 
 function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
 }
 
-function listResults(entries) {
+function listAudioResults(entries) {
   // Document fragments can improve performance since they're only appended
   // to the DOM once. Only one browser reflow occurs.
   var fragment = document.createDocumentFragment();
@@ -320,22 +338,51 @@ function listResults(entries) {
   document.querySelector('#playlist').appendChild(fragment);
   $('#read_files').fadeOut(1000);
 }
+function listVideoResults(entries) {
+  // Document fragments can improve performance since they're only appended
+  // to the DOM once. Only one browser reflow occurs.
+  var fragment = document.createDocumentFragment();
 
-function readFileSelect(evt) {
+  entries.forEach(function(entry, i) {
+   						video.playlist.push( entry.toURL() ); 
+				   	  	
+				   	  	var li = document.createElement('li');
+				   	  	var name = unescape(entry.name);
+				   	  	var correctName = unescape(entry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	  	
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	var index = nodeList.indexOf( li );
+				   	  	
+				   	  	li.onclick=function(){
+				   	  		playVideo(index);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+  });
+
+  document.querySelector('#playlist').appendChild(fragment);
+  $('#read_files').fadeOut(1000);
+}
+
+function readAudioFileSelect(evt) {
 
 	evt.stopPropagation();
     evt.preventDefault();
 	
 	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
 	
-		var dirReader = fs.root.createReader();
+				
+		fs.root.getDirectory('audio', {}, function(dirEntry){		
+		var dirReader = dirEntry.createReader();
 		var entries = [];
-		
-		// Call the reader.readEntries() until no more results are returned.
+
 		var readEntries = function() {
 		   dirReader.readEntries (function(results) {
 		    if (!results.length) {
-		      listResults(entries.sort());
+		      listAudioResults(entries.sort());
 		    } else {
 		      entries = entries.concat(toArray(results));
 		      readEntries();
@@ -346,12 +393,44 @@ function readFileSelect(evt) {
 		readEntries(); // Start reading dirs.
 
 
-
-	});
+		});
   
+   });
 }
+ 
+function readVideoFileSelect(evt) {
 
-function handleFileSelect(evt) {
+	evt.stopPropagation();
+    evt.preventDefault();
+	
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
+	
+				
+		fs.root.getDirectory('video', {}, function(dirEntry){		
+		var dirReader = dirEntry.createReader();
+		var entries = [];
+
+		var readEntries = function() {
+		   dirReader.readEntries (function(results) {
+		    if (!results.length) {
+		      listVideoResults(entries.sort());
+		    } else {
+		      entries = entries.concat(toArray(results));
+		      readEntries();
+		    }
+		  }, errorHandler);
+		};
+		
+		readEntries(); // Start reading dirs.
+
+
+		});
+  
+   });
+}
+ 
+
+function handleAudioFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 	
@@ -361,14 +440,16 @@ function handleFileSelect(evt) {
 	    // Duplicate each file the user selected to the app's fs.
 	    
 	  //    alert("Welcome to Filesystem!"); // Just to check if everything is OK :)
-	      
+	    fs.root.getDirectory('audio', {create: true}, function(dirEntry) {
+
+		}, errorHandler);  
 	      
 	    for (var i = 0, file; file = files[i]; ++i) {
 	
 	     
 	      (function(f) {
 	        
-	        fs.root.getFile(f.name, {create: true, exclusive: true}, function(fileEntry) {
+	        fs.root.getFile('/audio/'+f.name, {create: true, exclusive: true}, function(fileEntry) {
 	          	  fileEntry.createWriter(function(fileWriter) {
 	          		  fileWriter.write(f); 
 	          	  }, errorHandler);
@@ -377,8 +458,7 @@ function handleFileSelect(evt) {
 			   	  var reader = new FileReader();
 			   	
 			   	  reader.onloadend = function(e) {
-				   	  
-				   	  	audio.playlist.push( fileEntry.toURL() ); 
+				   	 	audio.playlist.push( fileEntry.toURL() ); 
 				   	  	
 				   	  	var li = document.createElement('li');
 				   	  	var name = unescape(fileEntry.name);
@@ -386,15 +466,15 @@ function handleFileSelect(evt) {
 				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
 				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
 				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  
 				   	  	document.getElementById('playlist').insertBefore(li, null);
-				   	  	
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
 				   	  	var index = nodeList.indexOf( li );
-				   	  	
 				   	  	li.onclick=function(){
 				   	  		playAudio(index);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
+
 			   	  };
 			   	
 			   	  reader.readAsDataURL(file);
@@ -406,10 +486,76 @@ function handleFileSelect(evt) {
 	     
 	
 	    }
-		$('header h2').text('Change controls to achieve stunning new looks.');
+
 	    $('header').delay(8000).fadeOut(2000);
-	    $('#drop_zone').css('background', 'transparent');
-	    $('#read_files').fadeOut(1000);
+
+	    
+	    
+	});
+
+
+	
+}
+function handleVideoFileSelect(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+	
+	var files = evt.dataTransfer.files;
+
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
+	    // Duplicate each file the user selected to the app's fs.
+	    
+	  //    alert("Welcome to Filesystem!"); // Just to check if everything is OK :)
+	      
+	    fs.root.getDirectory('video', {create: true}, function(dirEntry) {
+
+		}, errorHandler);
+	    for (var i = 0, file; file = files[i]; ++i) {
+	
+	     
+	      (function(f) {
+	        
+	        fs.root.getFile('/video/'+f.name, {create: true, exclusive: true}, function(fileEntry) {
+	          	  fileEntry.createWriter(function(fileWriter) {
+	          		  fileWriter.write(f); 
+	          	  }, errorHandler);
+	          
+	              fileEntry.file(function(file) {
+			   	  var reader = new FileReader();
+			   	
+			   	  reader.onloadend = function(e) {
+				 
+				   	    video.playlist.push( fileEntry.toURL() ); 
+				   	   
+				  	
+				   	  	var li = document.createElement('li');
+				   	  	var name = unescape(fileEntry.name);
+				   	  	var correctName = unescape(fileEntry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  
+				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	var index = nodeList.indexOf( li );
+				   	  	li.onclick=function(){
+				   	  		playVideo(index);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+	
+			   	  };
+			   	
+			   	  reader.readAsDataURL(file);
+			   	}, errorHandler);
+
+	        }, errorHandler);
+			   	
+	      })(file);
+	     
+	
+	    }
+		//$('header h2').text('Change controls to achieve stunning new looks.');
+	    $('header').delay(8000).fadeOut(2000);
 	    
 	    
 	});
@@ -426,9 +572,15 @@ function handleDragOver(evt) {
 // Setup the dnd listeners.
 var dropZone = document.getElementById('drop_zone');
 dropZone.addEventListener('dragover', handleDragOver, false);
-dropZone.addEventListener('drop', handleFileSelect, false);
+dropZone.addEventListener('drop', handleAudioFileSelect, false);
 var readFiles = document.getElementById('read_files');  
-readFiles.addEventListener('mousedown', readFileSelect, false); 
+readFiles.addEventListener('mousedown', readAudioFileSelect, false); 
+
+var dropZoneVideo = document.getElementById('video_drop');
+dropZoneVideo.addEventListener('dragover', handleDragOver, false);
+dropZoneVideo.addEventListener('drop', handleVideoFileSelect, false);
+var readFilesVideo = document.getElementById('read_video');  
+readFilesVideo.addEventListener('mousedown', readVideoFileSelect, false); 
   
 function init() {
 
@@ -557,6 +709,7 @@ function init() {
 		$('header').fadeOut(8000);
 		if($(this).is('.active')){
 			$('#drop_zone').hide();
+			$('#video_drop').hide();
 			$('audio').css('top','20px');
 			$('audio').hide();
 			$(this).css('top', '0px');
@@ -564,6 +717,7 @@ function init() {
 		}
 		else if($(this).not('.active')){
 		    $('#drop_zone').show();
+		    $('#video_drop').show();
 		    $('audio').show();
 		    $('audio').css('top','298px');
 			$(this).css('top', '326px');
@@ -703,6 +857,23 @@ function onToggleWireframe() {
     else{
     
 	  	videoMaterial.wireframe = false;
+    	
+    }
+    
+	
+}
+
+function onToggleWebcam() {
+
+    if( ruttEtraParams.webcam === true  ){
+    	
+	
+		videoInput.src = videoObject;
+	    	
+    }
+    else{
+    
+	  	videoInput.src = video.nowPlaying;
     	
     }
     

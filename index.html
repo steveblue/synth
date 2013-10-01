@@ -31,14 +31,20 @@
 		<a href="info/index.php">Learn More</a>
 		<p>WARNING: This interactive experience may potentially trigger seizures for people with photosensitive epilepsy. Viewer discretion is advised.</p>
 	</header>
+	
+
 	<div id="topfill"></div>
+	<div id="video_drop">
+		<ul id="videoplaylist"></ul>
+		<h5 id="read_video">Read Video Files</h5>
+	</div>
+	
 	<div id="drop_zone">
 		<ul id="playlist"></ul>
-		<h5 id="read_files">Read Files</h5>
+		<h5 id="read_files">Read Audio Files</h5>
 	</div>
-	<div id="gui_container">
-	</div>
-	<audio id="audio" src="" controls="controls">
+	<audio id="audio" src="" controls="controls"></audio>
+	<div id="gui_container"></div>
 	<video id="video" autoplay loop style="display:none">
 	<canvas id="compare" width="320" height="240"></canvas>
 	</video>
