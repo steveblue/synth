@@ -6,7 +6,7 @@ if (!hasGetUserMedia) {
     $('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
     
 } else {
-    $('header h2').text('Click "allow" at top of screen to start video.');
+    $('header h2').text('Click "allow" to start webcam.');
 }
     
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -348,6 +348,8 @@ function playVideo(playlistId){
 function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
 }
+
+
 
 function listAudioResults(entries) {
   // Document fragments can improve performance since they're only appended
@@ -770,8 +772,47 @@ function init() {
 	
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	window.addEventListener( 'resize', onWindowResize, false );
-	initComplete = true;
+	keypress.combo("1", function() {
+	   playVideo(0);
+    });
+    keypress.combo("2", function() {
+       playVideo(1);
+    });
+    keypress.combo("3", function() {
+       playVideo(2);
+    });
+    keypress.combo("4", function() {
+       playVideo(3);
+    });
+    keypress.combo("5", function() {
+       playVideo(4);
+    });
+    keypress.combo("6", function() {
+       playVideo(5);
+    });
+    keypress.combo("7", function() {
+       playVideo(6);
+    });
+    keypress.combo("8", function() {
+       playVideo(7);
+    });
+    keypress.combo("9", function() {
+       playVideo(8);
+    });
+    keypress.combo("0", function() {
+       onToggleWebcam();
+    });
+    keypress.combo("l", function() {
+       if(videoInput.loop == false){
+       videoInput.loop = true;
+       }
+       else{
+	   videoInput.loop = false;    
+       }
+    });
 
+	initComplete = true;
+	
 }
 
 function audioChange(){
