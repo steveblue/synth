@@ -172,8 +172,8 @@ article {
 }
 /* line 147, ../scss/style.scss */
 #drop_zone li {
-  padding-bottom: 0px;
-  padding-top: 10px;
+  padding-bottom: 2px;
+  padding-top: 2px;
 }
 /* line 151, ../scss/style.scss */
 #drop_zone li:first-child {
@@ -204,8 +204,8 @@ article {
 }
 /* line 175, ../scss/style.scss */
 #video_drop li {
-  padding-bottom: 0px;
-  padding-top: 10px;
+  padding-bottom: 2px;
+  padding-top: 2px;
 }
 /* line 179, ../scss/style.scss */
 #video_drop li:first-child {

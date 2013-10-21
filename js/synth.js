@@ -289,6 +289,7 @@ function playAudio(playlistId){
     	else{
 	    	$('audio').show();
     	}
+    	
     	audioplayer.id = 'audio';
     	audioplayer.controls = true;
 		audioplayer.src = audio.playlist[playlistId];  
@@ -303,6 +304,8 @@ function playAudio(playlistId){
 		audioplayer.play();
 		dancer.play();
 		audioisplaying = true; 
+		$('#playlist').children('li').css('background-color','#010101');
+	    $('#playlist').children('li').eq(playlistId).css('background-color','#232323');
 }	
 function continueAudioPlay(){
 		audio.current++;
@@ -338,7 +341,8 @@ function playVideo(playlistId){
 		videoInput.muted = true;
 		videoInput.play();
 		videoisplaying = true; 
-		console.log(videoInput.src);
+		$('#videoplaylist').children('li').css('background-color','#010101');
+	    $('#videoplaylist').children('li').eq(playlistId).css('background-color','#232323');
 }
 
 function toArray(list) {
