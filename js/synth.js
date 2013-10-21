@@ -3,7 +3,7 @@ var hasGetUserMedia = (function() {
 })();
 
 if (!hasGetUserMedia) {
-    $('header h2').text('Synth requires WebRTC webcam support. Try it out with Google Chrome.');
+    $('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
     
 } else {
     $('header h2').text('Click "allow" at top of screen to start video.');
