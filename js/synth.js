@@ -78,7 +78,7 @@ var	ruttEtraParams = {
 		wireframe: true,
 		camerax: 0.0,
 		cameray: 0.0,
-		cameraz: 140.0,
+		cameraz: -30.0,
 		scale : 1.0,
 		multiplier :  12.0,
 		displace : 6.0,
@@ -93,8 +93,15 @@ var	ruttEtraParams = {
 		webcam: true
 		
 	}
+var audio = [];
+audio.playlist = [];
+var audioplayer = document.getElementById('audio');
+var audioisplaying = false;
+var video = [];
+video.playlist = [];
+var videoisplaying = false;
+var dancer = new Dancer();	
 
-var dancer;
 
 var pointer = [];
 pointer.push(ruttEtraParams.bass);
@@ -168,7 +175,7 @@ composer = new THREE.EffectComposer( renderer );
 renderModel = new THREE.RenderPass( scene, camera );
 composer.addPass( renderModel );	
 
-effectBloom = new THREE.BloomPass( 2.4, 50, 18.0, 256 );
+effectBloom = new THREE.BloomPass( 2.0, 50, 18.0, 256 );
 composer.addPass( effectBloom );
 
 effectHue = new THREE.ShaderPass( THREE.HueSaturationShader  );
@@ -240,12 +247,6 @@ onParamsChange();
 init();
 animate();
 
-var audio = [];
-audio.playlist = [];
-var audioisplaying = false;
-var video = [];
-video.playlist = [];
-var videoisplaying = false;
 
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem; 
 
@@ -279,31 +280,65 @@ function errorHandler(err){
 
 function playAudio(playlistId){
     	audioisplaying = false;
-    	dancer = new Dancer();
-		// Using an audio object
-		audio.nowPlaying = document.getElementById('audio');
-		audio.nowPlaying.src = audio.playlist[playlistId];
-		
+    	audioplayer.pause();
+    	audioplayer.remove();
+    	audioplayer = container.appendChild(document.createElement("audio"));
+    	if($('#close_drop').is('.active')){
+	    	$('audio').hide();
+    	}
+    	else{
+	    	$('audio').show();
+    	}
+    	audioplayer.id = 'audio';
+    	audioplayer.controls = true;
+		audioplayer.src = audio.playlist[playlistId];  
 		dancer.after( 0, function() {
-		// After 0s, let's get this real and map a frequency to displacement of mesh
-		// Note that the instance of dancer is bound to "this"
-		ruttEtraParams.bass = this.getFrequency( 140 ) * 100;
-		ruttEtraParams.mid = this.getFrequency( 210 ) * 100;
-		ruttEtraParams.treble = this.getFrequency( 460 ) * 100;
-		
-		}).load( audio.nowPlaying );
-		  
+			// After 0s, let's get this real and map a frequency to displacement of mesh
+			// Note that the instance of dancer is bound to "this"
+			ruttEtraParams.bass = this.getFrequency( 140 ) * 100;
+			ruttEtraParams.mid = this.getFrequency( 210 ) * 100;
+			ruttEtraParams.treble = this.getFrequency( 460 ) * 100;
+			
+		}).load( audioplayer );		
+		audioplayer.play();
 		dancer.play();
-		audioisplaying = true; 	
+		audioisplaying = true; 
 }	
+function continueAudioPlay(){
+		audio.current++;
+		var playlist = audio.playlist;
+		var length = playlist.length;
+		if(audio.current == length){
+		    audio.current = 0;
+		    playAudio(audio.current);
+		}
+		else{
+		    playAudio(audio.current);
+		}
+}
+function continueVideoPlay(){
+		videoInput.current++;
+		var playlist = video.playlist;
+		var length = playlist.length;
+		if(videoInput.current == length){
+		    videoInput.current = 0;
+		    playVideo(videoInput.current);
+		}
+		else{
+		    playVideo(videoInput.current);
+		}
+}
 function playVideo(playlistId){
+    		   	  		
+    	videoInput.pause();
     	videoisplaying = false;
-    	
-		video.nowPlaying = video.playlist[playlistId]; 
-		videoInput.loop = true; 
-		// play the damn thing here.
+		videoInput.src = video.playlist[playlistId];
+		videoInput.loop = false; 
+		//videoInput.currentTime = 0;
+		videoInput.muted = true;
 		videoInput.play();
-		videoisplaying = true; 	
+		videoisplaying = true; 
+		console.log(videoInput.src);
 }
 
 function toArray(list) {
@@ -331,6 +366,8 @@ function listAudioResults(entries) {
 				   	  	
 				   	  	li.onclick=function(){
 				   	  		playAudio(index);
+				   	  		audio.current = index;
+				   	  		audioplayer.addEventListener('ended', continueAudioPlay, false);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
   });
@@ -359,12 +396,14 @@ function listVideoResults(entries) {
 				   	  	
 				   	  	li.onclick=function(){
 				   	  		playVideo(index);
+				   	  		videoInput.current = index;
+				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
   });
 
   document.querySelector('#playlist').appendChild(fragment);
-  $('#read_files').fadeOut(1000);
+  $('#read_video').fadeOut(1000);
 }
 
 function readAudioFileSelect(evt) {
@@ -540,6 +579,7 @@ function handleVideoFileSelect(evt) {
 				   	  	var index = nodeList.indexOf( li );
 				   	  	li.onclick=function(){
 				   	  		playVideo(index);
+				   	  		console.log(index);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
 	
@@ -585,7 +625,7 @@ readFilesVideo.addEventListener('mousedown', readVideoFileSelect, false);
 function init() {
 
 	var light = new THREE.PointLight( 0xffffff );
-	light.position.set( 100, 100, 100 ).normalize();
+	light.position.set( 1000, 1000, 1000 ).normalize();
 	light.shadowCameraVisible = true;
 	light.shadowDarkness = 0.25;
 	light.intensity = 12;
@@ -594,7 +634,6 @@ function init() {
 	
 	var directionalLightFill = new THREE.DirectionalLight(0xffffff);
 	directionalLightFill.position.set(-1000, 1000, 2000).normalize();
-	directionalLightFill.position.set( 100, 100, 100 ).normalize();
 	directionalLightFill.shadowCameraVisible = true;
 	directionalLightFill.shadowDarkness = 0.25;
 	directionalLightFill.intensity = 6;
@@ -720,7 +759,7 @@ function init() {
 		    $('#video_drop').show();
 		    $('audio').show();
 		    $('audio').css('top','298px');
-			$(this).css('top', '326px');
+			$(this).css('top', '627px');
 			$(this).children('p').text('Close Playlist');
 		}
 	});
@@ -762,7 +801,7 @@ function onParamsChange(){
 	$('#canvas').css( 'background-color', ruttEtraParams.background );
 	hex = ruttEtraParams.background;
 	hex = parseInt(hex.replace('#','0x'));
-	renderer.setClearColorHex( hex , 1 );
+	renderer.setClearColor( hex , 1 );
 	
 	pointer[0] = ruttEtraParams.bass;
 	pointer[1] = ruttEtraParams.mid;
