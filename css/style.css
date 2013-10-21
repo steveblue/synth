@@ -190,7 +190,7 @@ article {
   height: 297px;
   border: 1px solid #101010;
   z-index: 1000;
-  background: #000000;
+  background: url("img/dropvid.png");
   background-size: cover;
   background-repeat: repeat;
 }
