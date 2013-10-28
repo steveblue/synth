@@ -1,65 +1,45 @@
-var hasGetUserMedia = (function() {
-    return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.msGetUserMedia);
-})();
-
-if (!hasGetUserMedia) {
-    $('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
-    
-} else {
-    $('header h2').text('Click "allow" to start webcam.');
-}
-    
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var container;
-
 var camera, scene, renderer;
-
 var video, texture, material, mesh;
-
 var composer;
 var renderModel, effectBloom, effectHue, effectCopy;
 
 var mouseX = 0;
 var mouseY = 0;
-
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 var videoPlayer = document.getElementById('videoplayer');
 var videoInput = document.getElementById('video');
+videoInput.load();
+videoInput.loop = true;
 var canvasInput = document.getElementById('compare');
 var videoObject;
+
+var audio = [];
+audio.playlist = [];
+var audioplayer = document.getElementById('audio');
+var audioisplaying = false;
+var video = [];
+video.playlist = [];
+var videoisplaying = false;
+var dancer = new Dancer();	
+
+var dropZone = document.getElementById('drop_zone');
+var readFiles = document.getElementById('read_files');  
+var dropZoneVideo = document.getElementById('video_drop');
+var readFilesVideo = document.getElementById('read_video');
+
 var initComplete = false;
-var count = 0;
-var hex;
 var webcamEnabled = false;
+var hex;
+
 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
 camera.position.z = 3600;
-
 window.URL = window.URL || window.webkitURL;
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-//get webcam
-navigator.getUserMedia({
-    video: true,
-    audio: false
-}, function(stream) {
-    //on webcam enabled
-    if (navigator.mozGetUserMedia) {
-        videoInput.mozSrcObject = stream;
-    } 
-    else {
-        var vendorURL = window.URL || window.webkitURL;
-        webcamEnabled = true;
-        videoObject = vendorURL.createObjectURL(stream);
-		videoInput.src = videoObject;
-    }
 
-    $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
-    $('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);
-}, function(error) {
-    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
-});
 var gui;
 //Init DAT GUI control panel
 var	ruttEtraParams = {
@@ -93,14 +73,6 @@ var	ruttEtraParams = {
 		webcam: true
 		
 	}
-var audio = [];
-audio.playlist = [];
-var audioplayer = document.getElementById('audio');
-var audioisplaying = false;
-var video = [];
-video.playlist = [];
-var videoisplaying = false;
-var dancer = new Dancer();	
 
 
 var pointer = [];
@@ -125,6 +97,8 @@ texture = new THREE.Texture( videoInput );
 texture.minFilter = THREE.LinearFilter;
 texture.magFilter = THREE.LinearFilter;
 texture.format = THREE.RGBFormat;
+//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+//texture.repeat.set( 720, 480 );
 texture.generateMipmaps = true;
 
 
@@ -164,7 +138,7 @@ mesh.position.y = 0;
 mesh.visible = true;
 mesh.scale.x = mesh.scale.y = 1.0;
 
-renderer = new THREE.WebGLRenderer( { clearColor: 0x000000, clearAlpha: 1, antialias: true } );
+renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.autoClear = false;
 container.appendChild( renderer.domElement );
@@ -175,7 +149,7 @@ composer = new THREE.EffectComposer( renderer );
 renderModel = new THREE.RenderPass( scene, camera );
 composer.addPass( renderModel );	
 
-effectBloom = new THREE.BloomPass( 2.0, 50, 18.0, 256 );
+effectBloom = new THREE.BloomPass( 2.0, 20, 4.0, 256 );
 composer.addPass( effectBloom );
 
 effectHue = new THREE.ShaderPass( THREE.HueSaturationShader  );
@@ -243,40 +217,21 @@ f5.open();
 gui.close();
 
 onParamsChange();
-	
-init();
-animate();
+
+function checkLoad() {
+        if (videoInput.readyState === 4) {
+           init();
+           animate();
+        } else {
+            setTimeout(checkLoad, 100);
+        }
+    }
+
+checkLoad();
 
 
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem; 
 
-function errorHandler(err){
- var msg = 'An error occured: ';
- 
-  switch (err.code) { 
-    case FileError.NOT_FOUND_ERR: 
-      msg += 'File or directory not found'; 
-      break;
- 
-    case FileError.NOT_READABLE_ERR: 
-      msg += 'File or directory not readable'; 
-      break;
- 
-    case FileError.PATH_EXISTS_ERR: 
-      msg += 'File or directory already exists'; 
-      break;
- 
-    case FileError.TYPE_MISMATCH_ERR: 
-      msg += 'Invalid filetype'; 
-      break;
- 
-    default:
-      msg += 'Unknown Error'; 
-      break;
-  };
- 
- console.log(msg);
-};
+
 
 function playAudio(playlistId){
     	audioisplaying = false;
@@ -349,7 +304,36 @@ function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
 }
 
-
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+window.requestFileSystem  =  window.requestFileSystem || window.webkitRequestFileSystem; 
+}
+function errorHandler(err){
+ var msg = 'An error occured: ';
+ 
+  switch (err.code) { 
+    case FileError.NOT_FOUND_ERR: 
+      msg += 'File or directory not found'; 
+      break;
+ 
+    case FileError.NOT_READABLE_ERR: 
+      msg += 'File or directory not readable'; 
+      break;
+ 
+    case FileError.PATH_EXISTS_ERR: 
+      msg += 'File or directory already exists'; 
+      break;
+ 
+    case FileError.TYPE_MISMATCH_ERR: 
+      msg += 'Invalid filetype'; 
+      break;
+ 
+    default:
+      msg += 'Unknown Error'; 
+      break;
+  };
+ 
+ console.log(msg);
+};
 
 function listAudioResults(entries) {
   // Document fragments can improve performance since they're only appended
@@ -615,19 +599,17 @@ function handleDragOver(evt) {
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
-// Setup the dnd listeners.
-var dropZone = document.getElementById('drop_zone');
+if (Modernizr.filesystem) {
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', handleAudioFileSelect, false);
-var readFiles = document.getElementById('read_files');  
 readFiles.addEventListener('mousedown', readAudioFileSelect, false); 
-
-var dropZoneVideo = document.getElementById('video_drop');
 dropZoneVideo.addEventListener('dragover', handleDragOver, false);
 dropZoneVideo.addEventListener('drop', handleVideoFileSelect, false);
-var readFilesVideo = document.getElementById('read_video');  
 readFilesVideo.addEventListener('mousedown', readVideoFileSelect, false); 
-  
+} 
+else{
+
+} 
 function init() {
 
 	var light = new THREE.PointLight( 0xffffff );
@@ -651,6 +633,37 @@ function init() {
 	scene.add( mesh );
 			
 	var pointTo = 0;
+	
+	if (Modernizr.getusermedia) {
+		 $('header h2').text('Click "allow" to start webcam.');
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+		//get webcam
+		navigator.getUserMedia({
+		    video: true,
+		    audio: false
+		}, function(stream) {
+		    //on webcam enabled
+		    if (navigator.mozGetUserMedia) {
+		        videoInput.mozSrcObject = stream;
+		    } 
+		    else {
+		        var vendorURL = window.URL || window.webkitURL;
+		        webcamEnabled = true;
+		        videoObject = vendorURL.createObjectURL(stream);
+				videoInput.src = videoObject;
+		    }
+		
+		    $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
+		    $('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);
+		}, function(error) {
+		    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
+		});
+	}
+	else{
+		$('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
+	}
+
+
 	$('.property-name').mousedown(function() {
 
 	if( $(this).not('.active') ){
@@ -743,9 +756,7 @@ function init() {
 		}
 	});
 	
-	function resetSetting(elem,count){
-		
-	}
+
 
 	$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 
@@ -812,7 +823,7 @@ function init() {
     });
 
 	initComplete = true;
-	
+	animate();
 }
 
 function audioChange(){
@@ -846,7 +857,7 @@ function onParamsChange(){
 	$('#canvas').css( 'background-color', ruttEtraParams.background );
 	hex = ruttEtraParams.background;
 	hex = parseInt(hex.replace('#','0x'));
-	renderer.setClearColor( hex , 1 );
+	renderer.setClearColor( hex , 1.0 );
 	
 	pointer[0] = ruttEtraParams.bass;
 	pointer[1] = ruttEtraParams.mid;
@@ -1003,7 +1014,7 @@ function render() {
 	}	
 	camera.lookAt( scene.position );	
 	onParamsChange();
-	renderer.clear();
+	//renderer.clear();
 	composer.render();
 
 }
