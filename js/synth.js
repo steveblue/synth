@@ -5,7 +5,7 @@ var camera, scene, renderer;
 var video, texture, material, mesh;
 var composer;
 var renderModel, effectBloom, effectHue, effectCopy;
-
+var exportSTL;
 var mouseX = 0;
 var mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
@@ -24,6 +24,7 @@ var audioplayer = document.getElementById('audio');
 var audioisplaying = false;
 var video = [];
 video.playlist = [];
+video.playlist.push('vid/flying-over-los-angeles-at-night.mp4');
 var videoisplaying = false;
 var dancer = new Dancer();	
 
@@ -124,19 +125,16 @@ videoMaterial = new THREE.ShaderMaterial( {
 });
 videoMaterial.renderToScreen = true;
 videoMaterial.wireframe = true;
-geometry = new THREE.PlaneGeometry(720, 480, 720, 480);
+
+geometry = new THREE.PlaneGeometry(320, 180, 320, 180);
 geometry.overdraw = false;
 geometry.dynamic = true;
 geometry.verticesNeedUpdate = true;
 
 mesh = new THREE.Mesh( geometry, videoMaterial );
-
-mesh.position.x = 0;
-mesh.position.y = 0;
-
-
-mesh.visible = true;
+mesh.position.x = mesh.position.y = 0;
 mesh.scale.x = mesh.scale.y = 1.0;
+mesh.visible = true;
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -812,6 +810,38 @@ function init() {
     });
     keypress.combo("0", function() {
        onToggleWebcam();
+    });
+    keypress.combo("p", function() {
+       if(videoisplaying===false){
+	       videoInput.play();
+	       videoisplaying=true;
+       }
+       else{
+	       videoInput.pause();
+	       videoisplaying=false;
+       }
+    });
+    keypress.combo("e", function() {
+      console.log('exporting stl...');
+      // go through the image pixels
+      geometry.verticesNeedUpdate = false; // turn off vertices going to GPU
+	  for(y = 0; y < 180; y+=1) {
+	     
+	      for(x = 0; x < 320 ; x+= 1) {
+	      	var color = new THREE.Color(getColor(x, y));
+	      	var brightness = getBrightness(color);
+	      	var posn = new THREE.Vector3(x -_imageWidth/2,y - _imageHeight/2, -brightness * _guiOptions.depth + _guiOptions.depth/2);
+	      	geometry.vertices.push(new THREE.Vertex(posn));
+	      	geometry.colors.push(color);
+	      }
+	      //add a line
+	      var line = new THREE.Line(geometry, _material );
+	      _lineGroup.addChild(line);
+	  }
+	  
+      exportSTL = new THREE.STLExporter;
+	  exportSTL.exportMesh(mesh);
+	  console.log('export complete.');
     });
     keypress.combo("l", function() {
        if(videoInput.loop == false){
