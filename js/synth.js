@@ -1,3 +1,4 @@
+/*synth v175*/
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var container;
@@ -124,7 +125,7 @@ videoMaterial = new THREE.ShaderMaterial( {
 });
 videoMaterial.renderToScreen = true;
 videoMaterial.wireframe = true;
-geometry = new THREE.PlaneGeometry(720, 480, 720, 480);
+geometry = new THREE.PlaneGeometry(480, 270, 480, 270);
 geometry.overdraw = false;
 geometry.dynamic = true;
 geometry.verticesNeedUpdate = true;
