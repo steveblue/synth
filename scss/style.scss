@@ -51,7 +51,7 @@ header {
     margin-left: -250px;
     padding: 5px;
     z-index:1000;
-    opacity:0.9;
+    opacity:0.95;
 }
 
 
@@ -111,6 +111,10 @@ header {
 		text-align:center;
 		padding-top:40px;
 		font-size:14px;
+		img{
+		    width:100%;
+		    height:auto;
+	    }
 	}
 	h1, h2{
 		text-align:center;

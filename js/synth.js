@@ -757,7 +757,7 @@ function init() {
 	});
 	
 
-
+if (Modernizr.filesystem) {
 	$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 
 	$('#close_drop').on('click',function(){
@@ -780,7 +780,10 @@ function init() {
 			$(this).children('p').text('Close Playlist');
 		}
 	});
-	
+}
+else{
+	$('#close_drop,#video_drop,#drop_zone,audio').hide();
+}	
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	window.addEventListener( 'resize', onWindowResize, false );
 	keypress.combo("1", function() {
@@ -821,7 +824,10 @@ function init() {
 	   videoInput.loop = false;    
        }
     });
-
+	
+	$('.close-button').on('click',function(){
+		$('header').fadeOut(8000);
+	});
 	initComplete = true;
 	animate();
 }
