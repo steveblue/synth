@@ -124,13 +124,13 @@ videoMaterial = new THREE.ShaderMaterial( {
 });
 videoMaterial.renderToScreen = true;
 videoMaterial.wireframe = true;
-geometry = new THREE.PlaneGeometry(480, 270, 480, 270);
+geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
 geometry.overdraw = false;
 geometry.dynamic = true;
 geometry.verticesNeedUpdate = true;
 
 mesh = new THREE.Mesh( geometry, videoMaterial );
-
+mesh.doubleSided = true;
 mesh.position.x = 0;
 mesh.position.y = 0;
 
@@ -149,7 +149,7 @@ composer = new THREE.EffectComposer( renderer );
 renderModel = new THREE.RenderPass( scene, camera );
 composer.addPass( renderModel );	
 
-effectBloom = new THREE.BloomPass( 2.0, 20, 4.0, 256 );
+effectBloom = new THREE.BloomPass( 3.3, 20, 4.0, 256 );
 composer.addPass( effectBloom );
 
 effectHue = new THREE.ShaderPass( THREE.HueSaturationShader  );
@@ -612,19 +612,23 @@ else{
 } 
 function init() {
 
-	var light = new THREE.PointLight( 0xffffff );
-	light.position.set( 1000, 1000, 1000 ).normalize();
-	light.shadowCameraVisible = true;
-	light.shadowDarkness = 0.25;
-	light.intensity = 12;
+	var light = new THREE.SpotLight(0xffffff);
+	light.position.set( 0, 0, 100 ).normalize();
+	light.target = mesh;
+	//light.shadowCameraVisible = true;
+	//light.shadowDarkness = 0.25;
+	light.intensity = 1200;
 	light.castShadow = true;
 	scene.add( light );
 	
-	var directionalLightFill = new THREE.DirectionalLight(0xffffff);
-	directionalLightFill.position.set(-1000, 1000, 2000).normalize();
-	directionalLightFill.shadowCameraVisible = true;
-	directionalLightFill.shadowDarkness = 0.25;
-	directionalLightFill.intensity = 6;
+
+	
+	var directionalLightFill = new THREE.SpotLight(0xffffff);
+	directionalLightFill.position.set(0, 0, -100).normalize();
+	directionalLightFill.target = mesh;
+	//directionalLightFill.shadowCameraVisible = true;
+	//directionalLightFill.shadowDarkness = 0.25;
+	directionalLightFill.intensity = 1200;
 	directionalLightFill.castShadow = true;
 	scene.add(directionalLightFill);
 	
@@ -639,17 +643,17 @@ function init() {
 		  setTimeout(function(){
 		     $('header h2').text('Drag and Drop up to 1GB of MP3 and h.264 MP4 Video to the Playlists.');
 		    setTimeout(function(){
-			 $('header h2').text('Control the distortion and create something new.');
+			 $('header h2').text('Control the distortion.');
 			 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
 			 $('.close-button').trigger('click');   
 			  	setTimeout(function(){
-				  	$('header h2').text('Audio Waveform and Mouse Events control the Synthesizer');
+				  	$('header h2').text('Audio Waveform and Mouse Events control the Synthesizer.');
 				  	
 				  	$('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);  
 			 	},5000);
 			 
 		    },5000);
-		   },4000);
+		   },3000);
 		    
 		    
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -912,11 +916,11 @@ function meshChange(geo){
 //function newMesh(geo, sizeX, sizeY, sizeZ, segX, segY, segZ, scale){
 
 function newMesh(geo,scale){
-
+	geometry.verticesNeedUpdate = false;
 	scene.remove(mesh);
 	
 	if(geo === 'plane') {
-		geometry = new THREE.PlaneGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight);
+		geometry = new THREE.PlaneGeometry(videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, videoInput.videoWidth/2);
 
 	}
 	
@@ -933,17 +937,17 @@ function newMesh(geo,scale){
 	
 	else if (geo === 'cylinder') {
 	
-		geometry = new THREE.CylinderGeometry( scale*2, scale*2, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, true );
-		camera.position.z = ruttEtraParams.cameraz = 40;
+		geometry = new THREE.CylinderGeometry( scale, scale, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, true );
+		//camera.position.z = ruttEtraParams.cameraz = 40;
 	
 	}
 	
 	else if (geo === 'torus') {
 	//	geometry = new THREE.TorusKnotGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoWidth, scale);
-		geometry = new THREE.TorusGeometry( scale*2, videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2 );
+		geometry = new THREE.TorusGeometry( scale, videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2 );
 	}
 	drawNewMesh(geometry);
-	
+	geometry.verticesNeedUpdate = true;
 	
 }
 
