@@ -113,7 +113,6 @@ videoMaterial = new THREE.ShaderMaterial( {
     	"originY":  { type: "f", value: 0.0 },
     	"originZ":  { type: "f", value: -2000.0 }
     },
-
     vertexShader: RuttEtraShader.vertexShader,
     fragmentShader: RuttEtraShader.fragmentShader,
     depthWrite: true,
@@ -183,7 +182,7 @@ f2.open();
 
 var f3 = gui.addFolder('Camera');
 
-f3.add(ruttEtraParams, 'cameraz', -12000.0,12000.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
+f3.add(ruttEtraParams, 'cameraz', -3600.0,3600.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
 f3.add(ruttEtraParams, 'camerax', -3600.0,3600.0).step(1.0).listen().name("Camera X").onChange(onParamsChange);
 f3.add(ruttEtraParams, 'cameray', -3600.0,3600.0).step(1.0).listen().name("Camera Y").onChange(onParamsChange);
 f3.open();
@@ -637,6 +636,22 @@ function init() {
 	
 	if (Modernizr.getusermedia) {
 		 $('header h2').text('Click "allow" to start webcam.');
+		  setTimeout(function(){
+		     $('header h2').text('Drag and Drop up to 1GB of MP3 and h.264 MP4 Video to the Playlists.');
+		    setTimeout(function(){
+			 $('header h2').text('Control the distortion and create something new.');
+			 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
+			 $('.close-button').trigger('click');   
+			  	setTimeout(function(){
+				  	$('header h2').text('Audio Waveform and Mouse Events control the Synthesizer');
+				  	
+				  	$('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);  
+			 	},5000);
+			 
+		    },5000);
+		   },4000);
+		    
+		    
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		//get webcam
 		navigator.getUserMedia({
@@ -654,8 +669,8 @@ function init() {
 				videoInput.src = videoObject;
 		    }
 		
-		    $('header h2').text('Drag and Drop up to 1GB of MP3 to the Playlist.');
-		    $('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);
+		
+		    
 		}, function(error) {
 		    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
 		});
@@ -827,7 +842,7 @@ else{
     });
 	
 	$('.close-button').on('click',function(){
-		$('header').fadeOut(8000);
+		//$('header').fadeOut(8000);
 	});
 	initComplete = true;
 	animate();
