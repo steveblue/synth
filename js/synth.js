@@ -291,7 +291,7 @@ function playVideo(playlistId){
     	videoInput.pause();
     	videoisplaying = false;
 		videoInput.src = video.playlist[playlistId];
-		videoInput.loop = false; 
+		//videoInput.loop = false; 
 		//videoInput.currentTime = 0;
 		videoInput.muted = true;
 		videoInput.play();
@@ -920,7 +920,7 @@ function newMesh(geo,scale){
 	scene.remove(mesh);
 	
 	if(geo === 'plane') {
-		geometry = new THREE.PlaneGeometry(videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, videoInput.videoWidth/2);
+		geometry = new THREE.PlaneGeometry(videoInput.videoWidth/2, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2);
 
 	}
 	
