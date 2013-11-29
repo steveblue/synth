@@ -25,6 +25,7 @@ var audioplayer = document.getElementById('audio');
 var audioisplaying = false;
 var video = [];
 video.playlist = [];
+video.playlist.push('vid/wavves-1280x720-2500kbps.mp4');
 var videoisplaying = false;
 var dancer = new Dancer();	
 
@@ -44,52 +45,48 @@ camera.position.z = 3600;
 window.URL = window.URL || window.webkitURL;
 
 var gui;
-//Init DAT GUI control panel
-var	ruttEtraParams = {
-		bass: 0.0,
-		mid: 0.0,
-		treble: 0.0,
-		mousex: mouseX,
-		mousey: mouseY,
-		shape: null,
-	//	dimX: 100.0,
-	//	dimY: 100.0,
-	//	dimZ: 100.0,
-	//	segX: 100.0,
-	//	segY: 100.0,
-	//	segZ: 100.0,
-		wireframe: false,
-		camerax: 0.0,
-		cameray: -1130.0,
-		cameraz: 1680.0,
-		scale : 6.0,
-		multiplier :  16.0,
-		displace : -6.0,
-		opacity : 0.2,
-		originX : 0.0,
-		originY: 0.0,
-		originZ : -2000.0,
-		//bloom: 1.8,
-		hue: 0.0,
-		saturation: 0.5,
-		background: "#090000",
-		webcam: false
-		
-}
-
-
 var pointer = [];
-pointer.push(ruttEtraParams.bass);
-pointer.push(ruttEtraParams.mid);
-pointer.push(ruttEtraParams.treble);
-pointer.push(ruttEtraParams.mousex);
-pointer.push(ruttEtraParams.mousey);
 var setting = [];
-setting.push('');
-setting.push('');
-setting.push('');
-setting.push('');
-setting.push('');
+//Init DAT GUI control panel
+var	params = function() {
+
+		this.bass = 0.0;
+		this.mid = 0.0;
+		this.treble = 0.0;
+		this.mousex = mouseX;
+		this.mousey = mouseY;
+		this.shape = 'plane';
+		this.wireframe = false;
+		this.camerax = 0.0;
+		this.cameray = -1130.0;
+		this.cameraz = 1680.0;
+		this.scale = 6.0;
+		this.multiplier =  16.0;
+		this.displace = -6.0;
+		this.opacity = 0.2;
+		this.originX = 0.0;
+		this.originY = 0.0;
+		this.originZ = -2000.0;
+		this.hue = 0.0;
+		this.saturation = 0.5;
+		this.background = '#090000';
+		this.webcam = false;
+		
+		pointer.push(this.bass);
+		pointer.push(this.mid);
+		pointer.push(this.treble);
+		pointer.push(this.mousex);
+		pointer.push(this.mousey);
+		
+		setting.push('');
+		setting.push('');
+		setting.push('');
+		setting.push('');
+		setting.push('');
+		
+		onParamsChange();
+};
+
 
 container = document.getElementById( 'canvas' );
 document.body.appendChild( container );
@@ -126,7 +123,7 @@ videoMaterial = new THREE.ShaderMaterial( {
 });
 videoMaterial.renderToScreen = true;
 videoMaterial.wireframe = false;
-geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
+geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
 geometry.overdraw = false;
 geometry.dynamic = true;
 geometry.verticesNeedUpdate = true;
@@ -161,63 +158,65 @@ composer.addPass( effectHue );
 //	effectCopy = new THREE.ShaderPass( THREE.CopyShader  );
 //	effectCopy.renderToScreen = true;
 //	composer.addPass( effectCopy );
-	
-gui = new dat.GUI({autoPlace: false});
+var guiSetup = false;
+var synthParams = new params();
 var guiContainer = document.getElementById('gui_container');
-guiContainer.appendChild(gui.domElement);
-gui.remember(ruttEtraParams);
+$.getJSON( "default.json", function( response ) {	
+
+gui = new dat.GUI({load: response, preset: 'Default', autoPlace: false});
+gui.remember(synthParams);
+gui.revert();
 
 var f1 = gui.addFolder('Audio');
-
-f1.add(ruttEtraParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(audioChange);
-f1.add(ruttEtraParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(audioChange);
-f1.add(ruttEtraParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(audioChange);
+f1.add(synthParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(audioChange);
+f1.add(synthParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(audioChange);
+f1.add(synthParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(audioChange);
 f1.open();	
 
 var f2 = gui.addFolder('Mouse');
-
-f2.add(ruttEtraParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(onParamsChange);
-f2.add(ruttEtraParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(onParamsChange);
+f2.add(synthParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(onParamsChange);
+f2.add(synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(onParamsChange);
 f2.open();	
 
 var f3 = gui.addFolder('Camera');
-
-f3.add(ruttEtraParams, 'cameraz', -3600.0,3600.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'camerax', -3600.0,3600.0).step(1.0).listen().name("Camera X").onChange(onParamsChange);
-f3.add(ruttEtraParams, 'cameray', -3600.0,3600.0).step(1.0).listen().name("Camera Y").onChange(onParamsChange);
+f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
+f3.add(synthParams, 'camerax', -3600.0,3600.0).step(1.0).listen().name("Camera X").onChange(onParamsChange);
+f3.add(synthParams, 'cameray', -3600.0,3600.0).step(1.0).listen().name("Camera Y").onChange(onParamsChange);
 f3.open();
 
 var f4 = gui.addFolder('Synthesizer');
-
-f4.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
-f4.addColor(ruttEtraParams, 'background').name("Background Color").onChange(onParamsChange);
-//f4.add(ruttEtraParams, 'bloom', 0.0,120.0).step(0.1).name("Bloom").onChange(onParamsChange);
+f4.add(synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
+f4.add(synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
+f4.add(synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
+f4.add(synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
+f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
+f4.add(synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
+f4.add(synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
+f4.add(synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
+f4.addColor(synthParams, 'background').name("Background Color").onChange(onParamsChange);
 f4.open();	
 
 var f5 = gui.addFolder('Geometry');
-f5.add(ruttEtraParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f5.add(ruttEtraParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onChange(onParamsChange);
-//f5.add(ruttEtraParams, 'dimX', 1.0,720.0).step(1.0).listen().name("X Dimension");
-//f5.add(ruttEtraParams, 'dimY', 1.0,720.0).step(1.0).listen().name("Y Dimension");
-//f5.add(ruttEtraParams, 'dimZ', 1.0,720.0).step(1.0).listen().name("Z Dimension");
-//f5.add(ruttEtraParams, 'segX', 1.0,720.0).step(1.0).listen().name("X Segments");
-//f5.add(ruttEtraParams, 'segY', 1.0,720.0).step(1.0).listen().name("Y Segments");
-//f5.add(ruttEtraParams, 'segZ', 1.0,720.0).step(1.0).listen().name("Z Segments");
-f5.add(ruttEtraParams, 'wireframe').onChange(onToggleWireframe);
-f5.add(ruttEtraParams, 'webcam').onChange(onToggleWebcam);
+f5.add(synthParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(meshChange);
+f5.add(synthParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onChange(onParamsChange);
+f5.add(synthParams, 'wireframe').onChange(onToggleWireframe);
+f5.add(synthParams, 'webcam').onChange(onToggleWebcam);
 f5.open();
 
 gui.close();
+guiContainer.appendChild(gui.domElement);
 
-onParamsChange();
+$('.save-row select').on('change',function(){
+	if(webcamEnabled === false){
 
+	}
+	
+});
+
+guiSetup = true;
+
+
+});
 function checkLoad() {
         if (videoInput.readyState === 4) {
            init();
@@ -251,9 +250,9 @@ function playAudio(playlistId){
 		dancer.after( 0, function() {
 			// After 0s, let's get this real and map a frequency to displacement of mesh
 			// Note that the instance of dancer is bound to "this"
-			ruttEtraParams.bass = this.getFrequency( 140 ) * 100;
-			ruttEtraParams.mid = this.getFrequency( 210 ) * 100;
-			ruttEtraParams.treble = this.getFrequency( 460 ) * 100;
+			synthParams.bass = this.getFrequency( 140 ) * 100;
+			synthParams.mid = this.getFrequency( 210 ) * 100;
+			synthParams.treble = this.getFrequency( 460 ) * 100;
 			
 		}).load( audioplayer );		
 		audioplayer.play();
@@ -291,8 +290,6 @@ function playVideo(playlistId){
     	videoInput.pause();
     	videoisplaying = false;
 		videoInput.src = video.playlist[playlistId];
-		//videoInput.loop = false; 
-		//videoInput.currentTime = 0;
 		videoInput.muted = true;
 		videoInput.play();
 		videoisplaying = true; 
@@ -615,7 +612,7 @@ else{
 function init() {
 
 	var light = new THREE.SpotLight(0xffffff);
-	light.position.set( 0, 0, 100 ).normalize();
+	light.position.set( 0, 0, 1000 ).normalize();
 	light.target = mesh;
 	//light.shadowCameraVisible = true;
 	//light.shadowDarkness = 0.25;
@@ -626,7 +623,7 @@ function init() {
 
 	
 	var directionalLightFill = new THREE.SpotLight(0xffffff);
-	directionalLightFill.position.set(0, 0, -100).normalize();
+	directionalLightFill.position.set(0, 0, -1000).normalize();
 	directionalLightFill.target = mesh;
 	//directionalLightFill.shadowCameraVisible = true;
 	//directionalLightFill.shadowDarkness = 0.25;
@@ -673,7 +670,7 @@ function init() {
 		    else {
 		        var vendorURL = window.URL || window.webkitURL;
 		        webcamEnabled = true;
-		        ruttEtraParams.webcam = true; //meant to select the input
+		        synthParams.webcam = true; //meant to select the input
 		        videoObject = vendorURL.createObjectURL(stream);
 				videoInput.src = videoObject;
 		    }
@@ -697,19 +694,19 @@ function init() {
 	
 		
 		if($(this).text() === 'Bass') {
-			pointer[0] = ruttEtraParams.bass;
+			pointer[0] = synthParams.bass;
 			pointTo = 0;
 			console.log(pointer[0]);
 
 		}
 		if($(this).text() === 'Mid') {
-			pointer[1] = ruttEtraParams.mid;
+			pointer[1] = synthParams.mid;
 			pointTo = 1;
 			console.log(pointer[1]);
 
 		}
 		if($(this).text() === 'Treble') {
-			pointer[2] = ruttEtraParams.treble;
+			pointer[2] = synthParams.treble;
 			pointTo = 2;
 			console.log(pointer[2]);
 
@@ -727,40 +724,40 @@ function init() {
 		
 		}
 		if($(this).text() === 'Zoom') {	
-			setting[pointTo] = 'ruttEtraParams.cameraz = pointer[i] * 4';	
-		//	ruttEtraParams.cameraz = setting[pointTo];
+			setting[pointTo] = 'synthParams.cameraz = pointer[i] * 4';	
+		//	synthParams.cameraz = setting[pointTo];
 		}
 		if($(this).text() === 'Camera X') {
-			setting[pointTo] = 'ruttEtraParams.camerax = pointer[i] * 2';	
-			//ruttEtraParams.camerax = setting[pointTo];
+			setting[pointTo] = 'synthParams.camerax = pointer[i] * 2';	
+			//synthParams.camerax = setting[pointTo];
 		}
 		if($(this).text() === 'Camera Y') {
-			setting[pointTo] = 'ruttEtraParams.cameray = pointer[i] * 10';
-			//ruttEtraParams.cameray = setting[pointTo];
+			setting[pointTo] = 'synthParams.cameray = pointer[i] * 10';
+			//synthParams.cameray = setting[pointTo];
 		}
 		if($(this).text() === 'Displace') {
-			setting[pointTo] = 'ruttEtraParams.displace = pointer[i] * 100';
-			//ruttEtraParams.displace = setting[pointTo];
+			setting[pointTo] = 'synthParams.displace = pointer[i] * 100';
+			//synthParams.displace = setting[pointTo];
 		}
 		if($(this).text() === 'Amplify') {
-			setting[pointTo] = 'ruttEtraParams.multiplier = pointer[i] * 100';
-			//ruttEtraParams.multiplier = setting[pointTo];
+			setting[pointTo] = 'synthParams.multiplier = pointer[i] * 100';
+			//synthParams.multiplier = setting[pointTo];
 		}
 		if($(this).text() === 'Distort X') {
-			setting[pointTo] = 'ruttEtraParams.originX = pointer[i] * 100';
-			//ruttEtraParams.originX = setting[pointTo];
+			setting[pointTo] = 'synthParams.originX = pointer[i] * 100';
+			//synthParams.originX = setting[pointTo];
 		}
 		if($(this).text() === 'Distort Y') {
-			setting[pointTo] = 'ruttEtraParams.originY = pointer[i] * 100';
-			//ruttEtraParams.originY = setting[pointTo];
+			setting[pointTo] = 'synthParams.originY = pointer[i] * 100';
+			//synthParams.originY = setting[pointTo];
 		}
 		if($(this).text() === 'Distort Z') {
-			setting[pointTo] = 'ruttEtraParams.originZ = pointer[i]';
-			//ruttEtraParams.originZ = setting[pointTo];	
+			setting[pointTo] = 'synthParams.originZ = pointer[i]';
+			//synthParams.originZ = setting[pointTo];	
 		}
 		if($(this).text() === 'Opacity') {
-			setting[pointTo] = 'ruttEtraParams.opacity = pointer[i]';
-			//ruttEtraParams.opacity = setting[pointTo];
+			setting[pointTo] = 'synthParams.opacity = pointer[i]';
+			//synthParams.opacity = setting[pointTo];
 		}
 		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
 		}
@@ -858,48 +855,53 @@ else{
 		controls = false;	
 		}
 	});
+	if(webcamEnabled === false){
+		playVideo(0);
+	}
 	initComplete = true;
 	animate();
 }
 
 function audioChange(){
-	ruttEtraParams.bass = this.getFrequency( 140 ) * 100;
-    ruttEtraParams.mid = this.getFrequency( 210 ) * 100;
-    ruttEtraParams.treble = this.getFrequency( 460 ) * 100;
+	if(guiSetup===true && audioisplaying===true){
+	synthParams.bass = this.getFrequency( 140 ) * 100;
+    synthParams.mid = this.getFrequency( 210 ) * 100;
+    synthParams.treble = this.getFrequency( 460 ) * 100;
+    }
 }
 
 function onParamsChange(){
+	if(guiSetup===true){
+	mesh.scale.x = mesh.scale.y = synthParams.scale;
+	
+	synthParams.mousex = mouseX;   
+	synthParams.mousey = mouseY;
+	
+	camera.position.x = synthParams.camerax;
+	camera.position.y = synthParams.cameray;
+	camera.position.z = synthParams.cameraz;
+	
+	videoMaterial.uniforms[ "displace" ].value = synthParams.displace;
+	videoMaterial.uniforms[ "multiplier" ].value = synthParams.multiplier;
+	videoMaterial.uniforms[ "opacity" ].value = synthParams.opacity;
+	videoMaterial.uniforms[ "originX" ].value = synthParams.originX;
+	videoMaterial.uniforms[ "originY" ].value = synthParams.originY;
+	videoMaterial.uniforms[ "originZ" ].value = synthParams.originZ;
 
-	mesh.scale.x = mesh.scale.y = ruttEtraParams.scale;
-	
-	ruttEtraParams.mousex = mouseX;   
-	ruttEtraParams.mousey = mouseY;
-	
-	camera.position.x = ruttEtraParams.camerax;
-	camera.position.y = ruttEtraParams.cameray;
-	camera.position.z = ruttEtraParams.cameraz;
-	
-	videoMaterial.uniforms[ "displace" ].value = ruttEtraParams.displace;
-	videoMaterial.uniforms[ "multiplier" ].value = ruttEtraParams.multiplier;
-	videoMaterial.uniforms[ "opacity" ].value = ruttEtraParams.opacity;
-	videoMaterial.uniforms[ "originX" ].value = ruttEtraParams.originX;
-	videoMaterial.uniforms[ "originY" ].value = ruttEtraParams.originY;
-	videoMaterial.uniforms[ "originZ" ].value = ruttEtraParams.originZ;
 
-
-	effectHue.uniforms[ 'hue' ].value = ruttEtraParams.hue;
-	effectHue.uniforms[ 'saturation' ].value = ruttEtraParams.saturation;
+	effectHue.uniforms[ 'hue' ].value = synthParams.hue;
+	effectHue.uniforms[ 'saturation' ].value = synthParams.saturation;
 	
-	$('#canvas').css( 'background-color', ruttEtraParams.background );
-	hex = ruttEtraParams.background;
+	$('#canvas').css( 'background-color', synthParams.background );
+	hex = synthParams.background;
 	hex = parseInt(hex.replace('#','0x'));
 	renderer.setClearColor( hex , 1.0 );
 	
-	pointer[0] = ruttEtraParams.bass;
-	pointer[1] = ruttEtraParams.mid;
-	pointer[2] = ruttEtraParams.treble;
-	pointer[3] = ruttEtraParams.mousex;
-	pointer[4] = ruttEtraParams.mousey;
+	pointer[0] = synthParams.bass;
+	pointer[1] = synthParams.mid;
+	pointer[2] = synthParams.treble;
+	pointer[3] = synthParams.mousex;
+	pointer[4] = synthParams.mousey;
 	
 	for(var i=0; i<=4; i++){
 	
@@ -910,21 +912,22 @@ function onParamsChange(){
 	for (var i in gui.__controllers) {
 	   gui.__controllers[i].updateDisplay();
 	}
+	}
+	
 	
 
 }
 
 function meshChange(){
 		scene.remove(mesh);
-		var shape = ruttEtraParams.shape;
-		ruttEtraParams.background = "#000000";
+		var shape = synthParams.shape;
 		geometry.verticesNeedUpdate = false;
 		geometry.dynamic = false;
 
 		switch (shape)
 		{
 		case 'plane':
-		 		 	geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
+		 		 	geometry = new THREE.PlaneGeometry(360, 180, 360, 180);
 		 		 	mesh = new THREE.Mesh( geometry, videoMaterial );
 		 		 
 		break;
@@ -941,17 +944,17 @@ function meshChange(){
 		break;
 		
 		case 'cylinder':
-					geometry = new THREE.CylinderGeometry( ruttEtraParams.scale, ruttEtraParams.scale, 240, 360, 240, false );
+					geometry = new THREE.CylinderGeometry( synthParams.scale, synthParams.scale, 240, 360, 240, false );
 					mesh = new THREE.Mesh( geometry, videoMaterial );
 		break;
 		
 		case 'torus':
-					geometry = new THREE.TorusGeometry( ruttEtraParams.scale, 360, 360, 360 );
+					geometry = new THREE.TorusGeometry( synthParams.scale, 360, 360, 360 );
 					mesh = new THREE.Mesh( geometry, videoMaterial );
 		break;
 		 
 		default:
-		  			geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
+		  			geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
 		  			mesh = new THREE.Mesh( geometry, videoMaterial );
 		
 		}
@@ -960,7 +963,7 @@ function meshChange(){
 		geometry.verticesNeedUpdate = true;
 		mesh.doubleSided = true;
 		mesh.position.x = mesh.position.y = mesh.position.z = 0;
-		mesh.scale.x = mesh.scale.y = ruttEtraParams.scale;	
+		mesh.scale.x = mesh.scale.y = synthParams.scale;	
 		scene.add(mesh);
 
 
@@ -971,15 +974,16 @@ function meshChange(){
 
 function onToggleWireframe() {
 
-  if( videoMaterial.wireframe === false ){
+  if( synthParams.wireframe === false && videoMaterial.wireframe === false ){
     	
     	videoMaterial.wireframe = true;
+
     	
     }
-    else{
+   else{
     
 	  	videoMaterial.wireframe = false;
-    	
+
     }
     
 	
@@ -987,14 +991,14 @@ function onToggleWireframe() {
 
 function onToggleWebcam() {
 
-    if( ruttEtraParams.webcam === true  ){
+    if( synthParams.webcam === true  ){
     	
-		ruttEtraParams.webcam = true;
+		synthParams.webcam = true;
 		videoInput.src = videoObject;
 	    	
     }
     else{
-    	ruttEtraParams.webcam = false; 
+    	synthParams.webcam = false; 
 	  	videoInput.src = video.nowPlaying;
     	
     }

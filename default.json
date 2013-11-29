@@ -1,0 +1,147 @@
+{
+  "preset": "Default",
+  "closed": false,
+  "remembered": {
+    "Default": {
+      "0": {
+        "cameraz": 1680,
+        "camerax": 0,
+        "cameray": -1130,
+        "displace": -6,
+        "multiplier": 16,
+        "originX": 0,
+        "originY": 0,
+        "originZ": -2000,
+        "opacity": 0.2,
+        "hue": 0,
+        "saturation": 0.5,
+        "background": "#090000",
+        "shape": "plane",
+        "scale": 6.0,
+        "wireframe": false
+      }
+    },
+    "Plane": {
+      "0": {
+        "cameraz": 1680,
+        "camerax": 0,
+        "cameray": 40,
+        "displace": 6,
+        "multiplier": 10,
+        "originX": 0,
+        "originY": 0,
+        "originZ": 2000,
+        "opacity": 0.2,
+        "hue": 0,
+        "saturation": 0.2,
+        "background": "#00000",
+        "shape": "plane",
+        "scale": 6.0,
+        "wireframe": false
+      }
+    },
+    "Sphere": {
+      "0": {
+        "cameraz": 3600,
+        "camerax": 0,
+        "cameray": -379,
+        "displace": 35.0,
+        "multiplier": 17.8,
+        "originX": 0,
+        "originY": 0,
+        "originZ": -2000,
+        "opacity": 0.3,
+        "hue": 0,
+        "saturation": 0,
+        "background": "#000000",
+        "shape": "sphere",
+        "scale": 4.0,
+        "wireframe": false
+      }
+    },
+    "Cube": {
+      "0": {
+        "cameraz": 1742,
+        "camerax": 0,
+        "cameray": -150,
+        "displace": 35.0,
+        "multiplier": 17.8,
+        "originX": 0,
+        "originY": 0,
+        "originZ": -2000,
+        "opacity": 0.1,
+        "hue": 0,
+        "saturation": 0,
+        "background": "#000000",
+        "shape": "cube",
+        "scale": 6.0,
+        "wireframe": true
+      }
+    },
+    "Cylinder": {
+      "0": {
+        "cameraz": -300,
+        "camerax": 0,
+        "cameray": -772,
+        "displace": 35.0,
+        "multiplier": -1.8,
+        "originX": 0,
+        "originY": 0,
+        "originZ": -2000,
+        "opacity": 0.1,
+        "hue": 0,
+        "saturation": 0.2,
+        "background": "#000000",
+        "shape": "cylinder",
+        "scale": 6.0,
+        "wireframe": false
+      }
+    },
+    "Torus": {
+      "0": {
+        "cameraz": -850,
+        "camerax": 0,
+        "cameray": 2056,
+        "displace": 35.300000000000004,
+        "multiplier": -1.8,
+        "originX": 0,
+        "originY": 0,
+        "originZ": -2000,
+        "opacity": 0.1,
+        "hue": 0,
+        "saturation": 0.2,
+        "background": "#000000",
+        "shape": "torus",
+        "scale": 6.0,
+        "wireframe": true
+      }
+    }
+  },
+  "folders": {
+    "Audio": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Mouse": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Camera": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Synthesizer": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    },
+    "Geometry": {
+      "preset": "Default",
+      "closed": false,
+      "folders": {}
+    }
+  }
+}
