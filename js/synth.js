@@ -179,17 +179,17 @@ f2.add(synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").o
 f2.open();	
 
 var f3 = gui.addFolder('Camera');
-f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(1.0).listen().name("Zoom").onChange(onParamsChange);
-f3.add(synthParams, 'camerax', -3600.0,3600.0).step(1.0).listen().name("Camera X").onChange(onParamsChange);
-f3.add(synthParams, 'cameray', -3600.0,3600.0).step(1.0).listen().name("Camera Y").onChange(onParamsChange);
+f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(0.1).listen().name("Zoom").onChange(onParamsChange);
+f3.add(synthParams, 'camerax', -3600.0,3600.0).step(0.1).listen().name("Camera X").onChange(onParamsChange);
+f3.add(synthParams, 'cameray', -3600.0,3600.0).step(0.1).listen().name("Camera Y").onChange(onParamsChange);
 f3.open();
 
 var f4 = gui.addFolder('Synthesizer');
 f4.add(synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
 f4.add(synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f4.add(synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
-f4.add(synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
-f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
+f4.add(synthParams, 'originX', -2000.0, 2000.0).step(0.1).listen().name("Distort X").onChange(onParamsChange);
+f4.add(synthParams, 'originY', -2000.0, 2000.0).step(0.1).listen().name("Distort Y").onChange(onParamsChange);
+f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(0.1).listen().name("Distort Z").onChange(onParamsChange);
 f4.add(synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
 f4.add(synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
 f4.add(synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
