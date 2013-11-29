@@ -23,9 +23,9 @@
     },
     "Plane": {
       "0": {
-        "cameraz": 1680,
+        "cameraz": 1200,
         "camerax": 0,
-        "cameray": 40,
+        "cameray": -300,
         "displace": 6,
         "multiplier": 10,
         "originX": 0,
@@ -101,7 +101,7 @@
       "0": {
         "cameraz": -850,
         "camerax": 0,
-        "cameray": 2056,
+        "cameray": -2056,
         "displace": 35.300000000000004,
         "multiplier": -1.8,
         "originX": 0,

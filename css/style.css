@@ -351,51 +351,93 @@ audio {
   width: 26% !important;
   color: #ababab !important;
 }
-/* line 304, ../scss/style.scss */
+/* line 302, ../scss/style.scss */
+.dg .property-name:after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: #F00;
+  position: relative;
+  top: -26px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid #f00;
+  opacity: 0.0;
+  -webkit-transition: opacity 3s ease-in-out;
+}
+/* line 316, ../scss/style.scss */
+.dg .property-name.highlight:after {
+  content: "";
+  opacity: 1.0;
+  -webkit-transition: opacity 3s ease-in-out;
+}
+/* line 323, ../scss/style.scss */
 .dg li.save-row .button {
   margin-top: 6px !important;
 }
-/* line 310, ../scss/style.scss */
+/* line 329, ../scss/style.scss */
 .dg li.save-row select {
   position: relative !important;
   top: -3px !important;
 }
-/* line 316, ../scss/style.scss */
+/* line 333, ../scss/style.scss */
+.dg li.save-row select:after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: #F00;
+  position: relative;
+  top: -26px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid #f00;
+  opacity: 0.0;
+  -webkit-transition: opacity 3s ease-in-out;
+}
+/* line 347, ../scss/style.scss */
+.dg li.save-row select.highlight:after {
+  content: "";
+  opacity: 1.0;
+  -webkit-transition: opacity 1s ease-in-out;
+}
+/* line 354, ../scss/style.scss */
 .dg li.save-row {
   background: #010101 !important;
 }
-/* line 318, ../scss/style.scss */
+/* line 356, ../scss/style.scss */
 .dg li.save-row .button {
   background-color: #303030 !important;
   box-shadow: none !important;
 }
-/* line 326, ../scss/style.scss */
+/* line 364, ../scss/style.scss */
 .dg .c .slider-fg {
   background: transparent !important;
   background-color: transparent !important;
   border-right: 1px solid #ababab !important;
 }
-/* line 333, ../scss/style.scss */
+/* line 371, ../scss/style.scss */
 .dg .cr.number {
   border-left: 1px solid black !important;
 }
-/* line 337, ../scss/style.scss */
+/* line 375, ../scss/style.scss */
 .dg .cr.boolean {
   border-left: 3px solid black !important;
 }
-/* line 340, ../scss/style.scss */
+/* line 378, ../scss/style.scss */
 .dg .c select {
   width: 100%;
   height: 19px;
   margin-left: -4px;
 }
 
-/* line 347, ../scss/style.scss */
+/* line 385, ../scss/style.scss */
 .dg.main .close-button {
   color: #ababab !important;
   opacity: 0.8 !important;
 }
-/* line 351, ../scss/style.scss */
+/* line 389, ../scss/style.scss */
 .dg.main .close-button:hover {
   color: white !important;
   opacity: 1em !important;

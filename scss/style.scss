@@ -299,6 +299,25 @@ audio{
 		width:26%!important;
 		color: #ABABAB!important;
 	}
+	.property-name:after{
+		content: "";
+		display: block;
+		width: 24px;
+		height: 24px;
+		background-color: #F00;
+		position: relative;
+		top: -26px;
+		border-radius: 12px;
+		background: transparent;
+		border: 1px solid #f00;
+		opacity:0.0;
+		-webkit-transition:opacity 3s ease-in-out;
+	}
+	.property-name.highlight:after{
+		content: "";
+		opacity:1.0;
+		-webkit-transition:opacity 3s ease-in-out;
+	}
 	
 	li.save-row {
 		.button{
@@ -310,6 +329,25 @@ audio{
 		select {
 			position: relative!important;
 			top: -3px!important;
+		}
+		select:after{
+		content: "";
+		display: block;
+		width: 24px;
+		height: 24px;
+		background-color: #F00;
+		position: relative;
+		top: -26px;
+		border-radius: 12px;
+		background: transparent;
+		border: 1px solid #f00;
+		opacity:0.0;
+		-webkit-transition:opacity 3s ease-in-out;
+		}
+		select.highlight:after{
+		content: "";
+		opacity:1.0;
+		-webkit-transition:opacity 1s ease-in-out;
 		}
 	}
 	

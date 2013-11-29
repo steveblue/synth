@@ -640,19 +640,32 @@ function init() {
 	if (Modernizr.getusermedia) {
 		 $('header h2').text('Click "allow" to start webcam.');
 		  setTimeout(function(){
-		     $('header h2').text('Drag and Drop up to 1GB of MP3 and h.264 MP4 Video to the Playlists.');
+		     $('header h2').text('Drag and drop up to 1GB of web audio and video to the playlists.');
 		    setTimeout(function(){
-			 $('header h2').text('Control the distortion.');
-			 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
-			 if(controls === false){
-			 $('.close-button').trigger('click');   
-			 }
-			  	setTimeout(function(){
-				  	$('header h2').text('Audio Waveform and Mouse Events control the Synthesizer.');
-				  	
-				  	$('header p,header h2,header h1,header a').delay(8000).fadeOut(2000);  
-			 	},5000);
-			 
+				 $('header h2').text('Control the distortion.');
+				 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
+					if(controls === false){
+					 $('.close-button').trigger('click');   
+					}
+				  		setTimeout(function(){
+				  		
+					  			$('header h2').text('Audio and mouse control the Synthesizer.');
+					  		//	$('.property-name').addClass('highlight');
+					  				setTimeout(function(){
+					  			//	$('.property-name').removeClass('highlight');
+					  			//	$('.save-row select').addClass('highlight');
+					  				$('header h2').text('Save presets for later.');
+					  				
+					  					setTimeout(function(){
+					  				//	$('.save-row select').removeClass('highlight');
+					  					$('header p,header h2,header h1,header a').fadeOut(2000);
+					  					},5000);
+					  				
+					  				  
+					  				},5000);
+					  	
+				 	},5000);
+				 
 		    },5000);
 		   },3000);
 		    
