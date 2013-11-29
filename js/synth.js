@@ -699,11 +699,12 @@ function init() {
 	}
 
 
-	$('.property-name').mousedown(function() {
-
-	if( $(this).not('.active') ){
+	$('.property-name').on('click',function() {
 	
-	    $(this).addClass('active');
+		
+	
+		
+	    
 	
 		
 		if($(this).text() === 'Bass') {
@@ -774,8 +775,11 @@ function init() {
 		}
 		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
 		}
+		 
+		if( !$(this).hasClass('active') ){
+		$(this).addClass('active');
 		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+pointTo+'"></div>');
-
+		}
 		$(this).parent('div').children('.c').children('.slider').children('.cancel').on('click',function(){	
 		
 	
@@ -787,7 +791,8 @@ function init() {
 	
 		});
 	
-		}
+		
+		
 	});
 	
 
