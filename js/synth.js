@@ -863,14 +863,26 @@ else{
 	   videoInput.loop = false;    
        }
     });
-	
+    var mouseView = true;
+
+    keypress.combo("x", function() {
+      
+       if($('#close_drop').not('.active')){
+	        $('#close_drop').trigger('click');
+       }
+       if($('.close-button').not('.active')){
+	        $('.close-button').trigger('click');
+       }
+       
+    });
 	$('.close-button').on('click',function(){
-		//$('header').fadeOut(8000);
 		if(controls === false){
 		controls = true;
+		$('.close-button').addClass('active');
 		}
 		else{
 		controls = false;	
+		$('.close-button').removeClass('active');
 		}
 	});
 	if(webcamEnabled === false){
