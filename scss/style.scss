@@ -9,7 +9,7 @@ html,body {
 }
 a:link, a:visited {
 	display:block;
-	color:#ABABAB;
+	color:#020202;
 	opacity: 0.8;
 	font-family: 'Lato', sans-serif;
 	font-size:14px;
@@ -58,26 +58,26 @@ header {
 h1{
     font-family: 'Exo', sans-serif;
     font-size:96px;
-    color:#ABABAB;
+    color:#000;
     font-weight: 100;
     text-rendering: optimizeLegibility;
 }
 h2{
 	font-family: 'Exo', sans-serif;
-    color:#ABABAB;
+    color:#000;
     font-weight: 300;
 
 }
 h5{
 	font-family: 'Exo', sans-serif;
-    color:#ABABAB;
+    color:#000;
     font-weight: 300;
     font-size:12px;
     letter-spacing: 0.2em;
  
 }
 p,li{
-	color:#ABABAB;
+	color:#FFF;
 	font-family: 'Lato', sans-serif;
 	font-size:12px;
 	font-weight: 300;
@@ -92,7 +92,7 @@ select {
    width: auto;
    padding: 5px;
    font-family: 'Lato', sans-serif;
-   font-size: 12px;
+   font-size: 8px;
    color:#ABABAB;
    letter-spacing: 0.2em;
    text-transform: none;

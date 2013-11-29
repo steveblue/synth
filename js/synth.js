@@ -56,24 +56,24 @@ var	ruttEtraParams = {
 	//	segX: 100.0,
 	//	segY: 100.0,
 	//	segZ: 100.0,
-		wireframe: true,
+		wireframe: false,
 		camerax: 0.0,
-		cameray: 0.0,
-		cameraz: -30.0,
-		scale : 1.0,
-		multiplier :  12.0,
-		displace : 6.0,
-		opacity : 0.8,
+		cameray: -1130.0,
+		cameraz: 1680.0,
+		scale : 6.0,
+		multiplier :  16.0,
+		displace : -6.0,
+		opacity : 0.2,
 		originX : 0.0,
 		originY: 0.0,
 		originZ : -2000.0,
 		//bloom: 1.8,
 		hue: 0.0,
 		saturation: 0.1,
-		background: "#000",
+		background: "#090100",
 		webcam: true
 		
-	}
+}
 
 
 var pointer = [];
@@ -123,7 +123,7 @@ videoMaterial = new THREE.ShaderMaterial( {
    
 });
 videoMaterial.renderToScreen = true;
-videoMaterial.wireframe = true;
+videoMaterial.wireframe = false;
 geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
 geometry.overdraw = false;
 geometry.dynamic = true;
