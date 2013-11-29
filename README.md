@@ -2,7 +2,7 @@
 Help fund the first public exhibition of this work on Kickstarter: http://kck.st/17Gk2kG
 
 
-Synth v.175
+Synth v.18
 
 Webcam + Music + HTML5 + WebGL = Synth
 
