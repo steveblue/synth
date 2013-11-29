@@ -26,6 +26,7 @@ a:hover{
 	opacity: 1.0em;
 	text-transform: none;
 }
+
 a:active{
 	color:#FEE;
 	opacity: 1.0em;
@@ -256,7 +257,12 @@ audio{
 	display:block;
 	width:100%;
 	height:20px;
-	background:#010101;
+	background:rgba(10,10,10,0.8);
+
+	a:link, a:visited {
+	color:#ABABAB;
+	}
+
 	}
 }
 #gui_container{

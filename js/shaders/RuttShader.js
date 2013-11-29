@@ -11,7 +11,7 @@
     		"opacity":  { type: "f", value: 1.0 },
 			"originX":  { type: "f", value: 0.0 },
 			"originY":  { type: "f", value: 0.0 },
-			"originZ":  { type: "f", value: -3000.0 }
+			"originZ":  { type: "f", value: 0.0 }
 
     	},
     	

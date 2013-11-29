@@ -32,14 +32,14 @@ a:hover {
   text-transform: none;
 }
 
-/* line 29, ../scss/style.scss */
+/* line 30, ../scss/style.scss */
 a:active {
   color: #FEE;
   opacity: 1.0em;
   text-transform: none;
 }
 
-/* line 34, ../scss/style.scss */
+/* line 35, ../scss/style.scss */
 .dg, .dg li.title, .dg.main .close-button {
   color: #ABABAB;
   font-family: 'Lato', sans-serif;
@@ -51,7 +51,7 @@ a:active {
   opacity: 50%;
 }
 
-/* line 44, ../scss/style.scss */
+/* line 45, ../scss/style.scss */
 header {
   color: #ABABAB;
   position: absolute;
@@ -65,7 +65,7 @@ header {
   opacity: 0.95;
 }
 
-/* line 58, ../scss/style.scss */
+/* line 59, ../scss/style.scss */
 h1 {
   font-family: 'Exo', sans-serif;
   font-size: 96px;
@@ -74,14 +74,14 @@ h1 {
   text-rendering: optimizeLegibility;
 }
 
-/* line 65, ../scss/style.scss */
+/* line 66, ../scss/style.scss */
 h2 {
   font-family: 'Exo', sans-serif;
   color: #000;
   font-weight: 300;
 }
 
-/* line 71, ../scss/style.scss */
+/* line 72, ../scss/style.scss */
 h5 {
   font-family: 'Exo', sans-serif;
   color: #000;
@@ -90,7 +90,7 @@ h5 {
   letter-spacing: 0.2em;
 }
 
-/* line 79, ../scss/style.scss */
+/* line 80, ../scss/style.scss */
 p, li {
   color: #FFF;
   font-family: 'Lato', sans-serif;
@@ -103,7 +103,7 @@ p, li {
   letter-spacing: 2px;
 }
 
-/* line 90, ../scss/style.scss */
+/* line 91, ../scss/style.scss */
 select {
   background: #303030;
   width: auto;
@@ -121,28 +121,28 @@ select {
   cursor: hand;
 }
 
-/* line 106, ../scss/style.scss */
+/* line 107, ../scss/style.scss */
 article p, article li {
   font-size: 16px;
 }
 
-/* line 110, ../scss/style.scss */
+/* line 111, ../scss/style.scss */
 header p, header a:link, header a:visited {
   text-align: center;
   padding-top: 40px;
   font-size: 14px;
 }
-/* line 114, ../scss/style.scss */
+/* line 115, ../scss/style.scss */
 header p img, header a:link img, header a:visited img {
   width: 100%;
   height: auto;
 }
-/* line 119, ../scss/style.scss */
+/* line 120, ../scss/style.scss */
 header h1, header h2 {
   text-align: center;
 }
 
-/* line 123, ../scss/style.scss */
+/* line 124, ../scss/style.scss */
 article {
   display: block;
   width: 60%;
@@ -153,7 +153,7 @@ article {
   padding-bottom: 60px;
 }
 
-/* line 132, ../scss/style.scss */
+/* line 133, ../scss/style.scss */
 #drop_zone {
   position: absolute;
   top: 0;
@@ -167,7 +167,7 @@ article {
   background-size: cover;
   background-repeat: repeat;
 }
-/* line 144, ../scss/style.scss */
+/* line 145, ../scss/style.scss */
 #drop_zone p {
   display: block;
   position: relative;
@@ -175,17 +175,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
-/* line 151, ../scss/style.scss */
+/* line 152, ../scss/style.scss */
 #drop_zone li {
   padding-bottom: 2px;
   padding-top: 2px;
 }
-/* line 155, ../scss/style.scss */
+/* line 156, ../scss/style.scss */
 #drop_zone li:first-child {
   padding-top: 6px;
 }
 
-/* line 159, ../scss/style.scss */
+/* line 160, ../scss/style.scss */
 #video_drop {
   position: absolute;
   top: 328px;
@@ -199,7 +199,7 @@ article {
   background-size: cover;
   background-repeat: repeat;
 }
-/* line 172, ../scss/style.scss */
+/* line 173, ../scss/style.scss */
 #video_drop p {
   display: block;
   position: relative;
@@ -207,17 +207,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
-/* line 179, ../scss/style.scss */
+/* line 180, ../scss/style.scss */
 #video_drop li {
   padding-bottom: 2px;
   padding-top: 2px;
 }
-/* line 183, ../scss/style.scss */
+/* line 184, ../scss/style.scss */
 #video_drop li:first-child {
   padding-top: 6px;
 }
 
-/* line 187, ../scss/style.scss */
+/* line 188, ../scss/style.scss */
 #topfill {
   position: absolute;
   top: 0;
@@ -228,7 +228,7 @@ article {
   background: #010101;
 }
 
-/* line 196, ../scss/style.scss */
+/* line 197, ../scss/style.scss */
 #read_files {
   position: relative;
   top: -45px;
@@ -238,7 +238,7 @@ article {
   cursor: hand;
 }
 
-/* line 204, ../scss/style.scss */
+/* line 205, ../scss/style.scss */
 #read_video {
   position: relative;
   top: -50px;
@@ -248,7 +248,7 @@ article {
   cursor: hand;
 }
 
-/* line 212, ../scss/style.scss */
+/* line 213, ../scss/style.scss */
 #close_drop {
   position: absolute;
   top: 627px;
@@ -260,27 +260,27 @@ article {
   text-align: center;
 }
 
-/* line 222, ../scss/style.scss */
+/* line 223, ../scss/style.scss */
 #close_drop:hover {
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 227, ../scss/style.scss */
+/* line 228, ../scss/style.scss */
 #close_drop p {
   color: #ababab;
   opacity: 0.8;
   position: relative;
   top: -10px;
 }
-/* line 234, ../scss/style.scss */
+/* line 235, ../scss/style.scss */
 #close_drop p:hover {
   color: #FFF;
   opacity: 1.0;
   text-transform: none;
 }
 
-/* line 240, ../scss/style.scss */
+/* line 241, ../scss/style.scss */
 audio {
   position: absolute;
   top: 298px;
@@ -288,7 +288,7 @@ audio {
   display: none;
 }
 
-/* line 246, ../scss/style.scss */
+/* line 247, ../scss/style.scss */
 #playlist, #videoplaylist {
   list-style-type: none;
   display: block;
@@ -298,16 +298,20 @@ audio {
   margin: 0;
   padding: 0;
 }
-/* line 254, ../scss/style.scss */
+/* line 255, ../scss/style.scss */
 #playlist li, #videoplaylist li {
   list-style-type: none;
   display: block;
   width: 100%;
   height: 20px;
-  background: #010101;
+  background: rgba(10, 10, 10, 0.8);
+}
+/* line 262, ../scss/style.scss */
+#playlist li a:link, #playlist li a:visited, #videoplaylist li a:link, #videoplaylist li a:visited {
+  color: #ABABAB;
 }
 
-/* line 262, ../scss/style.scss */
+/* line 268, ../scss/style.scss */
 #gui_container {
   position: absolute;
   display: block;
@@ -318,7 +322,7 @@ audio {
   background: #010101;
 }
 
-/* line 271, ../scss/style.scss */
+/* line 277, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -331,7 +335,7 @@ audio {
   z-index: 9999;
 }
 
-/* line 282, ../scss/style.scss */
+/* line 288, ../scss/style.scss */
 .dg {
   color: #ababab !important;
   font: 10px "Lato", sans-serif !important;
@@ -342,56 +346,56 @@ audio {
   text-decoration: none;
   text-shadow: none !important;
 }
-/* line 292, ../scss/style.scss */
+/* line 298, ../scss/style.scss */
 .dg .has-slider input[type=text] {
   width: 26% !important;
   color: #ababab !important;
 }
-/* line 298, ../scss/style.scss */
+/* line 304, ../scss/style.scss */
 .dg li.save-row .button {
   margin-top: 6px !important;
 }
-/* line 304, ../scss/style.scss */
+/* line 310, ../scss/style.scss */
 .dg li.save-row select {
   position: relative !important;
   top: -3px !important;
 }
-/* line 310, ../scss/style.scss */
+/* line 316, ../scss/style.scss */
 .dg li.save-row {
   background: #010101 !important;
 }
-/* line 312, ../scss/style.scss */
+/* line 318, ../scss/style.scss */
 .dg li.save-row .button {
   background-color: #303030 !important;
   box-shadow: none !important;
 }
-/* line 320, ../scss/style.scss */
+/* line 326, ../scss/style.scss */
 .dg .c .slider-fg {
   background: transparent !important;
   background-color: transparent !important;
   border-right: 1px solid #ababab !important;
 }
-/* line 327, ../scss/style.scss */
+/* line 333, ../scss/style.scss */
 .dg .cr.number {
   border-left: 1px solid black !important;
 }
-/* line 331, ../scss/style.scss */
+/* line 337, ../scss/style.scss */
 .dg .cr.boolean {
   border-left: 3px solid black !important;
 }
-/* line 334, ../scss/style.scss */
+/* line 340, ../scss/style.scss */
 .dg .c select {
   width: 100%;
   height: 19px;
   margin-left: -4px;
 }
 
-/* line 341, ../scss/style.scss */
+/* line 347, ../scss/style.scss */
 .dg.main .close-button {
   color: #ababab !important;
   opacity: 0.8 !important;
 }
-/* line 345, ../scss/style.scss */
+/* line 351, ../scss/style.scss */
 .dg.main .close-button:hover {
   color: white !important;
   opacity: 1em !important;

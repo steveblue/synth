@@ -37,6 +37,8 @@ var initComplete = false;
 var webcamEnabled = false;
 var hex;
 
+var controls = false;
+
 camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
 camera.position.z = 3600;
 window.URL = window.URL || window.webkitURL;
@@ -69,9 +71,9 @@ var	ruttEtraParams = {
 		originZ : -2000.0,
 		//bloom: 1.8,
 		hue: 0.0,
-		saturation: 0.1,
-		background: "#090100",
-		webcam: true
+		saturation: 0.5,
+		background: "#090000",
+		webcam: false
 		
 }
 
@@ -133,10 +135,8 @@ mesh = new THREE.Mesh( geometry, videoMaterial );
 mesh.doubleSided = true;
 mesh.position.x = 0;
 mesh.position.y = 0;
-
-
 mesh.visible = true;
-mesh.scale.x = mesh.scale.y = 1.0;
+mesh.scale.x = mesh.scale.y = 6.0;
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -191,11 +191,11 @@ var f4 = gui.addFolder('Synthesizer');
 
 f4.add(ruttEtraParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
 f4.add(ruttEtraParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(100.0).listen().name("Distort X").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(100.0).listen().name("Distort Y").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(100.0).listen().name("Distort Z").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
 f4.add(ruttEtraParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
-f4.add(ruttEtraParams, 'hue', -1.0,1.0).step(0.01).name("Hue").onChange(onParamsChange);
+f4.add(ruttEtraParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
 f4.add(ruttEtraParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
 f4.addColor(ruttEtraParams, 'background').name("Background Color").onChange(onParamsChange);
 //f4.add(ruttEtraParams, 'bloom', 0.0,120.0).step(0.1).name("Bloom").onChange(onParamsChange);
@@ -259,8 +259,8 @@ function playAudio(playlistId){
 		audioplayer.play();
 		dancer.play();
 		audioisplaying = true; 
-		$('#playlist').children('li').css('background-color','#010101');
-	    $('#playlist').children('li').eq(playlistId).css('background-color','#232323');
+		$('#playlist').children('li').css('background-color','rgba(10,10,10,0.7)');
+	    $('#playlist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
 }	
 function continueAudioPlay(){
 		audio.current++;
@@ -296,8 +296,8 @@ function playVideo(playlistId){
 		videoInput.muted = true;
 		videoInput.play();
 		videoisplaying = true; 
-		$('#videoplaylist').children('li').css('background-color','#010101');
-	    $('#videoplaylist').children('li').eq(playlistId).css('background-color','#232323');
+		$('#videoplaylist').children('li').css('background-color','rgba(10,10,10,0.7)');
+	    $('#videoplaylist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
 }
 
 function toArray(list) {
@@ -361,8 +361,9 @@ function listAudioResults(entries) {
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
   });
-
+  
   document.querySelector('#playlist').appendChild(fragment);
+  $('#drop_zone').css('background', 'transparent');
   $('#read_files').fadeOut(1000);
 }
 function listVideoResults(entries) {
@@ -393,6 +394,7 @@ function listVideoResults(entries) {
   });
 
   document.querySelector('#playlist').appendChild(fragment);
+  $('#video_drop').css('background', 'transparent');
   $('#read_video').fadeOut(1000);
 }
 
@@ -645,7 +647,9 @@ function init() {
 		    setTimeout(function(){
 			 $('header h2').text('Control the distortion.');
 			 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
+			 if(controls === false){
 			 $('.close-button').trigger('click');   
+			 }
 			  	setTimeout(function(){
 				  	$('header h2').text('Audio Waveform and Mouse Events control the Synthesizer.');
 				  	
@@ -669,6 +673,7 @@ function init() {
 		    else {
 		        var vendorURL = window.URL || window.webkitURL;
 		        webcamEnabled = true;
+		        ruttEtraParams.webcam = true; //meant to select the input
 		        videoObject = vendorURL.createObjectURL(stream);
 				videoInput.src = videoObject;
 		    }
@@ -695,31 +700,31 @@ function init() {
 			pointer[0] = ruttEtraParams.bass;
 			pointTo = 0;
 			console.log(pointer[0]);
-			return;
+
 		}
 		if($(this).text() === 'Mid') {
 			pointer[1] = ruttEtraParams.mid;
 			pointTo = 1;
 			console.log(pointer[1]);
-			return;
+
 		}
 		if($(this).text() === 'Treble') {
 			pointer[2] = ruttEtraParams.treble;
 			pointTo = 2;
 			console.log(pointer[2]);
-			return;
+
 		}
 		if($(this).text() === 'Mouse X') {
 			pointer[3] = mouseX;
 			pointTo = 3;
 			console.log(pointer[3]);
-			return;
+	
 		}
 		if($(this).text() === 'Mouse Y') {
 			pointer[4] = mouseY;
 			pointTo = 4;
 			console.log(pointer[4]);
-			return;
+		
 		}
 		if($(this).text() === 'Zoom') {	
 			setting[pointTo] = 'ruttEtraParams.cameraz = pointer[i] * 4';	
@@ -750,7 +755,7 @@ function init() {
 			//ruttEtraParams.originY = setting[pointTo];
 		}
 		if($(this).text() === 'Distort Z') {
-			setting[pointTo] = 'ruttEtraParams.originZ = pointer[i] * 100';
+			setting[pointTo] = 'ruttEtraParams.originZ = pointer[i]';
 			//ruttEtraParams.originZ = setting[pointTo];	
 		}
 		if($(this).text() === 'Opacity') {
@@ -758,7 +763,6 @@ function init() {
 			//ruttEtraParams.opacity = setting[pointTo];
 		}
 		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
-			return;
 		}
 		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+pointTo+'"></div>');
 
@@ -847,6 +851,12 @@ else{
 	
 	$('.close-button').on('click',function(){
 		//$('header').fadeOut(8000);
+		if(controls === false){
+		controls = true;
+		}
+		else{
+		controls = false;	
+		}
 	});
 	initComplete = true;
 	animate();
@@ -904,69 +914,60 @@ function onParamsChange(){
 
 }
 
-function meshChange(geo){
+function meshChange(){
+		scene.remove(mesh);
+		var shape = ruttEtraParams.shape;
+		ruttEtraParams.background = "#000000";
+		geometry.verticesNeedUpdate = false;
+		geometry.dynamic = false;
 
-//	newMesh(ruttEtraParams.shape, ruttEtraParams.dimX, ruttEtraParams.dimY, ruttEtraParams.dimZ, ruttEtraParams.segX, ruttEtraParams.segY, ruttEtraParams.segZ, ruttEtraParams.scale);
+		switch (shape)
+		{
+		case 'plane':
+		 		 	geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
+		 		 	mesh = new THREE.Mesh( geometry, videoMaterial );
+		 		 
+		break;
+		
+		case 'sphere':
+		 			geometry = new THREE.SphereGeometry(360, 360, 360);
+		 			mesh = new THREE.Mesh( geometry, videoMaterial );
+		 		
+		break;
+		  
+		case 'cube':
+					geometry = new THREE.CubeGeometry(120, 120, 120, 120, 120, 120);
+					mesh = new THREE.Mesh( geometry, videoMaterial );
+		break;
+		
+		case 'cylinder':
+					geometry = new THREE.CylinderGeometry( ruttEtraParams.scale, ruttEtraParams.scale, 240, 360, 240, false );
+					mesh = new THREE.Mesh( geometry, videoMaterial );
+		break;
+		
+		case 'torus':
+					geometry = new THREE.TorusGeometry( ruttEtraParams.scale, 360, 360, 360 );
+					mesh = new THREE.Mesh( geometry, videoMaterial );
+		break;
+		 
+		default:
+		  			geometry = new THREE.PlaneGeometry(720, 360, 720, 360);
+		  			mesh = new THREE.Mesh( geometry, videoMaterial );
+		
+		}
 
-	newMesh(ruttEtraParams.shape, ruttEtraParams.scale);
+		geometry.dynamic = true;
+		geometry.verticesNeedUpdate = true;
+		mesh.doubleSided = true;
+		mesh.position.x = mesh.position.y = mesh.position.z = 0;
+		mesh.scale.x = mesh.scale.y = ruttEtraParams.scale;	
+		scene.add(mesh);
+
+
 	
 }
 
 
-//function newMesh(geo, sizeX, sizeY, sizeZ, segX, segY, segZ, scale){
-
-function newMesh(geo,scale){
-	geometry.verticesNeedUpdate = false;
-	scene.remove(mesh);
-	
-	if(geo === 'plane') {
-		geometry = new THREE.PlaneGeometry(videoInput.videoWidth/2, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2);
-
-	}
-	
-	else if (geo === 'sphere') {
-	
-		geometry = new THREE.SphereGeometry(videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2);
-
-	}
-	
-	else if (geo === 'cube') {
-		geometry = new THREE.CubeGeometry(videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3, videoInput.videoHeight/3);
-
-	}
-	
-	else if (geo === 'cylinder') {
-	
-		geometry = new THREE.CylinderGeometry( scale, scale, videoInput.videoHeight/2, videoInput.videoWidth/2, videoInput.videoHeight/2, true );
-		//camera.position.z = ruttEtraParams.cameraz = 40;
-	
-	}
-	
-	else if (geo === 'torus') {
-	//	geometry = new THREE.TorusKnotGeometry(videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoHeight, videoInput.videoWidth, videoInput.videoWidth, scale);
-		geometry = new THREE.TorusGeometry( scale, videoInput.videoHeight/2, videoInput.videoHeight/2, videoInput.videoHeight/2 );
-	}
-	drawNewMesh(geometry);
-	geometry.verticesNeedUpdate = true;
-	
-}
-
-function drawNewMesh(geometry){
-	geometry.overdraw = false;
-	geometry.dynamic = true;
-	geometry.verticesNeedUpdate = true;
-	
-	mesh = new THREE.Mesh( geometry, videoMaterial );
-
-	mesh.position.x = 0;
-	mesh.position.y = 0;
-	mesh.position.z = scene.position.z;
-
-	mesh.visible = true;
-	//mesh.scale.x = mesh.scale.y = 16.0;
-	mesh.scale.x = mesh.scale.y = ruttEtraParams.scale;
-	scene.add(mesh);
-}
 
 function onToggleWireframe() {
 
@@ -988,12 +989,12 @@ function onToggleWebcam() {
 
     if( ruttEtraParams.webcam === true  ){
     	
-	
+		ruttEtraParams.webcam = true;
 		videoInput.src = videoObject;
 	    	
     }
     else{
-    
+    	ruttEtraParams.webcam = false; 
 	  	videoInput.src = video.nowPlaying;
     	
     }
