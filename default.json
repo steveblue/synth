@@ -18,7 +18,8 @@
         "background": "#090000",
         "shape": "plane",
         "scale": 6.0,
-        "wireframe": false
+        "wireframe": false,
+        "webcam":true
       }
     },
     "Plane": {

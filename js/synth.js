@@ -27,6 +27,7 @@ var video = [];
 video.playlist = [];
 video.playlist.push('vid/wavves-1280x720-2500kbps.mp4');
 var videoisplaying = false;
+var currentVideo = 0;
 var dancer = new Dancer();	
 
 var dropZone = document.getElementById('drop_zone');
@@ -155,9 +156,6 @@ effectHue.uniforms[ 'hue' ].value = 0.0;
 effectHue.uniforms[ 'saturation' ].value = 0.0;
 composer.addPass( effectHue );
 
-//	effectCopy = new THREE.ShaderPass( THREE.CopyShader  );
-//	effectCopy.renderToScreen = true;
-//	composer.addPass( effectCopy );
 var guiSetup = false;
 var synthParams = new params();
 var guiContainer = document.getElementById('gui_container');
@@ -205,17 +203,7 @@ f5.open();
 
 gui.close();
 guiContainer.appendChild(gui.domElement);
-
-$('.save-row select').on('change',function(){
-	if(webcamEnabled === false){
-
-	}
-	
-});
-
 guiSetup = true;
-
-
 });
 function checkLoad() {
         if (videoInput.readyState === 4) {
@@ -224,14 +212,9 @@ function checkLoad() {
         } else {
             setTimeout(checkLoad, 100);
         }
-    }
+}
 
 checkLoad();
-
-
-
-
-
 function playAudio(playlistId){
     	audioisplaying = false;
     	audioplayer.pause();
@@ -286,7 +269,7 @@ function continueVideoPlay(){
 		}
 }
 function playVideo(playlistId){
-    		   	  		
+    	currentVideo = playlistId;	   	  		
     	videoInput.pause();
     	videoisplaying = false;
 		videoInput.src = video.playlist[playlistId];
@@ -683,7 +666,6 @@ function init() {
 		    else {
 		        var vendorURL = window.URL || window.webkitURL;
 		        webcamEnabled = true;
-		        synthParams.webcam = true; //meant to select the input
 		        videoObject = vendorURL.createObjectURL(stream);
 				videoInput.src = videoObject;
 		    }
@@ -701,12 +683,6 @@ function init() {
 
 	$('.property-name').on('click',function() {
 	
-		
-	
-		
-	    
-	
-		
 		if($(this).text() === 'Bass') {
 			pointer[0] = synthParams.bass;
 			pointTo = 0;
@@ -1021,15 +997,20 @@ function onToggleWireframe() {
 
 function onToggleWebcam() {
 
-    if( synthParams.webcam === true  ){
+    if( webcamEnabled === false  ){
     	
-		synthParams.webcam = true;
 		videoInput.src = videoObject;
-	    	
+		webcamEnabled = true;
+		synthParams.webcam = true; 
+
+	
     }
     else{
+    	
+    	playVideo(currentVideo);
+    	webcamEnabled = false;
     	synthParams.webcam = false; 
-	  	videoInput.src = video.nowPlaying;
+	  	
     	
     }
     
