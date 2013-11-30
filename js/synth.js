@@ -383,7 +383,7 @@ function listVideoResults(entries) {
 				   	  	var index = nodeList.indexOf( li );
 				   	  	
 				   	  	li.onclick=function(){
-				   	  		playVideo(index);
+				   	  		playVideo(index+1);/*temp fix for default video, must be +1 because default video is in the 0 slot*/
 				   	  		videoInput.current = index;
 				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
 				   	  		$('#close_drop').trigger('click');
