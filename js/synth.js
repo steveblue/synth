@@ -179,17 +179,17 @@ f2.add(synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").o
 f2.open();	
 
 var f3 = gui.addFolder('Camera');
-f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(0.1).listen().name("Zoom").onChange(onParamsChange);
-f3.add(synthParams, 'camerax', -3600.0,3600.0).step(0.1).listen().name("Camera X").onChange(onParamsChange);
-f3.add(synthParams, 'cameray', -3600.0,3600.0).step(0.1).listen().name("Camera Y").onChange(onParamsChange);
+f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(10.0).listen().name("Zoom").onChange(onParamsChange);
+f3.add(synthParams, 'camerax', -3600.0,3600.0).step(10.0).listen().name("Camera X").onChange(onParamsChange);
+f3.add(synthParams, 'cameray', -3600.0,3600.0).step(10.0).listen().name("Camera Y").onChange(onParamsChange);
 f3.open();
 
 var f4 = gui.addFolder('Synthesizer');
 f4.add(synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
 f4.add(synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f4.add(synthParams, 'originX', -2000.0, 2000.0).step(0.1).listen().name("Distort X").onChange(onParamsChange);
-f4.add(synthParams, 'originY', -2000.0, 2000.0).step(0.1).listen().name("Distort Y").onChange(onParamsChange);
-f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(0.1).listen().name("Distort Z").onChange(onParamsChange);
+f4.add(synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
+f4.add(synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
+f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
 f4.add(synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
 f4.add(synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
 f4.add(synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
@@ -198,7 +198,7 @@ f4.open();
 
 var f5 = gui.addFolder('Geometry');
 f5.add(synthParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f5.add(synthParams, 'scale', 0.1, 20.0).step(1.0).listen().name("Scale").onChange(onParamsChange);
+f5.add(synthParams, 'scale', 0.1, 20.0).step(0.1).listen().name("Scale").onChange(onParamsChange);
 f5.add(synthParams, 'wireframe').onChange(onToggleWireframe);
 f5.add(synthParams, 'webcam').onChange(onToggleWebcam);
 f5.open();
@@ -902,21 +902,21 @@ function audioChange(){
 
 function onParamsChange(){
 	if(guiSetup===true){
-	mesh.scale.x = mesh.scale.y = synthParams.scale;
+	mesh.scale.x = mesh.scale.y = parseFloat(synthParams.scale);
 	
 	synthParams.mousex = mouseX;   
 	synthParams.mousey = mouseY;
 	
-	camera.position.x = synthParams.camerax;
-	camera.position.y = synthParams.cameray;
-	camera.position.z = synthParams.cameraz;
+	camera.position.x = parseFloat(synthParams.camerax);
+	camera.position.y = parseFloat(synthParams.cameray);
+	camera.position.z = parseFloat(synthParams.cameraz);
 	
 	videoMaterial.uniforms[ "displace" ].value = synthParams.displace;
 	videoMaterial.uniforms[ "multiplier" ].value = synthParams.multiplier;
-	videoMaterial.uniforms[ "opacity" ].value = synthParams.opacity;
-	videoMaterial.uniforms[ "originX" ].value = synthParams.originX;
-	videoMaterial.uniforms[ "originY" ].value = synthParams.originY;
-	videoMaterial.uniforms[ "originZ" ].value = synthParams.originZ;
+	videoMaterial.uniforms[ "opacity" ].value =  parseFloat(synthParams.opacity);
+	videoMaterial.uniforms[ "originX" ].value =  parseFloat(synthParams.originX);
+	videoMaterial.uniforms[ "originY" ].value =  parseFloat(synthParams.originY);
+	videoMaterial.uniforms[ "originZ" ].value =  parseFloat(synthParams.originZ);
 
 
 	effectHue.uniforms[ 'hue' ].value = synthParams.hue;

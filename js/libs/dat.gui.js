@@ -703,7 +703,11 @@ dat.controllers.NumberController = (function (Controller, common) {
         this.__impliedStep = 1; // What are we, psychics?
       } else {
         // Hey Doug, check this out.
-        this.__impliedStep = Math.pow(10, Math.floor(Math.log(this.initialValue)/Math.LN10))/10;
+        var initVal = this.initialValue;
+        if(initVal<0){
+	       initVal = initVal * -1;
+        }
+        this.__impliedStep = Math.pow(10, Math.floor(Math.log(initVal)/Math.LN10))/10;
       }
 
     } else {
