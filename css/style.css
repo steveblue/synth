@@ -12,7 +12,7 @@ html, body {
 /* line 10, ../scss/style.scss */
 a:link, a:visited {
   display: block;
-  color: #020202;
+  color: #FFF;
   opacity: 0.8;
   font-family: 'Lato', sans-serif;
   font-size: 14px;
@@ -53,7 +53,7 @@ a:active {
 
 /* line 45, ../scss/style.scss */
 header {
-  color: #ABABAB;
+  color: #FFF;
   position: absolute;
   top: 45%;
   left: 50%;
@@ -69,7 +69,7 @@ header {
 h1 {
   font-family: 'Exo', sans-serif;
   font-size: 96px;
-  color: #000;
+  color: #FFF;
   font-weight: 100;
   text-rendering: optimizeLegibility;
 }
@@ -77,14 +77,14 @@ h1 {
 /* line 66, ../scss/style.scss */
 h2 {
   font-family: 'Exo', sans-serif;
-  color: #000;
+  color: #FFF;
   font-weight: 300;
 }
 
 /* line 72, ../scss/style.scss */
 h5 {
   font-family: 'Exo', sans-serif;
-  color: #000;
+  color: #FFF;
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.2em;
