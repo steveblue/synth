@@ -1,7 +1,4 @@
-
-
-    
-    RuttEtraShader = {
+RuttEtraShader = {
     
     	uniforms: {
 		
@@ -14,11 +11,9 @@
 			"originZ":  { type: "f", value: 0.0 }
 
     	},
-    	
-    
-    
     	vertexShader: [
-    
+		'precision highp int;',
+		'precision highp float;',
     	'uniform sampler2D tDiffuse;',
         'varying vec3 vColor;',
         'varying vec2 vUv;',
@@ -56,4 +51,4 @@
     
     	].join("\n")
     
-    };
+};
