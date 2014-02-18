@@ -25,7 +25,8 @@ var audioplayer = document.getElementById('audio');
 var audioisplaying = false;
 var video = [];
 video.playlist = [];
-video.playlist.push('vid/wavves-1280x720-2500kbps.mp4');
+video.playlist.push( 'vid/wavves-1280x720-2500kbps.mp4' ); 
+defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
 var videoisplaying = false;
 var currentVideo = 0;
 var dancer = new Dancer();	
@@ -346,6 +347,28 @@ function listAudioResults(entries) {
   $('#drop_zone').css('background', 'transparent');
   $('#read_files').fadeOut(1000);
 }
+function defaultVideo(url){
+						//video.playlist.push( url ); 
+				   	  	
+				   	  	var li = document.createElement('li');
+				   	  	var name = 'waves.mp4';
+				   	  	var correctName = 'waves.mp4';
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',url,
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	  	
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	var index = nodeList.indexOf( 0 ); 
+				   	  	
+				   	  	li.onclick=function(){
+				   	  		videoInput.current = 0;
+				   	  		playVideo(0);
+				   	  		
+				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+}
 function listVideoResults(entries) {
   // Document fragments can improve performance since they're only appended
   // to the DOM once. Only one browser reflow occurs.
@@ -363,12 +386,12 @@ function listVideoResults(entries) {
 				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
 				   	  	
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
-				   	  	var index = nodeList.indexOf( li );
+				   	  	var index = nodeList.indexOf( li ); // +1 to compensate for webcam in 0 slot
 				   	  	
 				   	  	li.onclick=function(){
-				   	  	
-				   	  		playVideo(index);/*temp fix for default video, must be +1 because default video is in the 0 slot*/
 				   	  		videoInput.current = index;
+				   	  		console.log(videoInput.current);
+				   	  		playVideo(videoInput.current);				   	  		
 				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
@@ -551,8 +574,10 @@ function handleVideoFileSelect(evt) {
 				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
 				   	  	var index = nodeList.indexOf( li );
 				   	  	li.onclick=function(){
-				   	  		playVideo(index);
-				   	  		console.log(index);
+				   	  		videoInput.current = index;
+				   	  		console.log(videoInput.current);
+				   	  		playVideo(videoInput.current);
+				   	  		console.log(videoInput.current);
 				   	  		$('#close_drop').trigger('click');
 				   	  	}
 	
