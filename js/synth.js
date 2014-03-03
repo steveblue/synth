@@ -38,6 +38,7 @@ var readFilesVideo = document.getElementById('read_video');
 
 var initComplete = false;
 var webcamEnabled = false;
+var menusEnabled = true;
 var hex;
 
 var controls = false;
@@ -868,13 +869,19 @@ else{
     var mouseView = true;
 
     keypress.combo("x", function() {
-      
+      if(menusEnabled === true){
        if($('#close_drop').not('.active')){
 	        $('#close_drop').trigger('click');
        }
        if($('.close-button').not('.active')){
 	        $('.close-button').trigger('click');
        }
+      }
+       
+    });
+    keypress.combo("m", function() {
+      
+		  onToggleMenus();
        
     });
 	$('.close-button').on('click',function(){
@@ -1037,6 +1044,25 @@ function onToggleWebcam() {
     	webcamEnabled = false;
     	synthParams.webcam = false; 
 	  	
+    	
+    }
+    
+	
+}
+
+function onToggleMenus() {
+
+    if( menusEnabled === false  ){
+    	
+		$('#close_drop,.close-button,#topfill').show();
+		menusEnabled = true;
+	
+    }
+    else{
+    
+    	$('#close_drop,.close-button,#topfill').hide();
+		menusEnabled = false;
+
     	
     }
     
