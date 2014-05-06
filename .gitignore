@@ -4,3 +4,5 @@ config.rb
 *.mov
 *.mp4
 /vid
+/info
+/dpth
