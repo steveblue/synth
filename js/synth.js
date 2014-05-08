@@ -1,63 +1,64 @@
-/*synth v181*/
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+/*synth v185*/
+if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); } else {
 
-var container;
-var camera, scene, renderer;
-var video, texture, material, mesh;
-var composer;
-var renderModel, effectBloom, effectHue, effectCopy;
-
-var mouseX = 0;
-var mouseY = 0;
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
-
-var videoPlayer = document.getElementById('videoplayer');
-var videoInput = document.getElementById('video');
-videoInput.load();
-videoInput.loop = true;
-var canvasInput = document.getElementById('compare');
-var videoObject;
-
-var audio = [];
-audio.playlist = [];
-var audioplayer = document.getElementById('audio');
-var audioisplaying = false;
-var video = [];
-video.playlist = [];
-video.playlist.push( 'vid/wavves-1280x720-2500kbps.mp4' ); 
-defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
-var videoisplaying = false;
-var currentVideo = 0;
-var dancer = new Dancer();	
-
-var dropZone = document.getElementById('drop_zone');
-var readFiles = document.getElementById('read_files');  
-var dropZoneVideo = document.getElementById('video_drop');
-var readFilesVideo = document.getElementById('read_video');
-
-var initComplete = false;
-var webcamEnabled = false;
-var menusEnabled = true;
-var hex;
-
-var controls = false;
-
-camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
-camera.position.z = 3600;
-window.URL = window.URL || window.webkitURL;
-
-var gui;
-var pointer = [];
-var setting = [];
-//Init DAT GUI control panel
-var	params = function() {
-
+var Synth = function() {	
+	var that = this;
+	this.container;
+	this.camera;
+	this.scene;
+	this.renderer;
+	this.texture;
+	this.material;
+	this.mesh;
+	this.light;
+	this.directionalLightFill;
+	this.composer;
+	this.renderModel; 
+	this.effectBloom;
+	this.effectHue;
+	this.effectCopy;
+	this.mouseX = 0;
+	this.mouseY = 0;
+	this.windowHalfX = window.innerWidth / 2;
+	this.windowHalfY = window.innerHeight / 2;
+	this.videoPlayer = document.getElementById('videoplayer');
+	this.videoInput = document.getElementById('video');
+	this.videoInput.current = 0;
+	this.canvasInput = document.getElementById('compare');
+	this.videoObject;
+	this.videoisplaying = false;
+	this.vplaylist = [];
+	this.aplaylist = [];
+	this.audioInput = document.getElementById('audio');
+	this.audioInput.current = 0;
+	this.audioisplaying = false;
+	this.dancer = new Dancer();		
+	this.dropZone = document.getElementById('drop_zone');
+	this.readFiles = document.getElementById('read_files');  
+	this.dropZoneVideo = document.getElementById('video_drop');
+	this.readFilesVideo = document.getElementById('read_video');	
+	this.initComplete = false;
+	this.webcamEnabled = false;
+	this.menusEnabled = true;
+	this.hex;	
+	this.controls = false;	
+	this.gui;
+	this.pointer = [];
+	this.pointTo = 0;
+	this.setting = [];
+	this.guiSetup = false;	
+	this.f1;
+	this.f2;
+	this.f3;
+	this.f4;
+	this.f5;
+	this.guiContainer;
+	this.params = function() {
 		this.bass = 0.0;
 		this.mid = 0.0;
 		this.treble = 0.0;
-		this.mousex = mouseX;
-		this.mousey = mouseY;
+		this.mousex = that.mouseX;
+		this.mousey = that.mouseY;
 		this.shape = 'plane';
 		this.wireframe = false;
 		this.camerax = 0.0;
@@ -73,579 +74,299 @@ var	params = function() {
 		this.hue = 0.0;
 		this.saturation = 0.5;
 		this.background = '#090000';
-		this.webcam = false;
-		
-		pointer.push(this.bass);
-		pointer.push(this.mid);
-		pointer.push(this.treble);
-		pointer.push(this.mousex);
-		pointer.push(this.mousey);
-		
-		setting.push('');
-		setting.push('');
-		setting.push('');
-		setting.push('');
-		setting.push('');
-		
-		onParamsChange();
-};
-
-
-container = document.getElementById( 'canvas' );
-document.body.appendChild( container );
-
-scene = new THREE.Scene();
-
-texture = new THREE.Texture( videoInput );
-texture.minFilter = THREE.LinearFilter;
-texture.magFilter = THREE.LinearFilter;
-texture.format = THREE.RGBFormat;
-//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-//texture.repeat.set( 720, 480 );
-texture.generateMipmaps = true;
-
-
-videoMaterial = new THREE.ShaderMaterial( {
-    uniforms: {
-        "tDiffuse": { type: "t", value: texture },
-        "multiplier":  { type: "f", value: 66.6 },
-    	"displace":  { type: "f", value: 33.3 },
-    	"opacity":  { type: "f", value: 1.0 },
-    	"originX":  { type: "f", value: 0.0 },
-    	"originY":  { type: "f", value: 0.0 },
-    	"originZ":  { type: "f", value: -2000.0 }
-    },
-    vertexShader: RuttEtraShader.vertexShader,
-    fragmentShader: RuttEtraShader.fragmentShader,
-    depthWrite: true,
-    depthTest: true,
-    wireframe: false, 
-    transparent: true,
-    overdraw: false
-   
-});
-videoMaterial.renderToScreen = true;
-videoMaterial.wireframe = false;
-geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
-geometry.overdraw = false;
-geometry.dynamic = true;
-geometry.verticesNeedUpdate = true;
-
-mesh = new THREE.Mesh( geometry, videoMaterial );
-mesh.doubleSided = true;
-mesh.position.x = 0;
-mesh.position.y = 0;
-mesh.visible = true;
-mesh.scale.x = mesh.scale.y = 6.0;
-
-renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.autoClear = false;
-container.appendChild( renderer.domElement );
-
-// postprocessing
-composer = new THREE.EffectComposer( renderer );
-
-renderModel = new THREE.RenderPass( scene, camera );
-composer.addPass( renderModel );	
-
-effectBloom = new THREE.BloomPass( 3.3, 20, 4.0, 256 );
-composer.addPass( effectBloom );
-
-effectHue = new THREE.ShaderPass( THREE.HueSaturationShader  );
-effectHue.renderToScreen = true;
-effectHue.uniforms[ 'hue' ].value = 0.0;
-effectHue.uniforms[ 'saturation' ].value = 0.0;
-composer.addPass( effectHue );
-
-var guiSetup = false;
-var synthParams = new params();
-var guiContainer = document.getElementById('gui_container');
-$.getJSON( "default.json", function( response ) {	
-
-gui = new dat.GUI({load: response, preset: 'Default', autoPlace: false});
-gui.remember(synthParams);
-gui.revert();
-
-var f1 = gui.addFolder('Audio');
-f1.add(synthParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(audioChange);
-f1.add(synthParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(audioChange);
-f1.add(synthParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(audioChange);
-f1.open();	
-
-var f2 = gui.addFolder('Mouse');
-f2.add(synthParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(onParamsChange);
-f2.add(synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(onParamsChange);
-f2.open();	
-
-var f3 = gui.addFolder('Camera');
-f3.add(synthParams, 'cameraz', -3600.0,3600.0).step(10.0).listen().name("Zoom").onChange(onParamsChange);
-f3.add(synthParams, 'camerax', -3600.0,3600.0).step(10.0).listen().name("Camera X").onChange(onParamsChange);
-f3.add(synthParams, 'cameray', -3600.0,3600.0).step(10.0).listen().name("Camera Y").onChange(onParamsChange);
-f3.open();
-
-var f4 = gui.addFolder('Synthesizer');
-f4.add(synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(onParamsChange);
-f4.add(synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(onParamsChange);
-f4.add(synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(onParamsChange);
-f4.add(synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(onParamsChange);
-f4.add(synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(onParamsChange);
-f4.add(synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(onParamsChange);
-f4.add(synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(onParamsChange);
-f4.add(synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(onParamsChange);
-f4.addColor(synthParams, 'background').name("Background Color").onChange(onParamsChange);
-f4.open();	
-
-var f5 = gui.addFolder('Geometry');
-f5.add(synthParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(meshChange);
-f5.add(synthParams, 'scale', 0.1, 20.0).step(0.1).listen().name("Scale").onChange(onParamsChange);
-f5.add(synthParams, 'wireframe').onChange(onToggleWireframe);
-f5.add(synthParams, 'webcam').onChange(onToggleWebcam);
-f5.open();
-
-gui.close();
-guiContainer.appendChild(gui.domElement);
-guiSetup = true;
-});
-function checkLoad() {
-        if (videoInput.readyState === 4) {
-           init();
-           animate();
-        } else {
-            setTimeout(checkLoad, 100);
-        }
+		this.webcam = false;		
+		that.pointer.push(this.bass);
+		that.pointer.push(this.mid);
+		that.pointer.push(this.treble);
+		that.pointer.push(this.mousex);
+		that.pointer.push(this.mousey);		
+		that.setting.push('');
+		that.setting.push('');
+		that.setting.push('');
+		that.setting.push('');
+		that.setting.push('');		
+	};
+	this.synthParams = new this.params();
 }
 
-checkLoad();
-function playAudio(playlistId){
-    	audioisplaying = false;
-    	audioplayer.pause();
-    	audioplayer.remove();
-    	audioplayer = container.appendChild(document.createElement("audio"));
-    	if($('#close_drop').is('.active')){
-	    	$('audio').hide();
-    	}
-    	else{
-	    	$('audio').show();
-    	}
-    	
-    	audioplayer.id = 'audio';
-    	audioplayer.controls = true;
-		audioplayer.src = audio.playlist[playlistId];  
-		dancer.after( 0, function() {
-			// After 0s, let's get this real and map a frequency to displacement of mesh
-			// Note that the instance of dancer is bound to "this"
-			synthParams.bass = this.getFrequency( 140 ) * 100;
-			synthParams.mid = this.getFrequency( 210 ) * 100;
-			synthParams.treble = this.getFrequency( 460 ) * 100;
+Synth.prototype = {
+
+init: function() {
+    var that = this;
+    
+    window.URL = window.URL || window.webkitURL;
+	this.container = document.getElementById( 'canvas' );
+	document.body.appendChild( that.container );
+	
+	this.vplaylist.push( 'vid/wavves-1280x720-2500kbps.mp4' ); 
+	
+	this.videoInput.load();
+	this.videoInput.loop = true;
+	
+	this.camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
+	this.camera.position.z = 3600;
+	
+	
+	this.scene = new THREE.Scene();
+	
+	this.texture = new THREE.Texture( that.videoInput );
+	this.texture.minFilter = THREE.LinearFilter;
+	this.texture.magFilter = THREE.LinearFilter;
+	this.texture.format = THREE.RGBFormat;
+	//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	//texture.repeat.set( 720, 480 );
+	this.texture.generateMipmaps = true;
+	
+	
+	this.videoMaterial = new THREE.ShaderMaterial( {
+	    uniforms: {
+	        "tDiffuse": { type: "t", value: that.texture },
+	        "multiplier":  { type: "f", value: 66.6 },
+	    	"displace":  { type: "f", value: 33.3 },
+	    	"opacity":  { type: "f", value: 1.0 },
+	    	"originX":  { type: "f", value: 0.0 },
+	    	"originY":  { type: "f", value: 0.0 },
+	    	"originZ":  { type: "f", value: -2000.0 }
+	    },
+	    vertexShader: RuttEtraShader.vertexShader,
+	    fragmentShader: RuttEtraShader.fragmentShader,
+	    depthWrite: true,
+	    depthTest: true,
+	    wireframe: false, 
+	    transparent: true,
+	    overdraw: false
+	   
+	});
+	this.videoMaterial.renderToScreen = true;
+	this.videoMaterial.wireframe = false;
+	this.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
+	this.geometry.overdraw = false;
+	this.geometry.dynamic = true;
+	this.geometry.verticesNeedUpdate = true;
+	
+	this.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
+	this.mesh.doubleSided = true;
+	this.mesh.position.x = 0;
+	this.mesh.position.y = 0;
+	this.mesh.visible = true;
+	this.mesh.scale.x = this.mesh.scale.y = 6.0;
+	
+	this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+	this.renderer.setSize( window.innerWidth, window.innerHeight );
+	this.renderer.autoClear = false;
+	this.container.appendChild( that.renderer.domElement );
+	
+	// postprocessing
+	this.composer = new THREE.EffectComposer( that.renderer );
+	
+	this.renderModel = new THREE.RenderPass( that.scene, that.camera );
+	this.composer.addPass( that.renderModel );	
+	
+	this.effectBloom = new THREE.BloomPass( 3.3, 20, 4.0, 256 );
+	this.composer.addPass( that.effectBloom );
+	
+	this.effectHue = new THREE.ShaderPass( THREE.HueSaturationShader  );
+	this.effectHue.renderToScreen = true;
+	this.effectHue.uniforms[ 'hue' ].value = 0.0;
+	this.effectHue.uniforms[ 'saturation' ].value = 0.0;
+	this.composer.addPass( that.effectHue );
+	
+	
+
+	this.guiContainer = document.getElementById('gui_container');
+	var guiContainer = this.guiContainer;
+	$.getJSON( "default.json", function( response ) {	
+	
+	that.gui = new dat.GUI({load: response, preset: 'Default', autoPlace: false});
+	that.gui.remember(that.synthParams);
+	that.gui.revert();
+	var gui = that.gui;
+	that.f1 = that.gui.addFolder('Audio');
+	that.f1.add(that.synthParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(that.audioChange);
+	that.f1.add(that.synthParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(that.audioChange);
+	that.f1.add(that.synthParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(that.audioChange);
+	that.f1.open();	
+	
+	that.f2 = that.gui.addFolder('Mouse');
+	that.f2.add(that.synthParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(that.onParamsChange);
+	that.f2.add(that.synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(that.onParamsChange);
+	that.f2.open();	
+	
+	that.f3 = that.gui.addFolder('Camera');
+	that.f3.add(that.synthParams, 'cameraz', -3600.0,3600.0).step(10.0).listen().name("Zoom").onChange(that.onParamsChange);
+	that.f3.add(that.synthParams, 'camerax', -3600.0,3600.0).step(10.0).listen().name("Camera X").onChange(that.onParamsChange);
+	that.f3.add(that.synthParams, 'cameray', -3600.0,3600.0).step(10.0).listen().name("Camera Y").onChange(that.onParamsChange);
+	that.f3.open();
+	
+	that.f4 = that.gui.addFolder('Synthesizer');
+	that.f4.add(that.synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(that.onParamsChange);
+	that.f4.add(that.synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(that.onParamsChange);
+	that.f4.addColor(that.synthParams, 'background').name("Background Color").onChange(that.onParamsChange);
+	that.f4.open();	
+	
+	that.f5 = that.gui.addFolder('Geometry');
+	that.f5.add(that.synthParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(function(){that.meshChange(that)});
+	that.f5.add(that.synthParams, 'scale', 0.1, 20.0).step(0.1).listen().name("Scale").onChange(that.onParamsChange);
+	that.f5.add(that.synthParams, 'wireframe').onChange(function(){that.onToggleWireframe(that)});
+	that.f5.add(that.synthParams, 'webcam').onChange(function(){that.onToggleWebcam(that)});
+	that.f5.open();
+	
+	that.gui.close();
+	that.guiContainer.appendChild(gui.domElement);
+	that.guiSetup = true;
+	
+	$('.property-name').on('click',function() {
+		console.log($(this).text());
+		if($(this).text() === 'Bass') {
+			that.pointer[0] = that.synthParams.bass;
+			that.pointTo = 0;
+			console.log(that.pointer[0]);
+
+		}
+		if($(this).text() === 'Mid') {
+			that.pointer[1] = that.synthParams.mid;
+			that.pointTo = 1;
+			console.log(that.pointer[1]);
+
+		}
+		if($(this).text() === 'Treble') {
+			that.pointer[2] = that.synthParams.treble;
+			that.pointTo = 2;
+			console.log(that.pointer[2]);
+
+		}
+		if($(this).text() === 'Mouse X') {
+			that.pointer[3] = that.mouseX;
+			that.pointTo = 3;
+			console.log(that.pointer[3]);
+	
+		}
+		if($(this).text() === 'Mouse Y') {
+			that.pointer[4] = that.mouseY;
+			that.pointTo = 4;
+			console.log(that.pointer[4]);
+		
+		}
+		if($(this).text() === 'Zoom') {	
+			that.setting[that.pointTo] = 'that.synthParams.cameraz = that.pointer[i] * 4';	
+		//	synthParams.cameraz = setting[pointTo];
+		}
+		if($(this).text() === 'Camera X') {
+			that.setting[that.pointTo] = 'that.synthParams.camerax = that.pointer[i] * 2';	
+			//synthParams.camerax = setting[pointTo];
+		}
+		if($(this).text() === 'Camera Y') {
+			that.setting[that.pointTo] = 'that.synthParams.cameray = that.pointer[i] * 10';
+			//synthParams.cameray = setting[pointTo];
+		}
+		if($(this).text() === 'Displace') {
+			that.setting[that.pointTo] = 'that.synthParams.displace = that.pointer[i] * 100';
+			//synthParams.displace = setting[pointTo];
+		}
+		if($(this).text() === 'Amplify') {
+			that.setting[pointTo] = 'that.that.synthParams.multiplier = that.pointer[i] * 100';
+			//synthParams.multiplier = setting[pointTo];
+		}
+		if($(this).text() === 'Distort X') {
+			that.setting[pointTo] = 'that.synthParams.originX = that.pointer[i] * 100';
+			//synthParams.originX = setting[pointTo];
+		}
+		if($(this).text() === 'Distort Y') {
+			that.setting[pointTo] = 'that.synthParams.originY = that.pointer[i] * 100';
+			//synthParams.originY = setting[pointTo];
+		}
+		if($(this).text() === 'Distort Z') {
+			that.setting[pointTo] = 'that.synthParams.originZ = that.pointer[i]';
+			//synthParams.originZ = setting[pointTo];	
+		}
+		if($(this).text() === 'Opacity') {
+			that.setting[pointTo] = 'that.synthParams.opacity = that.pointer[i]';
+			//synthParams.opacity = setting[pointTo];
+		}
+		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
+		}
+		 
+		if( !$(this).hasClass('active') ){
+		$(this).addClass('active');
+		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+that.pointTo+'"></div>');
+		}
+		$(this).parent('div').children('.c').children('.slider').children('.cancel').on('click',function(){	
+		
+	
+			that.setting[ $(this).data('pointer') ] = "";
+				
 			
-		}).load( audioplayer );		
-		audioplayer.play();
-		dancer.play();
-		audioisplaying = true; 
-		$('#playlist').children('li').css('background-color','rgba(10,10,10,0.7)');
-	    $('#playlist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
-}	
-function continueAudioPlay(){
-		audio.current++;
-		var playlist = audio.playlist;
-		var length = playlist.length;
-		if(audio.current == length){
-		    audio.current = 0;
-		    playAudio(audio.current);
-		}
-		else{
-		    playAudio(audio.current);
-		}
-}
-function continueVideoPlay(){
-		videoInput.current++;
-		var playlist = video.playlist;
-		var length = playlist.length;
-		if(videoInput.current == length){
-		    videoInput.current = 0;
-		    playVideo(videoInput.current);
-		}
-		else{
-		    playVideo(videoInput.current);
-		}
-}
-function playVideo(playlistId){
-    	currentVideo = playlistId;	   	  		
-    	videoInput.pause();
-    	videoisplaying = false;
-		videoInput.src = video.playlist[playlistId];
-		videoInput.muted = true;
-		videoInput.play();
-		videoisplaying = true; 
-		$('#videoplaylist').children('li').css('background-color','rgba(10,10,10,0.7)');
-	    $('#videoplaylist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
-}
-
-function toArray(list) {
-  return Array.prototype.slice.call(list || [], 0);
-}
-
-if (window.File && window.FileReader && window.FileList && window.Blob) {
-window.requestFileSystem  =  window.requestFileSystem || window.webkitRequestFileSystem; 
-}
-function errorHandler(err){
- var msg = 'An error occured: ';
- 
-  switch (err.code) { 
-    case FileError.NOT_FOUND_ERR: 
-      msg += 'File or directory not found'; 
-      break;
- 
-    case FileError.NOT_READABLE_ERR: 
-      msg += 'File or directory not readable'; 
-      break;
- 
-    case FileError.PATH_EXISTS_ERR: 
-      msg += 'File or directory already exists'; 
-      break;
- 
-    case FileError.TYPE_MISMATCH_ERR: 
-      msg += 'Invalid filetype'; 
-      break;
- 
-    default:
-      msg += 'Unknown Error'; 
-      break;
-  };
- 
- console.log(msg);
-};
-
-function listAudioResults(entries) {
-  // Document fragments can improve performance since they're only appended
-  // to the DOM once. Only one browser reflow occurs.
-  var fragment = document.createDocumentFragment();
-
-  entries.forEach(function(entry, i) {
-   						audio.playlist.push( entry.toURL() ); 
-				   	  	
-				   	  	var li = document.createElement('li');
-				   	  	var name = unescape(entry.name);
-				   	  	var correctName = unescape(entry.name);
-				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
-				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
-				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
-				   	  	document.getElementById('playlist').insertBefore(li, null);
-				   	  	
-				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
-				   	  	var index = nodeList.indexOf( li );
-				   	  	
-				   	  	li.onclick=function(){
-				   	  		playAudio(index);
-				   	  		audio.current = index;
-				   	  		audioplayer.addEventListener('ended', continueAudioPlay, false);
-				   	  		$('#close_drop').trigger('click');
-				   	  	}
-  });
-  
-  document.querySelector('#playlist').appendChild(fragment);
-  $('#drop_zone').css('background', 'transparent');
-  $('#read_files').fadeOut(1000);
-}
-function defaultVideo(url){
-						//video.playlist.push( url ); 
-				   	  	
-				   	  	var li = document.createElement('li');
-				   	  	var name = 'waves.mp4';
-				   	  	var correctName = 'waves.mp4';
-				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
-				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',url,
-				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
-				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
-				   	  	
-				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
-				   	  	var index = nodeList.indexOf( 0 ); 
-				   	  	
-				   	  	li.onclick=function(){
-				   	  		videoInput.current = 0;
-				   	  		playVideo(0);
-				   	  		
-				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
-				   	  		$('#close_drop').trigger('click');
-				   	  	}
-}
-function listVideoResults(entries) {
-  // Document fragments can improve performance since they're only appended
-  // to the DOM once. Only one browser reflow occurs.
-  var fragment = document.createDocumentFragment();
-
-  entries.forEach(function(entry, i) {
-   						video.playlist.push( entry.toURL() ); 
-				   	  	
-				   	  	var li = document.createElement('li');
-				   	  	var name = unescape(entry.name);
-				   	  	var correctName = unescape(entry.name);
-				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
-				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
-				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
-				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
-				   	  	
-				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
-				   	  	var index = nodeList.indexOf( li ); // +1 to compensate for webcam in 0 slot
-				   	  	
-				   	  	li.onclick=function(){
-				   	  		videoInput.current = index;
-				   	  		console.log(videoInput.current);
-				   	  		playVideo(videoInput.current);				   	  		
-				   	  		videoInput.addEventListener('ended', continueVideoPlay, false);
-				   	  		$('#close_drop').trigger('click');
-				   	  	}
-  });
-
-  document.querySelector('#playlist').appendChild(fragment);
-  $('#video_drop').css('background', 'transparent');
-  $('#read_video').fadeOut(1000);
-}
-
-function readAudioFileSelect(evt) {
-
-	evt.stopPropagation();
-    evt.preventDefault();
+			$(this).parent('li').children('div:first-child').children('.property-name').removeClass('active');
+			$(this).remove();
 	
-	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
-	
-				
-		fs.root.getDirectory('audio', {}, function(dirEntry){		
-		var dirReader = dirEntry.createReader();
-		var entries = [];
-
-		var readEntries = function() {
-		   dirReader.readEntries (function(results) {
-		    if (!results.length) {
-		      listAudioResults(entries.sort());
-		    } else {
-		      entries = entries.concat(toArray(results));
-		      readEntries();
-		    }
-		  }, errorHandler);
-		};
-		
-		readEntries(); // Start reading dirs.
-
-
 		});
-  
-   });
-}
- 
-function readVideoFileSelect(evt) {
-
-	evt.stopPropagation();
-    evt.preventDefault();
 	
-	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
-	
-				
-		fs.root.getDirectory('video', {}, function(dirEntry){		
-		var dirReader = dirEntry.createReader();
-		var entries = [];
-
-		var readEntries = function() {
-		   dirReader.readEntries (function(results) {
-		    if (!results.length) {
-		      listVideoResults(entries.sort());
-		    } else {
-		      entries = entries.concat(toArray(results));
-		      readEntries();
-		    }
-		  }, errorHandler);
-		};
 		
-		readEntries(); // Start reading dirs.
-
-
-		});
-  
-   });
-}
- 
-
-function handleAudioFileSelect(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-	
-	var files = evt.dataTransfer.files;
-
-	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
-	    // Duplicate each file the user selected to the app's fs.
-	    
-	  //    alert("Welcome to Filesystem!"); // Just to check if everything is OK :)
-	    fs.root.getDirectory('audio', {create: true}, function(dirEntry) {
-
-		}, errorHandler);  
-	      
-	    for (var i = 0, file; file = files[i]; ++i) {
-	
-	     
-	      (function(f) {
-	        
-	        fs.root.getFile('/audio/'+f.name, {create: true, exclusive: true}, function(fileEntry) {
-	          	  fileEntry.createWriter(function(fileWriter) {
-	          		  fileWriter.write(f); 
-	          	  }, errorHandler);
-	          
-	              fileEntry.file(function(file) {
-			   	  var reader = new FileReader();
-			   	
-			   	  reader.onloadend = function(e) {
-				   	 	audio.playlist.push( fileEntry.toURL() ); 
-				   	  	
-				   	  	var li = document.createElement('li');
-				   	  	var name = unescape(fileEntry.name);
-				   	  	var correctName = unescape(fileEntry.name);
-				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
-				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
-				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
-				   	  
-				   	  	document.getElementById('playlist').insertBefore(li, null);
-				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
-				   	  	var index = nodeList.indexOf( li );
-				   	  	li.onclick=function(){
-				   	  		playAudio(index);
-				   	  		$('#close_drop').trigger('click');
-				   	  	}
-
-			   	  };
-			   	
-			   	  reader.readAsDataURL(file);
-			   	}, errorHandler);
-
-	        }, errorHandler);
-			   	
-	      })(file);
-	     
-	
-	    }
-
-	    $('header').delay(8000).fadeOut(2000);
-
-	    
-	    
+		
 	});
-
-
 	
-}
-function handleVideoFileSelect(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
 	
-	var files = evt.dataTransfer.files;
-
-	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
-	    // Duplicate each file the user selected to the app's fs.
-	    
-	  //    alert("Welcome to Filesystem!"); // Just to check if everything is OK :)
-	      
-	    fs.root.getDirectory('video', {create: true}, function(dirEntry) {
-
-		}, errorHandler);
-	    for (var i = 0, file; file = files[i]; ++i) {
 	
-	     
-	      (function(f) {
-	        
-	        fs.root.getFile('/video/'+f.name, {create: true, exclusive: true}, function(fileEntry) {
-	          	  fileEntry.createWriter(function(fileWriter) {
-	          		  fileWriter.write(f); 
-	          	  }, errorHandler);
-	          
-	              fileEntry.file(function(file) {
-			   	  var reader = new FileReader();
-			   	
-			   	  reader.onloadend = function(e) {
-				 
-				   	    video.playlist.push( fileEntry.toURL() ); 
-				   	   
-				  	
-				   	  	var li = document.createElement('li');
-				   	  	var name = unescape(fileEntry.name);
-				   	  	var correctName = unescape(fileEntry.name);
-				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
-				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
-				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
-				   	  
-				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
-				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
-				   	  	var index = nodeList.indexOf( li );
-				   	  	li.onclick=function(){
-				   	  		videoInput.current = index;
-				   	  		console.log(videoInput.current);
-				   	  		playVideo(videoInput.current);
-				   	  		console.log(videoInput.current);
-				   	  		$('#close_drop').trigger('click');
-				   	  	}
-	
-			   	  };
-			   	
-			   	  reader.readAsDataURL(file);
-			   	}, errorHandler);
-
-	        }, errorHandler);
-			   	
-	      })(file);
-	     
-	
-	    }
-		//$('header h2').text('Change controls to achieve stunning new looks.');
-	    $('header').delay(8000).fadeOut(2000);
-	    
-	    
 	});
-
-
+	//this.checkLoad();
+	if (Modernizr.filesystem) {
+	this.dropZone.context = this;
+	this.readFiles.context = this;
+	this.dropZoneVideo.context = this;
+	this.readFilesVideo.context = this;
 	
-}
-function handleDragOver(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-}
+	this.dropZone.addEventListener('dragover', that.handleDragOver, false);
+	this.dropZone.ondrop = function(evt){
+		that.handleFileSelect(evt,'audio',that);
+	}
+	this.readFiles.onmousedown = function(evt){
+		that.readFileSelect(evt,'audio');
+		$('#read_files').fadeOut(1000);
+	} 
+	this.dropZoneVideo.addEventListener('dragover', that.handleDragOver, false);	
+	this.dropZoneVideo.ondrop = function(evt){
+		that.handleFileSelect(evt,'video',that);
+	}
+	this.readFilesVideo.onmousedown = function(evt){
+		that.readFileSelect(evt,'video');
+		$('#read_video').fadeOut(1000);
+	}
+	} 
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+	window.requestFileSystem  =  window.requestFileSystem || window.webkitRequestFileSystem; 
+	}
 
-if (Modernizr.filesystem) {
-dropZone.addEventListener('dragover', handleDragOver, false);
-dropZone.addEventListener('drop', handleAudioFileSelect, false);
-readFiles.addEventListener('mousedown', readAudioFileSelect, false); 
-dropZoneVideo.addEventListener('dragover', handleDragOver, false);
-dropZoneVideo.addEventListener('drop', handleVideoFileSelect, false);
-readFilesVideo.addEventListener('mousedown', readVideoFileSelect, false); 
-} 
-else{
-
-} 
-function init() {
-
-	var light = new THREE.SpotLight(0xffffff);
-	light.position.set( 0, 0, 1000 ).normalize();
-	light.target = mesh;
+	this.light = new THREE.SpotLight(0xffffff);
+	this.light.position.set( 0, 0, 1000 ).normalize();
+	this.light.target = this.mesh;
 	//light.shadowCameraVisible = true;
 	//light.shadowDarkness = 0.25;
-	light.intensity = 1200;
-	light.castShadow = true;
-	scene.add( light );
+	this.light.intensity = 1200;
+	this.light.castShadow = true;
+	this.scene.add( that.light );
 	
 
 	
-	var directionalLightFill = new THREE.SpotLight(0xffffff);
-	directionalLightFill.position.set(0, 0, -1000).normalize();
-	directionalLightFill.target = mesh;
+	this.directionalLightFill = new THREE.SpotLight(0xffffff);
+	this.directionalLightFill.position.set(0, 0, -1000).normalize();
+	this.directionalLightFill.target = this.mesh;
 	//directionalLightFill.shadowCameraVisible = true;
 	//directionalLightFill.shadowDarkness = 0.25;
-	directionalLightFill.intensity = 1200;
-	directionalLightFill.castShadow = true;
-	scene.add(directionalLightFill);
+	this.directionalLightFill.intensity = 1200;
+	this.directionalLightFill.castShadow = true;
+	this.scene.add(that.directionalLightFill);
 	
 
-	mesh.position.z = scene.position.z;
-	scene.add( mesh );
+	this.mesh.position.z = this.scene.position.z;
+	this.scene.add( that.mesh );
 			
-	var pointTo = 0;
+	this.pointTo = 0;
 	
 	if (Modernizr.getusermedia) {
 		 $('header h2').text('Click "allow" to start webcam.');
@@ -654,7 +375,7 @@ function init() {
 		    setTimeout(function(){
 				 $('header h2').text('Control the distortion.');
 				 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
-					if(controls === false){
+					if(that.controls === false){
 					 $('.close-button').trigger('click');   
 					}
 				  		setTimeout(function(){
@@ -688,13 +409,13 @@ function init() {
 		}, function(stream) {
 		    //on webcam enabled
 		    if (navigator.mozGetUserMedia) {
-		        videoInput.mozSrcObject = stream;
+		        that.videoInput.mozSrcObject = stream;
 		    } 
 		    else {
 		        var vendorURL = window.URL || window.webkitURL;
-		        webcamEnabled = true;
-		        videoObject = vendorURL.createObjectURL(stream);
-				videoInput.src = videoObject;
+		        that.webcamEnabled = true;
+		        that.videoObject = vendorURL.createObjectURL(stream);
+				that.videoInput.src = that.videoObject;
 		    }
 		
 		
@@ -708,168 +429,92 @@ function init() {
 	}
 
 
-	$('.property-name').on('click',function() {
-	
-		if($(this).text() === 'Bass') {
-			pointer[0] = synthParams.bass;
-			pointTo = 0;
-			console.log(pointer[0]);
 
-		}
-		if($(this).text() === 'Mid') {
-			pointer[1] = synthParams.mid;
-			pointTo = 1;
-			console.log(pointer[1]);
+	
 
-		}
-		if($(this).text() === 'Treble') {
-			pointer[2] = synthParams.treble;
-			pointTo = 2;
-			console.log(pointer[2]);
-
-		}
-		if($(this).text() === 'Mouse X') {
-			pointer[3] = mouseX;
-			pointTo = 3;
-			console.log(pointer[3]);
+	if (Modernizr.filesystem) {
+		$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 	
-		}
-		if($(this).text() === 'Mouse Y') {
-			pointer[4] = mouseY;
-			pointTo = 4;
-			console.log(pointer[4]);
-		
-		}
-		if($(this).text() === 'Zoom') {	
-			setting[pointTo] = 'synthParams.cameraz = pointer[i] * 4';	
-		//	synthParams.cameraz = setting[pointTo];
-		}
-		if($(this).text() === 'Camera X') {
-			setting[pointTo] = 'synthParams.camerax = pointer[i] * 2';	
-			//synthParams.camerax = setting[pointTo];
-		}
-		if($(this).text() === 'Camera Y') {
-			setting[pointTo] = 'synthParams.cameray = pointer[i] * 10';
-			//synthParams.cameray = setting[pointTo];
-		}
-		if($(this).text() === 'Displace') {
-			setting[pointTo] = 'synthParams.displace = pointer[i] * 100';
-			//synthParams.displace = setting[pointTo];
-		}
-		if($(this).text() === 'Amplify') {
-			setting[pointTo] = 'synthParams.multiplier = pointer[i] * 100';
-			//synthParams.multiplier = setting[pointTo];
-		}
-		if($(this).text() === 'Distort X') {
-			setting[pointTo] = 'synthParams.originX = pointer[i] * 100';
-			//synthParams.originX = setting[pointTo];
-		}
-		if($(this).text() === 'Distort Y') {
-			setting[pointTo] = 'synthParams.originY = pointer[i] * 100';
-			//synthParams.originY = setting[pointTo];
-		}
-		if($(this).text() === 'Distort Z') {
-			setting[pointTo] = 'synthParams.originZ = pointer[i]';
-			//synthParams.originZ = setting[pointTo];	
-		}
-		if($(this).text() === 'Opacity') {
-			setting[pointTo] = 'synthParams.opacity = pointer[i]';
-			//synthParams.opacity = setting[pointTo];
-		}
-		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
-		}
-		 
-		if( !$(this).hasClass('active') ){
-		$(this).addClass('active');
-		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+pointTo+'"></div>');
-		}
-		$(this).parent('div').children('.c').children('.slider').children('.cancel').on('click',function(){	
-		
-	
-			setting[ $(this).data('pointer') ] = "";
-				
-			
-			$(this).parent('li').children('div:first-child').children('.property-name').removeClass('active');
-			$(this).remove();
-	
+		$('#close_drop').on('click',function(){
+			$(this).toggleClass('active');
+			$('header').fadeOut(8000);
+			if($(this).is('.active')){
+				$('#drop_zone').hide();
+				$('#video_drop').hide();
+				$('audio').css('top','20px');
+				$('audio').hide();
+				$(this).css('top', '0px');
+				$(this).children('p').text('Open Playlist');
+			}
+			else if($(this).not('.active')){
+			    $('#drop_zone').show();
+			    $('#video_drop').show();
+			    $('audio').show();
+			    $('audio').css('top','298px');
+				$(this).css('top', '627px');
+				$(this).children('p').text('Close Playlist');
+			}
 		});
-	
-		
-		
-	});
-	
+	}
+	else{
+		$('#close_drop,#video_drop,#drop_zone,audio').hide();
+	}	
+	document.addEventListener( 'mousemove', that.onDocumentMouseMove, false );
+	function onWindowResize() {
 
-if (Modernizr.filesystem) {
-	$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
+	that.windowHalfX = window.innerWidth / 2;
+	that.windowHalfY = window.innerHeight / 2;
 
-	$('#close_drop').on('click',function(){
-		$(this).toggleClass('active');
-		$('header').fadeOut(8000);
-		if($(this).is('.active')){
-			$('#drop_zone').hide();
-			$('#video_drop').hide();
-			$('audio').css('top','20px');
-			$('audio').hide();
-			$(this).css('top', '0px');
-			$(this).children('p').text('Open Playlist');
-		}
-		else if($(this).not('.active')){
-		    $('#drop_zone').show();
-		    $('#video_drop').show();
-		    $('audio').show();
-		    $('audio').css('top','298px');
-			$(this).css('top', '627px');
-			$(this).children('p').text('Close Playlist');
-		}
-	});
-}
-else{
-	$('#close_drop,#video_drop,#drop_zone,audio').hide();
-}	
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	that.camera.aspect = window.innerWidth / window.innerHeight;
+	that.camera.updateProjectionMatrix();
+
+	that.renderer.setSize( window.innerWidth, window.innerHeight );
+	that.composer.reset();
+
+	}
 	window.addEventListener( 'resize', onWindowResize, false );
 	keypress.combo("1", function() {
-	   playVideo(0);
+	   that.playVideo(0);
     });
     keypress.combo("2", function() {
-       playVideo(1);
+       that.playVideo(1);
     });
     keypress.combo("3", function() {
-       playVideo(2);
+       that.playVideo(2);
     });
     keypress.combo("4", function() {
-       playVideo(3);
+      that.playVideo(3);
     });
     keypress.combo("5", function() {
-       playVideo(4);
+       that.playVideo(4);
     });
     keypress.combo("6", function() {
-       playVideo(5);
+       that.playVideo(5);
     });
     keypress.combo("7", function() {
-       playVideo(6);
+       that.playVideo(6);
     });
     keypress.combo("8", function() {
-       playVideo(7);
+       that.playVideo(7);
     });
     keypress.combo("9", function() {
-       playVideo(8);
+       that.playVideo(8);
     });
     keypress.combo("0", function() {
-       onToggleWebcam();
+       that.onToggleWebcam(that);
     });
     keypress.combo("l", function() {
-       if(videoInput.loop == false){
-       videoInput.loop = true;
+       if(that.videoInput.loop == false){
+       that.videoInput.loop = true;
        }
        else{
-	   videoInput.loop = false;    
+	   that.videoInput.loop = false;    
        }
     });
     var mouseView = true;
 
     keypress.combo("x", function() {
-      if(menusEnabled === true){
+      if(that.menusEnabled === true){
        if($('#close_drop').not('.active')){
 	        $('#close_drop').trigger('click');
        }
@@ -881,237 +526,519 @@ else{
     });
     keypress.combo("m", function() {
       
-		  onToggleMenus();
+		  that.onToggleMenus();
        
     });
 	$('.close-button').on('click',function(){
-		if(controls === false){
-		controls = true;
+		if(that.controls === false){
+		that.controls = true;
 		$('.close-button').addClass('active');
 		}
 		else{
-		controls = false;	
+		that.controls = false;	
 		$('.close-button').removeClass('active');
 		}
 	});
-	if(webcamEnabled === false){
-		playVideo(0);
+	if(that.webcamEnabled === false){
+		that.playVideo(0);
 	}
-	initComplete = true;
+	
+	that.initComplete = true;
 	animate();
-}
+},
+checkLoad: function() {
+		var that = this;
+        if (that.videoInput.readyState === 4) {
+           that.init();
+           animate();
+        } else {
+            setTimeout(that.checkLoad, 100);
+        }
+},
+playAudio: function(playlistId){
+		var that = this;
+    	this.audioisplaying = false;
+    	this.audioInput.pause();
+    	this.audioInput.remove();
+    	this.audioInput = that.container.appendChild(document.createElement("audio"));
+    	if($('#close_drop').is('.active')){
+	    	$('audio').hide();
+    	}
+    	else{
+	    	$('audio').show();
+    	}
+    	
+    	this.audioInput.id = 'audio';
+    	this.audioInput.controls = true;
+		this.audioInput.src = this.aplaylist[playlistId];  
+		this.dancer.after( 0, function() {
+			// After 0s, let's get this real and map a frequency to displacement of mesh
+			// Note that the instance of dancer is bound to "this"
+			that.synthParams.bass = this.getFrequency( 140 ) * 100;
+			that.synthParams.mid = this.getFrequency( 210 ) * 100;
+			that.synthParams.treble = this.getFrequency( 460 ) * 100;
+			
+		}).load( that.audioInput );		
+		this.audioInput.play();
+		this.dancer.play();
+		this.audioisplaying = true; 
+		$('#playlist').children('li').css('background-color','rgba(10,10,10,0.7)');
+	    $('#playlist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
+},	
+continueAudioPlay: function(context){
+		var that = context;
+		
+		that.audioInput.current++;
+		var playlist = that.aplaylist;
+		var length = that.aplaylist.length;
+		if(that.audioInput.current == length){
+		    that.audioInput.current = 0;
+		    that.playAudio(that.audioInput.current);
+		}
+		else{
+		    that.playAudio(that.audioInput.current);
+		}
+		console.log(that.audioInput.current);
+},
+continueVideoPlay: function(context){
+		var that = context;
+		console.log(that);
+		that.videoInput.current++;
+		var playlist = that.vplaylist;
+		var length = that.vplaylist.length;
+		if(that.videoInput.current == length){
+		    that.videoInput.current = 0;
+		    that.playVideo(that.videoInput.current);
+		}
+		else{
+		    that.playVideo(that.videoInput.current);
+		}
+},
+playVideo: function(playlistId){
+		//var that = Synth.prototype;
+		var that = this;
+    	//this.currentVideo = this.videoInput.current = playlistId;	  	  		
+    	this.videoInput.pause();
+    	this.videoisplaying = false;
+		this.videoInput.src = this.vplaylist[playlistId];
+		this.videoInput.muted = true;
+		this.videoInput.play();
+		this.videoisplaying = true; 
+		$('#videoplaylist').children('li').css('background-color','rgba(10,10,10,0.7)');
+	    $('#videoplaylist').children('li').eq(playlistId).css('background-color','rgba(10,10,10,0.9)');
+},
+toArray:function(list) {
+  return Array.prototype.slice.call(list || [], 0);
+},
+errorHandler: function(err){
+ var msg = 'An error occured: ';
+ 
+  switch (err.code) { 
+    case FileError.NOT_FOUND_ERR: 
+      msg += 'File or directory not found'; 
+      break;
+ 
+    case FileError.NOT_READABLE_ERR: 
+      msg += 'File or directory not readable'; 
+      break;
+ 
+    case FileError.PATH_EXISTS_ERR: 
+      msg += 'File or directory already exists'; 
+      break;
+ 
+    case FileError.TYPE_MISMATCH_ERR: 
+      msg += 'Invalid filetype'; 
+      break;
+ 
+    default:
+      msg += 'Unknown Error'; 
+      break;
+  };
+ 
+ console.log(msg);
+},
+defaultVideo: function(url){
+						//vplaylist.push( url ); 
+				   	  	var that = this;
+				   	  	var li = document.createElement('li');
+				   	  	var name = 'waves.mp4';
+				   	  	var correctName = 'waves.mp4';
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',url,
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	  	
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	var index = nodeList.indexOf( 0 ); 
+				   	  	
+				   	  	li.onclick=function(){
+				   	  		that.videoInput.current = 0;
+				   	  		that.playVideo(0);
+				   	  		
+				   	  		that.videoInput.addEventListener('ended', that.continueVideoPlay, false);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+},
+listResults: function(entries,type,context) {
+  // Document fragments can improve performance since they're only appended
+  // to the DOM once. Only one browser reflow occurs.
+  var fragment = document.createDocumentFragment();
+  var that = context;
+  function entryClickListener(index){
+  						if(type === 'video'){
+				   	  		context.playVideo(index);				   	  		
+				  
+				   	  		context.videoInput.onended = function(){
+					   	  		context.continueVideoPlay(context);
+				   	  		}
+				   	  	}
+				   	  	if(type === 'audio'){
+				   	  		context.playAudio(index);
+				   	  		
+				   	  		context.audioInput.onended = function(){
+					   	  		context.continueAudioPlay(context);
+				   	  		}
+				   	  			
+				   	  	}
+				   	  	$('#close_drop').trigger('click');
+  }
+  function entryListener(entry,playlist){
+	  playlist.push( entry.toURL() ); 
+	  console.log(playlist);
+  }
+  entries.forEach(function(entry, i) { 
 
-function audioChange(){
-	if(guiSetup===true && audioisplaying===true){
-	synthParams.bass = this.getFrequency( 140 ) * 100;
-    synthParams.mid = this.getFrequency( 210 ) * 100;
-    synthParams.treble = this.getFrequency( 460 ) * 100;
+				   	  	var li = document.createElement('li');
+				   	  	var name = unescape(entry.name);
+				   	  	var correctName = unescape(entry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',entry.toURL(),
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  	if(type === 'video'){
+				   	 	 	entryListener(entry,context.vplaylist);
+				   	 	 	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	 	 	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	}
+  				   	  	if(type === 'audio'){
+  				   	 	 	entryListener(entry,context.aplaylist);
+  				   	 	 	document.getElementById('playlist').insertBefore(li, null);
+				   	 	 	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
+  				   	  	}				   	  	
+				   	  	var index = nodeList.indexOf( li ); // +1 to compensate for webcam in 0 slot
+				   	  	li.onclick = function(){
+				   	  	   entryClickListener(index);
+				   	  	};
+  });
+  if(type === 'video'){
+  document.querySelector('#videoplaylist').appendChild(fragment);
+  
+  }
+  if(type === 'audio'){
+  document.querySelector('#playlist').appendChild(fragment);
+  
+  }
+  //$('#video_drop').css('background', 'transparent');
+  //$('#read_video').fadeOut(1000);
+},
+readFileSelect: function(evt,type) {
+
+	evt.stopPropagation();
+    evt.preventDefault();
+	var that = evt.target.context;
+
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
+	
+				
+		fs.root.getDirectory(type, {}, function(dirEntry){		
+		var dirReader = dirEntry.createReader();
+		var entries = [];
+
+		var readEntries = function() {
+		   dirReader.readEntries (function(results) {
+		    if (!results.length) {
+		   	
+		   	that.listResults(entries.sort(),type,evt.target.context);
+
+		    } else {
+		      entries = entries.concat(evt.target.context.toArray(results));
+		      readEntries();
+		    }
+		  }, evt.target.context.errorHandler);
+		};
+		
+		readEntries(); // Start reading dirs.
+
+
+		});
+  
+   });
+},
+handleFileSelect: function(evt,type,context) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    var that = context;
+	var files = evt.dataTransfer.files;
+	function loadEndHandler(context,fileEntry){
+						if(type === 'video'){
+		  				context.vplaylist.push( fileEntry.toURL() ); 
+		  				
+		  				}
+		  				if(type === 'audio'){
+		  				context.aplaylist.push( fileEntry.toURL() ); 
+		  				}
+		  				context.readFileSelect(evt,type);
+	}
+	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
+	    fs.root.getDirectory(type, {create: true}, function(dirEntry) {
+
+		}, that.errorHandler);
+	    for (var i = 0, file; file = files[i]; ++i) {
+	      (function(f) {
+	        fs.root.getFile('/'+type+'/'+f.name, {create: true, exclusive: true}, function(fileEntry) {
+	          	  fileEntry.createWriter(function(fileWriter) {
+	          		  fileWriter.write(f); 
+	          	  }, that.errorHandler);
+	          
+	              fileEntry.file(function(file) {
+			   	  var reader = new FileReader();
+			   	
+			   	  reader.onloadend = function(e) {
+		
+				   	 loadEndHandler(context,fileEntry);
+				   	 				   	   
+				  	
+				   	  	var li = document.createElement('li');
+				   	  	var name = unescape(fileEntry.name);
+				   	  	var correctName = unescape(fileEntry.name);
+				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
+				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',fileEntry.toURL(),
+				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
+				   	  if(type === 'video'){
+				   	  	document.getElementById('videoplaylist').insertBefore(li, null);
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('videoplaylist').children );
+				   	  	var index = nodeList.indexOf( li );
+				   	  	li.onclick=function(){
+				   	  		that.playVideo(index);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+				   	  }
+				   	  if(type === 'audio'){
+				   	  	document.getElementById('playlist').insertBefore(li, null);
+				   	  	var nodeList = Array.prototype.slice.call( document.getElementById('playlist').children );
+				   	  	var index = nodeList.indexOf( li );
+				   	  	li.onclick=function(){
+				   	  		that.playAudio(index);
+				   	  		$('#close_drop').trigger('click');
+				   	  	}
+				   	  }
+
+	
+			   	  };   	
+			   	  reader.readAsDataURL(file);
+			   	}, that.errorHandler);
+
+	        }, that.errorHandler);
+			   	
+	      })(file);
+	    }
+		//$('header h2').text('Change controls to achieve stunning new looks.');
+	    $('header').delay(8000).fadeOut(2000);	    
+	});	
+},
+handleDragOver: function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+},
+audioChange: function(){
+	if(this.guiSetup===true && this.audioisplaying===true){
+	this.synthParams.bass = this.getFrequency( 140 ) * 100;
+    this.synthParams.mid = this.getFrequency( 210 ) * 100;
+    this.synthParams.treble = this.getFrequency( 460 ) * 100;
     }
-}
+},
+onParamsChange: function(){
+ 	var that = this;
 
-function onParamsChange(){
-	if(guiSetup===true){
-	mesh.scale.x = mesh.scale.y = parseFloat(synthParams.scale);
+if(this.guiSetup===true){
+
+	that.mesh.scale.x = that.mesh.scale.y = parseFloat(that.synthParams.scale);
 	
-	synthParams.mousex = mouseX;   
-	synthParams.mousey = mouseY;
+	that.synthParams.mousex = that.mouseX;   
+	that.synthParams.mousey = that.mouseY;
 	
-	camera.position.x = parseFloat(synthParams.camerax);
-	camera.position.y = parseFloat(synthParams.cameray);
-	camera.position.z = parseFloat(synthParams.cameraz);
+	that.camera.position.x = parseFloat(that.synthParams.camerax);
+	that.camera.position.y = parseFloat(that.synthParams.cameray);
+	that.camera.position.z = parseFloat(that.synthParams.cameraz);
 	
-	videoMaterial.uniforms[ "displace" ].value = synthParams.displace;
-	videoMaterial.uniforms[ "multiplier" ].value = synthParams.multiplier;
-	videoMaterial.uniforms[ "opacity" ].value =  parseFloat(synthParams.opacity);
-	videoMaterial.uniforms[ "originX" ].value =  parseFloat(synthParams.originX);
-	videoMaterial.uniforms[ "originY" ].value =  parseFloat(synthParams.originY);
-	videoMaterial.uniforms[ "originZ" ].value =  parseFloat(synthParams.originZ);
+	that.videoMaterial.uniforms[ "displace" ].value = that.synthParams.displace;
+	that.videoMaterial.uniforms[ "multiplier" ].value = that.synthParams.multiplier;
+	that.videoMaterial.uniforms[ "opacity" ].value =  parseFloat(that.synthParams.opacity);
+	that.videoMaterial.uniforms[ "originX" ].value =  parseFloat(that.synthParams.originX);
+	that.videoMaterial.uniforms[ "originY" ].value =  parseFloat(that.synthParams.originY);
+	that.videoMaterial.uniforms[ "originZ" ].value =  parseFloat(that.synthParams.originZ);
 
 
-	effectHue.uniforms[ 'hue' ].value = synthParams.hue;
-	effectHue.uniforms[ 'saturation' ].value = synthParams.saturation;
+	that.effectHue.uniforms[ 'hue' ].value = that.synthParams.hue;
+	that.effectHue.uniforms[ 'saturation' ].value = that.synthParams.saturation;
 	
-	$('#canvas').css( 'background-color', synthParams.background );
-	hex = synthParams.background;
-	hex = parseInt(hex.replace('#','0x'));
-	renderer.setClearColor( hex , 1.0 );
+	$('#canvas').css( 'background-color', that.synthParams.background );
+	that.hex = that.synthParams.background;
+	that.hex = parseInt(that.hex.replace('#','0x'));
+	that.renderer.setClearColor( that.hex , 1.0 );
 	
-	pointer[0] = synthParams.bass;
-	pointer[1] = synthParams.mid;
-	pointer[2] = synthParams.treble;
-	pointer[3] = synthParams.mousex;
-	pointer[4] = synthParams.mousey;
+	that.pointer[0] = that.synthParams.bass;
+	that.pointer[1] = that.synthParams.mid;
+	that.pointer[2] = that.synthParams.treble;
+	that.pointer[3] = that.synthParams.mousex;
+	that.pointer[4] = that.synthParams.mousey;
 	
 	for(var i=0; i<=4; i++){
 	
-	eval(setting[i]);
+	eval(that.setting[i]);
 	
 	}
-	
+	var gui = that.gui;
 	for (var i in gui.__controllers) {
-	   gui.__controllers[i].updateDisplay();
-	}
+	  gui.__controllers[i].updateDisplay();
 	}
 	
-	
-
 }
+	
 
-function meshChange(){
-		scene.remove(mesh);
-		var shape = synthParams.shape;
-		geometry.verticesNeedUpdate = false;
-		geometry.dynamic = false;
-
+},
+meshChange: function(context){
+		var that = context;
+		that.scene.remove(that.mesh);
+		var shape = that.synthParams.shape;
+		that.geometry.verticesNeedUpdate = false;
+		that.geometry.dynamic = false;
+		console.log(shape);
 		switch (shape)
 		{
 		case 'plane':
-		 		 	geometry = new THREE.PlaneGeometry(360, 180, 360, 180);
-		 		 	mesh = new THREE.Mesh( geometry, videoMaterial );
+		 		 	that.geometry = new THREE.PlaneGeometry(360, 180, 360, 180);
+		 		 	that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		 
 		break;
 		
 		case 'sphere':
-		 			geometry = new THREE.SphereGeometry(360, 360, 360);
-		 			mesh = new THREE.Mesh( geometry, videoMaterial );
+		 			that.geometry = new THREE.SphereGeometry(360, 360, 360);
+		 			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		
 		break;
 		  
 		case 'cube':
-					geometry = new THREE.CubeGeometry(120, 120, 120, 120, 120, 120);
-					mesh = new THREE.Mesh( geometry, videoMaterial );
+					that.geometry = new THREE.CubeGeometry(120, 120, 120, 120, 120, 120);
+					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		
 		case 'cylinder':
-					geometry = new THREE.CylinderGeometry( synthParams.scale, synthParams.scale, 240, 360, 240, false );
-					mesh = new THREE.Mesh( geometry, videoMaterial );
+					that.geometry = new THREE.CylinderGeometry( that.synthParams.scale, that.synthParams.scale, 240, 360, 240, false );
+					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		
 		case 'torus':
-					geometry = new THREE.TorusGeometry( synthParams.scale, 360, 360, 360 );
-					mesh = new THREE.Mesh( geometry, videoMaterial );
+					that.geometry = new THREE.TorusGeometry( that.synthParams.scale, 360, 360, 360 );
+					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		 
 		default:
-		  			geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
-		  			mesh = new THREE.Mesh( geometry, videoMaterial );
+		  			that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
+		  			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		
 		}
 
-		geometry.dynamic = true;
-		geometry.verticesNeedUpdate = true;
-		mesh.doubleSided = true;
-		mesh.position.x = mesh.position.y = mesh.position.z = 0;
-		mesh.scale.x = mesh.scale.y = synthParams.scale;	
-		scene.add(mesh);
-
-
-	
-}
-
-
-
-function onToggleWireframe() {
-
-  if( synthParams.wireframe === false && videoMaterial.wireframe === false ){
+		that.geometry.dynamic = true;
+		that.geometry.verticesNeedUpdate = true;
+		that.mesh.doubleSided = true;
+		that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0;
+		that.mesh.scale.x = that.mesh.scale.y = that.synthParams.scale;	
+		that.synthParams.shape = shape;
+		that.scene.add(that.mesh);	
+},
+onToggleWireframe: function(context) {
+  var that = this;
+  if( that.synthParams.wireframe === false && that.videoMaterial.wireframe === false ){
     	
-    	videoMaterial.wireframe = true;
+    	that.videoMaterial.wireframe = true;
 
     	
     }
    else{
     
-	  	videoMaterial.wireframe = false;
+	  	that.videoMaterial.wireframe = false;
 
-    }
-    
-	
-}
-
-function onToggleWebcam() {
-
-    if( webcamEnabled === false  ){
+    }	
+},
+onToggleWebcam: function(context) {
+	var that = context;
+    if( that.webcamEnabled === false  ){
     	
-		videoInput.src = videoObject;
-		webcamEnabled = true;
-		synthParams.webcam = true; 
+		that.videoInput.src = that.videoObject;
+		that.webcamEnabled = true;
+		that.synthParams.webcam = true; 
 
 	
     }
     else{
     	
-    	playVideo(currentVideo);
-    	webcamEnabled = false;
-    	synthParams.webcam = false; 
-	  	
-    	
-    }
-    
-	
-}
-
-function onToggleMenus() {
-
-    if( menusEnabled === false  ){
+    	that.playVideo(that.currentVideo);
+    	that.webcamEnabled = false;
+    	that.synthParams.webcam = false; 
+	    	
+    }   	
+},
+onToggleMenus: function() {
+	var that = this;
+    if( that.menusEnabled === false  ){
     	
 		$('#close_drop,.close-button,#topfill').show();
-		menusEnabled = true;
+		that.menusEnabled = true;
 	
     }
     else{
     
     	$('#close_drop,.close-button,#topfill').hide();
-		menusEnabled = false;
-
-    	
+		that.menusEnabled = false;
     }
-    
-	
-}
+ 	
+},
 
-function onWindowResize() {
+onDocumentMouseMove: function(event) {
 
-	windowHalfX = window.innerWidth / 2;
-	windowHalfY = window.innerHeight / 2;
+	this.mouseX = ( event.clientX - this.windowHalfX );
+	this.mouseY = ( event.clientY - this.windowHalfY ) * 0.3;
 
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
+},
 
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	composer.reset();
-
-}
-
-
-function onDocumentMouseMove(event) {
-
-	mouseX = ( event.clientX - windowHalfX );
-	mouseY = ( event.clientY - windowHalfY ) * 0.3;
-
-}
-
-
-function animate() {
-
-	requestAnimationFrame( animate );
-	render();
-	//stats.update();
-	
-}
-
-
-function render() {
-	
-	if ( videoInput.readyState === videoInput.HAVE_ENOUGH_DATA ) {
-		if ( texture ) texture.needsUpdate = true;
-		if ( videoMaterial ) videoMaterial.needsUpdate = true;
+render: function() {
+	var that = this;
+	if ( this.videoInput.readyState === this.videoInput.HAVE_ENOUGH_DATA ) {
+		if ( this.texture ) this.texture.needsUpdate = true;
+		if ( this.videoMaterial ) this.videoMaterial.needsUpdate = true;
 	}	
-	camera.lookAt( scene.position );	
-	onParamsChange();
+	this.camera.lookAt( that.scene.position );	
+	this.onParamsChange();
 	//renderer.clear();
-	composer.render();
+	this.composer.render();
 
+},
+
+animate: function(){
+		
+		requestAnimationFrame( animate );
+		this.render();
 }
 
 
+} // end prototype
 
+var s = new Synth();
+	s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
+	s.init();
+	function animate() {
+		requestAnimationFrame( animate );
+		s.render();	
+	}
+} // end else for webgl detection
