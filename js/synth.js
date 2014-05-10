@@ -103,6 +103,24 @@ set scaler(val){
 	//this.scale = val;
 	this.mesh.scale.x = this.mesh.scale.y = this.scale = parseFloat(val);	
 },
+get oX(){
+	return this.originX;
+},
+set oX(pos){
+	this.cameraX = parseFloat(pos);
+},
+get oY(){
+	return this.originY;
+},
+set oY(pos){
+	this.originY = parseFloat(pos);
+},
+get oZ(){
+	return this.originZ;
+},
+set oZ(pos){
+	this.originZ = parseFloat(pos);
+},
 get originPos(){
 
 	return this.originX+','+this.originY+','+this.originZ;
@@ -114,6 +132,24 @@ set originPos(pos){
 	this.originY = parseFloat(coords[1]);
 	this.originZ = parseFloat(coords[2]);
 	
+},
+get camX(){
+	return this.camera.position.x;
+},
+set camX(pos){
+	this.camerax = this.camera.position.x = parseFloat(pos);
+},
+get camY(){
+	return this.camera.position.y;
+},
+set camY(pos){
+	this.cameray = this.camera.position.y = parseFloat(pos);
+},
+get camZ(){
+	return this.camera.position.y;
+},
+set camZ(pos){
+	this.cameraz = this.camera.position.z = parseFloat(pos);
 },
 get cameraPos(){
 	return this.camera.position.x+','+this.camera.position.y+','+this.camera.position.z;
@@ -380,8 +416,158 @@ initWebcam: function(){
 },
 initControls: function(){
 	var that = this;
-		
 	
+	function isFloat(n) {
+    return n === +n && n !== (n|0);
+	}
+
+	function convertToRange(value, srcRange, dstRange){
+	  // value is outside source range return
+	  if (value < srcRange[0] || value > srcRange[1]){
+	    return NaN; 
+	  }
+	
+	  var srcMax = parseFloat(srcRange[1]) - parseFloat(srcRange[0]),
+	      dstMax = parseFloat(dstRange[1]) - parseFloat(dstRange[0]),
+	      adjValue = parseFloat(value) - parseFloat(srcRange[0]);
+	
+	  return (parseFloat(adjValue) * parseFloat(dstMax) / parseFloat(srcMax)) + parseFloat(dstRange[0]);
+	
+	}	
+
+	function updateValue(obj,val){
+	
+				obj.html(val);
+				
+				console.log(val);
+		
+	}
+	var value, value2, round, start, end, width, height, control, key1, key2, json;
+
+	$('.xy').draggable({ 
+		containment: "parent",
+		start: function() {
+			key1 =  $(this).data('key1');
+			key2 =  $(this).data('key2');
+			value = $(this).data('value');
+		   	start =  $(this).data('start');
+		   	width = $(this).parent('.wrapper').parent('.joystick').width();
+		   	height = $(this).parent('.wrapper').parent('.joystick').height();
+		   	end = $(this).data('end');
+		},
+		drag: function() {
+			   control = $(this).position();
+			   if(control.top < height && control.top > 0 ){
+			 		 value = convertToRange(control.top, [0,height], [start,end]);
+			 		 
+			 	//	 value = value.toString();
+			 		 json = '{ "'+key1+'" : '+value+' }';
+			 		 console.log('that.'+key1+'='+value+'');
+			 		  eval('that.'+key1+'='+value+'');	
+			 		
+
+			  }
+			  if(control.left < width && control.left > 0){
+			  	 value2 = convertToRange(control.left, [0,width], [start,end]);
+			  	json = '{ "'+key2+'" : '+value2+' }';
+			  	 console.log('that.'+key2+'='+value2+'');
+			  	  eval('that.'+key2+'='+value+'');
+			  }		
+			 
+				  	 
+		},
+		stop: function() {
+			   control = $(this).position();
+			   if(control.top < height && control.top > 0 ){
+			 		 value = convertToRange(control.top, [0,height], [start,end]);
+			 		 
+			 	//	 value = value.toString();
+			 		 json = '{ "'+key1+'" : '+value+' }';
+			 		 eval('that.'+key1+'='+value+'');	
+			  }
+			  if(control.left < width && control.left > 0){
+			  	 value2 = convertToRange(control.left, [0,width], [start,end]);
+			  	json = '{ "'+key2+'" : '+value2+' }';
+			  	
+			  	  eval('that.'+key2+'='+value+'');	
+			  	
+
+			  }	
+			  
+			
+		}
+	});
+	var scale,posX,posY;
+    // pinch to zoom goes here
+	$('.vert').draggable({ 
+		axis: "y", 
+		containment: "parent",
+		start: function() {
+			key =  $(this).data('key');
+			value = $(this).data('value');
+		   	start =  $(this).data('start');
+		   	width = $(this).parent('.wrapper').parent('.fader').height() - $(this).height();
+		   	end = $(this).data('end');
+		},
+		drag: function() {
+			  control = $(this).position();
+			  if(control.top < width && control.top >= 0){
+			 		 value = convertToRange(control.top, [0,width], [start,end]);
+			 		// round = Math.round(value);
+			 		 //round = round.toString();
+			 		 json = '{ "'+key+'" : '+value+' }';
+			 		// console.log('that.'+key+'='+value+'');
+			 		 eval('that.'+key+'='+value+'');
+
+			  }
+		},
+		stop: function() {
+			 control = $(this).position();
+			 value = convertToRange(control.top, [0,width], [start,end]);
+			// round = Math.round(value);
+			// round = round.toString();
+				   	json = '{ "'+key+'" : '+value+' }';
+					// console.log('that.'+key+'='+value+'');
+			 		 eval('that.'+key+'='+value+'');
+
+		}
+	});
+	
+	$('.hor').draggable({ 
+		axis: "x", 
+		containment: "parent",
+		start: function() {
+			key =  $(this).data('key');
+			value = $(this).data('value');
+		   	start =  $(this).data('start');
+		   	width = $(this).parent('.wrapper').parent('.fader').width() - $(this).height();
+		   	end = $(this).data('end');
+		},
+		drag: function() {
+			  control = $(this).position();
+			  if(control.left < width && control.left >= 0){
+			 		 value = convertToRange(control.left, [0,width], [start,end]);
+			 		 //round = Math.round(value);
+			 		 //round = round.toString();
+			 		 json = '{ "'+key+'" : '+value+' }';
+			 		// console.log('that.'+key+'='+value+'');
+			 		 eval('that.'+key+'='+value+'');
+
+			  }
+		},
+		stop: function() {
+			  control = $(this).position();
+			  if(control.left < width && control.left >= 0){
+			 		 value = convertToRange(control.left, [0,width], [start,end]);
+			 		// round = Math.round(value);
+			 		 //round = round.toString();
+			 		 json = '{ "'+key+'" : '+value+' }';
+			 		// console.log('that.'+key+'='+value+'');
+			 		 eval('that.'+key+'='+value+'');
+
+			  }
+		}
+	});
 	
 	
 	if (Modernizr.filesystem) {
@@ -495,7 +681,7 @@ initControls: function(){
     });
     keypress.combo("m", function() {
       
-		  that.menu(true);
+		 // that.menu(true);
        
     });
 	$('.close-button').on('click',function(){

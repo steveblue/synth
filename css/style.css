@@ -322,7 +322,17 @@ audio {
   background: #010101;
 }
 
-/* line 277, ../scss/style.scss */
+/* line 278, ../scss/style.scss */
+#container {
+  display: block;
+  width: 100%;
+  height: 33%;
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* line 287, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -335,112 +345,218 @@ audio {
   z-index: 9999;
 }
 
-/* line 288, ../scss/style.scss */
-.dg {
-  color: #ababab !important;
-  font: 10px "Lato", sans-serif !important;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  text-transform: none;
-  text-decoration: none;
-  text-shadow: none !important;
-}
-/* line 298, ../scss/style.scss */
-.dg .has-slider input[type=text] {
-  width: 26% !important;
-  color: #ababab !important;
-}
-/* line 302, ../scss/style.scss */
-.dg .property-name:after {
-  content: "";
-  display: block;
-  width: 24px;
-  height: 24px;
-  background-color: #F00;
-  position: relative;
-  top: -26px;
-  border-radius: 12px;
-  background: transparent;
-  border: 1px solid #f00;
-  opacity: 0.0;
-  -webkit-transition: opacity 3s ease-in-out;
-}
-/* line 316, ../scss/style.scss */
-.dg .property-name.highlight:after {
-  content: "";
-  opacity: 1.0;
-  -webkit-transition: opacity 3s ease-in-out;
-}
-/* line 323, ../scss/style.scss */
-.dg li.save-row .button {
-  margin-top: 6px !important;
-}
-/* line 329, ../scss/style.scss */
-.dg li.save-row select {
-  position: relative !important;
-  top: -3px !important;
-}
-/* line 333, ../scss/style.scss */
-.dg li.save-row select:after {
-  content: "";
-  display: block;
-  width: 24px;
-  height: 24px;
-  background-color: #F00;
-  position: relative;
-  top: -26px;
-  border-radius: 12px;
-  background: transparent;
-  border: 1px solid #f00;
-  opacity: 0.0;
-  -webkit-transition: opacity 3s ease-in-out;
-}
-/* line 347, ../scss/style.scss */
-.dg li.save-row select.highlight:after {
-  content: "";
-  opacity: 1.0;
-  -webkit-transition: opacity 1s ease-in-out;
-}
-/* line 354, ../scss/style.scss */
-.dg li.save-row {
-  background: #010101 !important;
-}
-/* line 356, ../scss/style.scss */
-.dg li.save-row .button {
-  background-color: #303030 !important;
-  box-shadow: none !important;
-}
-/* line 364, ../scss/style.scss */
-.dg .c .slider-fg {
-  background: transparent !important;
-  background-color: transparent !important;
-  border-right: 1px solid #ababab !important;
-}
-/* line 371, ../scss/style.scss */
-.dg .cr.number {
-  border-left: 1px solid black !important;
-}
-/* line 375, ../scss/style.scss */
-.dg .cr.boolean {
-  border-left: 3px solid black !important;
-}
-/* line 378, ../scss/style.scss */
-.dg .c select {
-  width: 100%;
-  height: 19px;
-  margin-left: -4px;
+/* line 299, ../scss/style.scss */
+.play {
+  width: 100px;
+  height: 100px;
+  float: left;
+  background: #ABABAB;
 }
 
-/* line 385, ../scss/style.scss */
-.dg.main .close-button {
-  color: #ababab !important;
-  opacity: 0.8 !important;
+/* line 305, ../scss/style.scss */
+equalizer {
+  display: block;
+  position: relative;
+  width: 360px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #fff;
+  float: left;
 }
-/* line 389, ../scss/style.scss */
-.dg.main .close-button:hover {
-  color: white !important;
-  opacity: 1em !important;
-  text-transform: none !important;
-  -webkit-transition: all 0.5s ease-in-out !important;
+/* line 314, ../scss/style.scss */
+equalizer .wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* line 320, ../scss/style.scss */
+equalizer .wrapper control {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transform: rotate(180deg);
+  overflow: hidden;
+}
+/* line 330, ../scss/style.scss */
+equalizer .wrapper control .bars {
+  display: block;
+  list-style-type: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* line 338, ../scss/style.scss */
+equalizer .wrapper control .bars li {
+  display: block;
+  width: 10%;
+  height: 0;
+  position: relative;
+  top: 0;
+  float: left;
+  background: #ABABAB;
+}
+/* line 349, ../scss/style.scss */
+equalizer .wrapper .value {
+  width: 200px;
+  position: relative;
+  left: 50%;
+  margin-left: -100px;
+}
+/* line 354, ../scss/style.scss */
+equalizer .wrapper .value p {
+  float: left;
+  padding-right: 50px;
+}
+
+/* line 361, ../scss/style.scss */
+fader {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 40px;
+  margin: 0;
+  float: left;
+  border: 1px solid rgba(200, 200, 200, 0.5);
+  z-index: 9999;
+  margin-left: 0px;
+  background: rgba(0, 0, 0, 0.8);
+}
+/* line 373, ../scss/style.scss */
+fader .wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+/* line 378, ../scss/style.scss */
+fader .wrapper control.vert {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: 50% 50%;
+  background: transparent;
+}
+/* line 387, ../scss/style.scss */
+fader .wrapper control.vert point {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #fff;
+  position: relative;
+  top: 20px;
+  left: 0px;
+}
+/* line 397, ../scss/style.scss */
+fader .wrapper control.hor {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: 50% 50%;
+  background: transparent;
+}
+/* line 406, ../scss/style.scss */
+fader .wrapper control.hor point {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: #fff;
+  position: relative;
+  top: 0px;
+  left: 20px;
+}
+/* line 416, ../scss/style.scss */
+fader .wrapper .value {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  font-size: 8px;
+  color: #ABABAB;
+}
+
+/* line 429, ../scss/style.scss */
+fader.h {
+  width: 360px;
+  height: 40px;
+}
+
+/* line 437, ../scss/style.scss */
+fader.hue {
+  background: url(../img/hue.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* line 442, ../scss/style.scss */
+fader.sat {
+  background: url(../img/saturation.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* line 447, ../scss/style.scss */
+fader.opacity {
+  background: url(../img/opacity.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* line 452, ../scss/style.scss */
+joystick {
+  display: block;
+  position: relative;
+  height: 240px;
+  width: 240px;
+  margin: 0;
+  border: 1px solid #fff;
+  z-index: 9999;
+  float: left;
+  margin-left: 0px;
+}
+/* line 463, ../scss/style.scss */
+joystick .wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+/* line 468, ../scss/style.scss */
+joystick .wrapper control.xy {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: 50% 50%;
+  background: #ABABAB;
+}
+/* line 477, ../scss/style.scss */
+joystick .wrapper control.xy point {
+  display: none;
+}
+/* line 481, ../scss/style.scss */
+joystick .wrapper .value {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  font-size: 8px;
+  color: #ABABAB;
 }
