@@ -1,6 +1,4 @@
 /*synth v185*/
-if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); } else {
-
 var Synth = function() {	
 	var that = this;
 	this.container;
@@ -40,57 +38,191 @@ var Synth = function() {
 	this.initComplete = false;
 	this.webcamEnabled = false;
 	this.menusEnabled = true;
-	this.hex;	
+	this.hex = '#090000';	
 	this.controls = false;	
 	this.gui;
 	this.pointer = [];
 	this.pointTo = 0;
 	this.setting = [];
+	this.bass = 0.0;
+	this.mid = 0.0;
+	this.treble = 0.0;
+	this.mousex = that.mouseX;
+	this.mousey = that.mouseY;
+	this.shape = 'plane';
+	this.wireframe = false;
+	this.camerax = 0.0;
+	this.cameray = -1130.0;
+	this.cameraz = 1680.0;
+	this.scale = 6.0;
+	this.multiplier =  16.0;
+	this.displace = -6.0;
+	this.transparency = 0.2;
+	this.originX = 0.0;
+	this.originY = 0.0;
+	this.originZ = -2000.0;
+	this.hue = 0.0;
+	this.saturation = 0.5;
+	this.background = '#090000';
+	this.webcam = false;
 	this.guiSetup = false;	
 	this.f1;
 	this.f2;
 	this.f3;
 	this.f4;
 	this.f5;
-	this.guiContainer;
-	this.params = function() {
-		this.bass = 0.0;
-		this.mid = 0.0;
-		this.treble = 0.0;
-		this.mousex = that.mouseX;
-		this.mousey = that.mouseY;
-		this.shape = 'plane';
-		this.wireframe = false;
-		this.camerax = 0.0;
-		this.cameray = -1130.0;
-		this.cameraz = 1680.0;
-		this.scale = 6.0;
-		this.multiplier =  16.0;
-		this.displace = -6.0;
-		this.opacity = 0.2;
-		this.originX = 0.0;
-		this.originY = 0.0;
-		this.originZ = -2000.0;
-		this.hue = 0.0;
-		this.saturation = 0.5;
-		this.background = '#090000';
-		this.webcam = false;		
-		that.pointer.push(this.bass);
-		that.pointer.push(this.mid);
-		that.pointer.push(this.treble);
-		that.pointer.push(this.mousex);
-		that.pointer.push(this.mousey);		
-		that.setting.push('');
-		that.setting.push('');
-		that.setting.push('');
-		that.setting.push('');
-		that.setting.push('');		
-	};
-	this.synthParams = new this.params();
+	this.guiContainer;		
+	this.pointer.push(this.bass);
+	this.pointer.push(this.mid);
+	this.pointer.push(this.treble);
+	this.pointer.push(this.mousex);
+	this.pointer.push(this.mousey);		
+	this.setting.push('');
+	this.setting.push('');
+	this.setting.push('');
+	this.setting.push('');
+	this.setting.push('');	
 }
 
 Synth.prototype = {
+get displacement(){
+	return this.displace;
+},
+set displacement(val){
+	this.displace = val;	
+},
+get multiply(){
+	return this.multiplier;
+},
+set multiply(val){
+	this.multiplier = val;	
+},
+get scaler(){
+	return this.scale;
+},
+set scaler(val){
+	//this.scale = val;
+	this.mesh.scale.x = this.mesh.scale.y = this.scale = parseFloat(val);	
+},
+get originPos(){
 
+	return this.originX+','+this.originY+','+this.originZ;
+
+},
+set originPos(pos){
+	var coords = pos.split(',');
+	this.originX = parseFloat(coords[0]);
+	this.originY = parseFloat(coords[1]);
+	this.originZ = parseFloat(coords[2]);
+	
+},
+get cameraPos(){
+	return this.camera.position.x+','+this.camera.position.y+','+this.camera.position.z;
+},
+set cameraPos(pos){
+	var coords = pos.split(',');
+	this.camerax = this.camera.position.x = parseFloat(coords[0]);
+	this.cameray = this.camera.position.y = parseFloat(coords[1]);
+	this.cameraz = this.camera.position.z = parseFloat(coords[2]);	
+},
+get model(){
+	return this.shape;
+},
+set model(shape){
+	if(shape === 'plane' || shape === 'cube' || shape === 'torus' || shape === 'sphere' || shape === 'cylinder'){
+	this.shape = shape;
+	this.meshChange(shape);
+	}	
+},
+get color(){
+	return this.hue;
+},
+set color(val){
+	this.hue = val;	
+},
+get saturate(){
+	return this.saturation;
+},
+set saturate(val){
+	this.saturation = val;	
+},
+get opacity(){
+	return this.transparency;
+},
+set opacity(val){
+	this.transparency = val;	
+},
+get bg(){
+	return this.hex;
+},
+set bg(val){
+	var that = this;
+	this.hex = val;
+	console.log(this.hex);	
+	$('#canvas').css( 'background-color', that.hex );	
+	var newhex = parseInt(that.hex.replace('#','0x'));
+	this.renderer.setClearColor( newhex , 1.0 );
+	
+},
+get wire(){
+	return this.wireframe;
+},
+set wire(val) {
+
+  if( this.wireframe === false && this.videoMaterial.wireframe === false && val === true ){
+    	
+    	this.videoMaterial.wireframe = true;
+    	this.wireframe = true;
+    	
+    }
+   else{
+    
+	  	this.videoMaterial.wireframe = false;
+	  	this.wireframe = false;
+
+    }	
+},
+get channel(){
+	return this.webcam;
+},
+set channel(val) {
+
+    if( this.webcamEnabled === false && val === true ){
+    	
+		this.videoInput.src = this.videoObject;
+		this.webcamEnabled = true;
+		this.webcam = true; 
+
+	
+    }
+    else{
+    	
+    	this.playVideo(this.currentVideo);
+    	this.webcamEnabled = false;
+    	this.webcam = false; 
+	    	
+    }   	
+},
+get menu(){
+
+ return this.menusEnabled;
+ 
+},
+set menu(val){
+
+    if( this.menusEnabled === false  && val === true ){
+    	
+		$('#close_drop,.close-button,#topfill').show();
+		this.menusEnabled = true;
+	
+    }
+    else{
+    
+    	$('#close_drop,.close-button,#topfill').hide();
+		this.menusEnabled = false;
+    }
+ 	
+},
 init: function() {
     var that = this;
     
@@ -107,14 +239,12 @@ init: function() {
 	this.camera.position.z = 3600;
 	
 	
-	this.scene = new THREE.Scene();
+	this.scene = new THREE.Scene();	
 	
 	this.texture = new THREE.Texture( that.videoInput );
 	this.texture.minFilter = THREE.LinearFilter;
 	this.texture.magFilter = THREE.LinearFilter;
 	this.texture.format = THREE.RGBFormat;
-	//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-	//texture.repeat.set( 720, 480 );
 	this.texture.generateMipmaps = true;
 	
 	
@@ -172,149 +302,6 @@ init: function() {
 	this.composer.addPass( that.effectHue );
 	
 	
-
-	this.guiContainer = document.getElementById('gui_container');
-	var guiContainer = this.guiContainer;
-	$.getJSON( "default.json", function( response ) {	
-	
-	that.gui = new dat.GUI({load: response, preset: 'Default', autoPlace: false});
-	that.gui.remember(that.synthParams);
-	that.gui.revert();
-	var gui = that.gui;
-	that.f1 = that.gui.addFolder('Audio');
-	that.f1.add(that.synthParams, 'bass', 0.0,1.0).step(0.01).listen().name("Bass").onChange(that.audioChange);
-	that.f1.add(that.synthParams, 'mid', 0.0,1.0).step(0.01).listen().name("Mid").onChange(that.audioChange);
-	that.f1.add(that.synthParams, 'treble', 0.0,1.0).step(0.01).listen().name("Treble").onChange(that.audioChange);
-	that.f1.open();	
-	
-	that.f2 = that.gui.addFolder('Mouse');
-	that.f2.add(that.synthParams, 'mousex', -960.0,960.0).step(1.0).listen().name("Mouse X").onChange(that.onParamsChange);
-	that.f2.add(that.synthParams, 'mousey', -540.0,540.0).step(1.0).listen().name("Mouse Y").onChange(that.onParamsChange);
-	that.f2.open();	
-	
-	that.f3 = that.gui.addFolder('Camera');
-	that.f3.add(that.synthParams, 'cameraz', -3600.0,3600.0).step(10.0).listen().name("Zoom").onChange(that.onParamsChange);
-	that.f3.add(that.synthParams, 'camerax', -3600.0,3600.0).step(10.0).listen().name("Camera X").onChange(that.onParamsChange);
-	that.f3.add(that.synthParams, 'cameray', -3600.0,3600.0).step(10.0).listen().name("Camera Y").onChange(that.onParamsChange);
-	that.f3.open();
-	
-	that.f4 = that.gui.addFolder('Synthesizer');
-	that.f4.add(that.synthParams, 'displace', -100.0, 100.0).step(0.1).listen().name("Displace").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'multiplier', -100.0, 100.0).step(0.1).name("Amplify").listen().onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'originX', -2000.0, 2000.0).step(1.0).listen().name("Distort X").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'originY', -2000.0, 2000.0).step(1.0).listen().name("Distort Y").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'originZ', -2000.0, 2000.0).step(1.0).listen().name("Distort Z").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'opacity', 0.0,1.0).step(0.01).listen().name("Opacity").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'hue', 0.0,360.0).step(0.1).name("Hue").onChange(that.onParamsChange);
-	that.f4.add(that.synthParams, 'saturation', -1.0,0.87).step(0.01).name("Saturation").onChange(that.onParamsChange);
-	that.f4.addColor(that.synthParams, 'background').name("Background Color").onChange(that.onParamsChange);
-	that.f4.open();	
-	
-	that.f5 = that.gui.addFolder('Geometry');
-	that.f5.add(that.synthParams, 'shape', [ 'plane', 'sphere', 'cube', 'cylinder', 'torus' ] ).listen().name("Shape").onChange(function(){that.meshChange(that)});
-	that.f5.add(that.synthParams, 'scale', 0.1, 20.0).step(0.1).listen().name("Scale").onChange(that.onParamsChange);
-	that.f5.add(that.synthParams, 'wireframe').onChange(function(){that.onToggleWireframe(that)});
-	that.f5.add(that.synthParams, 'webcam').onChange(function(){that.onToggleWebcam(that)});
-	that.f5.open();
-	
-	that.gui.close();
-	that.guiContainer.appendChild(gui.domElement);
-	that.guiSetup = true;
-	
-	$('.property-name').on('click',function() {
-		console.log($(this).text());
-		if($(this).text() === 'Bass') {
-			that.pointer[0] = that.synthParams.bass;
-			that.pointTo = 0;
-			console.log(that.pointer[0]);
-
-		}
-		if($(this).text() === 'Mid') {
-			that.pointer[1] = that.synthParams.mid;
-			that.pointTo = 1;
-			console.log(that.pointer[1]);
-
-		}
-		if($(this).text() === 'Treble') {
-			that.pointer[2] = that.synthParams.treble;
-			that.pointTo = 2;
-			console.log(that.pointer[2]);
-
-		}
-		if($(this).text() === 'Mouse X') {
-			that.pointer[3] = that.mouseX;
-			that.pointTo = 3;
-			console.log(that.pointer[3]);
-	
-		}
-		if($(this).text() === 'Mouse Y') {
-			that.pointer[4] = that.mouseY;
-			that.pointTo = 4;
-			console.log(that.pointer[4]);
-		
-		}
-		if($(this).text() === 'Zoom') {	
-			that.setting[that.pointTo] = 'that.synthParams.cameraz = that.pointer[i] * 4';	
-		//	synthParams.cameraz = setting[pointTo];
-		}
-		if($(this).text() === 'Camera X') {
-			that.setting[that.pointTo] = 'that.synthParams.camerax = that.pointer[i] * 2';	
-			//synthParams.camerax = setting[pointTo];
-		}
-		if($(this).text() === 'Camera Y') {
-			that.setting[that.pointTo] = 'that.synthParams.cameray = that.pointer[i] * 10';
-			//synthParams.cameray = setting[pointTo];
-		}
-		if($(this).text() === 'Displace') {
-			that.setting[that.pointTo] = 'that.synthParams.displace = that.pointer[i] * 100';
-			//synthParams.displace = setting[pointTo];
-		}
-		if($(this).text() === 'Amplify') {
-			that.setting[pointTo] = 'that.that.synthParams.multiplier = that.pointer[i] * 100';
-			//synthParams.multiplier = setting[pointTo];
-		}
-		if($(this).text() === 'Distort X') {
-			that.setting[pointTo] = 'that.synthParams.originX = that.pointer[i] * 100';
-			//synthParams.originX = setting[pointTo];
-		}
-		if($(this).text() === 'Distort Y') {
-			that.setting[pointTo] = 'that.synthParams.originY = that.pointer[i] * 100';
-			//synthParams.originY = setting[pointTo];
-		}
-		if($(this).text() === 'Distort Z') {
-			that.setting[pointTo] = 'that.synthParams.originZ = that.pointer[i]';
-			//synthParams.originZ = setting[pointTo];	
-		}
-		if($(this).text() === 'Opacity') {
-			that.setting[pointTo] = 'that.synthParams.opacity = that.pointer[i]';
-			//synthParams.opacity = setting[pointTo];
-		}
-		if( $(this).text() === 'Scale' || $(this).text() === 'X Dimension' || $(this).text() === 'Y Dimension' || $(this).text() === 'Z Dimension' || $(this).text() === 'X Segments' || $(this).text() === 'Y Segments' || $(this).text() === 'Z Segments' ) {
-		}
-		 
-		if( !$(this).hasClass('active') ){
-		$(this).addClass('active');
-		$(this).parent('div').children('.c').children('.slider').prepend('<div class="cancel" data-pointer="'+that.pointTo+'"></div>');
-		}
-		$(this).parent('div').children('.c').children('.slider').children('.cancel').on('click',function(){	
-		
-	
-			that.setting[ $(this).data('pointer') ] = "";
-				
-			
-			$(this).parent('li').children('div:first-child').children('.property-name').removeClass('active');
-			$(this).remove();
-	
-		});
-	
-		
-		
-	});
-	
-	
-	
-	});
-	//this.checkLoad();
 	if (Modernizr.filesystem) {
 	this.dropZone.context = this;
 	this.readFiles.context = this;
@@ -350,14 +337,11 @@ init: function() {
 	this.light.intensity = 1200;
 	this.light.castShadow = true;
 	this.scene.add( that.light );
-	
-
-	
+		
 	this.directionalLightFill = new THREE.SpotLight(0xffffff);
 	this.directionalLightFill.position.set(0, 0, -1000).normalize();
 	this.directionalLightFill.target = this.mesh;
-	//directionalLightFill.shadowCameraVisible = true;
-	//directionalLightFill.shadowDarkness = 0.25;
+
 	this.directionalLightFill.intensity = 1200;
 	this.directionalLightFill.castShadow = true;
 	this.scene.add(that.directionalLightFill);
@@ -427,11 +411,6 @@ init: function() {
 	else{
 		$('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
 	}
-
-
-
-	
-
 	if (Modernizr.filesystem) {
 		$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 	
@@ -545,6 +524,13 @@ init: function() {
 	
 	that.initComplete = true;
 	animate();
+	
+    function animate() {
+	  requestAnimationFrame( animate );
+	  that.render();	
+	}
+	
+	
 },
 checkLoad: function() {
 		var that = this;
@@ -574,9 +560,9 @@ playAudio: function(playlistId){
 		this.dancer.after( 0, function() {
 			// After 0s, let's get this real and map a frequency to displacement of mesh
 			// Note that the instance of dancer is bound to "this"
-			that.synthParams.bass = this.getFrequency( 140 ) * 100;
-			that.synthParams.mid = this.getFrequency( 210 ) * 100;
-			that.synthParams.treble = this.getFrequency( 460 ) * 100;
+			that.bass = this.getFrequency( 140 ) * 100;
+			that.mid = this.getFrequency( 210 ) * 100;
+			that.treble = this.getFrequency( 460 ) * 100;
 			
 		}).load( that.audioInput );		
 		this.audioInput.play();
@@ -852,65 +838,55 @@ handleDragOver: function(evt) {
 },
 audioChange: function(){
 	if(this.guiSetup===true && this.audioisplaying===true){
-	this.synthParams.bass = this.getFrequency( 140 ) * 100;
-    this.synthParams.mid = this.getFrequency( 210 ) * 100;
-    this.synthParams.treble = this.getFrequency( 460 ) * 100;
+	this.bass = this.getFrequency( 140 ) * 100;
+    this.mid = this.getFrequency( 210 ) * 100;
+    this.treble = this.getFrequency( 460 ) * 100;
     }
 },
 onParamsChange: function(){
  	var that = this;
-
-if(this.guiSetup===true){
-
-	that.mesh.scale.x = that.mesh.scale.y = parseFloat(that.synthParams.scale);
+ 	
+	that.mesh.scale.x = that.mesh.scale.y = parseFloat(that.scale);
 	
-	that.synthParams.mousex = that.mouseX;   
-	that.synthParams.mousey = that.mouseY;
+	that.mousex = that.mouseX;   
+	that.mousey = that.mouseY;
 	
-	that.camera.position.x = parseFloat(that.synthParams.camerax);
-	that.camera.position.y = parseFloat(that.synthParams.cameray);
-	that.camera.position.z = parseFloat(that.synthParams.cameraz);
+	that.camera.position.x = parseFloat(that.camerax);
+	that.camera.position.y = parseFloat(that.cameray);
+	that.camera.position.z = parseFloat(that.cameraz);
 	
-	that.videoMaterial.uniforms[ "displace" ].value = that.synthParams.displace;
-	that.videoMaterial.uniforms[ "multiplier" ].value = that.synthParams.multiplier;
-	that.videoMaterial.uniforms[ "opacity" ].value =  parseFloat(that.synthParams.opacity);
-	that.videoMaterial.uniforms[ "originX" ].value =  parseFloat(that.synthParams.originX);
-	that.videoMaterial.uniforms[ "originY" ].value =  parseFloat(that.synthParams.originY);
-	that.videoMaterial.uniforms[ "originZ" ].value =  parseFloat(that.synthParams.originZ);
+	that.videoMaterial.uniforms[ "displace" ].value = that.displace;
+	that.videoMaterial.uniforms[ "multiplier" ].value = that.multiplier;
+	that.videoMaterial.uniforms[ "opacity" ].value =  parseFloat(that.transparency);
+	that.videoMaterial.uniforms[ "originX" ].value =  parseFloat(that.originX);
+	that.videoMaterial.uniforms[ "originY" ].value =  parseFloat(that.originY);
+	that.videoMaterial.uniforms[ "originZ" ].value =  parseFloat(that.originZ);
 
 
-	that.effectHue.uniforms[ 'hue' ].value = that.synthParams.hue;
-	that.effectHue.uniforms[ 'saturation' ].value = that.synthParams.saturation;
+	that.effectHue.uniforms[ 'hue' ].value = that.hue;
+	that.effectHue.uniforms[ 'saturation' ].value = that.saturation;
 	
-	$('#canvas').css( 'background-color', that.synthParams.background );
-	that.hex = that.synthParams.background;
-	that.hex = parseInt(that.hex.replace('#','0x'));
-	that.renderer.setClearColor( that.hex , 1.0 );
+	//that.hex = that.background;	
+	$('#canvas').css( 'background-color', that.hex );	
+	var newhex = parseInt(that.hex.replace('#','0x'));
+	that.renderer.setClearColor( newhex , 1.0 );
 	
-	that.pointer[0] = that.synthParams.bass;
-	that.pointer[1] = that.synthParams.mid;
-	that.pointer[2] = that.synthParams.treble;
-	that.pointer[3] = that.synthParams.mousex;
-	that.pointer[4] = that.synthParams.mousey;
+	that.pointer[0] = that.bass;
+	that.pointer[1] = that.mid;
+	that.pointer[2] = that.treble;
+	that.pointer[3] = that.mousex;
+	that.pointer[4] = that.mousey;
 	
 	for(var i=0; i<=4; i++){
 	
 	eval(that.setting[i]);
 	
 	}
-	var gui = that.gui;
-	for (var i in gui.__controllers) {
-	  gui.__controllers[i].updateDisplay();
-	}
-	
-}
-	
-
 },
-meshChange: function(context){
-		var that = context;
+meshChange: function(shape){
+		var that = this;
 		that.scene.remove(that.mesh);
-		var shape = that.synthParams.shape;
+		that.shape = shape;
 		that.geometry.verticesNeedUpdate = false;
 		that.geometry.dynamic = false;
 		console.log(shape);
@@ -934,12 +910,12 @@ meshChange: function(context){
 		break;
 		
 		case 'cylinder':
-					that.geometry = new THREE.CylinderGeometry( that.synthParams.scale, that.synthParams.scale, 240, 360, 240, false );
+					that.geometry = new THREE.CylinderGeometry( that.scale, that.scale, 240, 360, 240, false );
 					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		
 		case 'torus':
-					that.geometry = new THREE.TorusGeometry( that.synthParams.scale, 360, 360, 360 );
+					that.geometry = new THREE.TorusGeometry( that.scale, 360, 360, 360 );
 					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		 
@@ -953,65 +929,16 @@ meshChange: function(context){
 		that.geometry.verticesNeedUpdate = true;
 		that.mesh.doubleSided = true;
 		that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0;
-		that.mesh.scale.x = that.mesh.scale.y = that.synthParams.scale;	
-		that.synthParams.shape = shape;
+		that.mesh.scale.x = that.mesh.scale.y = that.scale;	
+		that.shape = shape;
 		that.scene.add(that.mesh);	
 },
-onToggleWireframe: function(context) {
-  var that = this;
-  if( that.synthParams.wireframe === false && that.videoMaterial.wireframe === false ){
-    	
-    	that.videoMaterial.wireframe = true;
-
-    	
-    }
-   else{
-    
-	  	that.videoMaterial.wireframe = false;
-
-    }	
-},
-onToggleWebcam: function(context) {
-	var that = context;
-    if( that.webcamEnabled === false  ){
-    	
-		that.videoInput.src = that.videoObject;
-		that.webcamEnabled = true;
-		that.synthParams.webcam = true; 
-
-	
-    }
-    else{
-    	
-    	that.playVideo(that.currentVideo);
-    	that.webcamEnabled = false;
-    	that.synthParams.webcam = false; 
-	    	
-    }   	
-},
-onToggleMenus: function() {
-	var that = this;
-    if( that.menusEnabled === false  ){
-    	
-		$('#close_drop,.close-button,#topfill').show();
-		that.menusEnabled = true;
-	
-    }
-    else{
-    
-    	$('#close_drop,.close-button,#topfill').hide();
-		that.menusEnabled = false;
-    }
- 	
-},
-
 onDocumentMouseMove: function(event) {
 
 	this.mouseX = ( event.clientX - this.windowHalfX );
 	this.mouseY = ( event.clientY - this.windowHalfY ) * 0.3;
 
 },
-
 render: function() {
 	var that = this;
 	if ( this.videoInput.readyState === this.videoInput.HAVE_ENOUGH_DATA ) {
@@ -1023,22 +950,6 @@ render: function() {
 	//renderer.clear();
 	this.composer.render();
 
-},
-
-animate: function(){
-		
-		requestAnimationFrame( animate );
-		this.render();
 }
-
-
 } // end prototype
 
-var s = new Synth();
-	s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
-	s.init();
-	function animate() {
-		requestAnimationFrame( animate );
-		s.render();	
-	}
-} // end else for webgl detection

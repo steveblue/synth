@@ -10,7 +10,6 @@
 		<script src="js/modernizr.custom.js"></script>
 		<script src="js/three.min.js"></script>
 		<script src="js/libs/dancer.js"></script>
-		<script src="js/libs/dat.gui.min.js"></script>
 		<script src="js/libs/keypress-1.0.8.min.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/shaders/RuttShader.js"></script><!--This is where the magic happens-->
@@ -27,7 +26,7 @@
 	<body>
 	<header>
 	    <h1>Synth</h1>
-	    <h2>v.181</h2>
+	    <h2>v.185</h2>
 		<a href="info/index.php">Learn More</a>
 	
 		<p>WARNING: This interactive experience may potentially trigger seizures for people with photosensitive epilepsy. Viewer discretion is advised.</p>
@@ -43,10 +42,18 @@
 	</div>
 	<audio id="audio" src="" controls="controls"></audio>
 	<div id="gui_container"></div>
-	<video id="video" src="vid/wavves-1280x720-2500kbps.mp4" width="640" height="360" autoplay loop="loop" muted style="display:none">
-	</video>
+	<video id="video" src="vid/wavves-1280x720-2500kbps.mp4" width="640" height="360" autoplay loop="loop" muted style="display:none"></video>
+	
 	<div id="canvas"></div>
 	<script src="js/synth.js"></script>
+	<script>
+
+		var s = new Synth();
+			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
+			s.init();
+		
+
+	</script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -55,5 +62,6 @@
 	  ga('create', 'UA-610740-9', 'kineticvideo.co');
 	  ga('send', 'pageview');
 	</script>
+	
 </body>
 </html>
