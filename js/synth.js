@@ -42,7 +42,6 @@ var Synth = function() {
 	this.controls = false;	
 	this.gui;
 	this.pointer = [];
-	this.pointTo = 0;
 	this.setting = [];
 	this.bass = 0.0;
 	this.mid = 0.0;
@@ -349,44 +348,9 @@ init: function() {
 
 	this.mesh.position.z = this.scene.position.z;
 	this.scene.add( that.mesh );
-			
-	this.pointTo = 0;
-	
+
 	if (Modernizr.getusermedia) {
-		 $('header h2').text('Click "allow" to start webcam.');
-		  setTimeout(function(){
-		     $('header h2').text('Drag and drop up to 1GB of web audio and video to the playlists.');
-		    setTimeout(function(){
-				 $('header h2').text('Control the distortion.');
-				 $('header h2').next('a').text('Watch the video to learn more').attr('href','http://kineticvideo.co/info/synth-early-alpha-available-now/');
-					if(that.controls === false){
-					 $('.close-button').trigger('click');   
-					}
-				  		setTimeout(function(){
-				  		
-					  			$('header h2').text('Audio and mouse control the Synthesizer.');
-					  		//	$('.property-name').addClass('highlight');
-					  				setTimeout(function(){
-					  			//	$('.property-name').removeClass('highlight');
-					  			//	$('.save-row select').addClass('highlight');
-					  				$('header h2').text('Save presets for later.');
-					  				
-					  					setTimeout(function(){
-					  				//	$('.save-row select').removeClass('highlight');
-					  					$('header p,header h2,header h1,header a').fadeOut(2000);
-					  					},5000);
-					  				
-					  				  
-					  				},5000);
-					  	
-				 	},5000);
-				 
-		    },5000);
-		   },3000);
-		    
-		    
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-		//get webcam
 		navigator.getUserMedia({
 		    video: true,
 		    audio: false
@@ -405,7 +369,7 @@ init: function() {
 		
 		    
 		}, function(error) {
-		    prompt.innerHTML = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
+		   $('header h2').text('Unable to capture WebCam. Please reload the page or try with Google Chrome.');
 		});
 	}
 	else{
@@ -441,9 +405,6 @@ init: function() {
 	document.addEventListener( 'mousemove', that.onDocumentMouseMove, false );
 	function onWindowResize() {
 
-	that.windowHalfX = window.innerWidth / 2;
-	that.windowHalfY = window.innerHeight / 2;
-
 	that.camera.aspect = window.innerWidth / window.innerHeight;
 	that.camera.updateProjectionMatrix();
 
@@ -452,6 +413,7 @@ init: function() {
 
 	}
 	window.addEventListener( 'resize', onWindowResize, false );
+	
 	keypress.combo("1", function() {
 	   that.playVideo(0);
     });
@@ -480,7 +442,7 @@ init: function() {
        that.playVideo(8);
     });
     keypress.combo("0", function() {
-       that.onToggleWebcam(that);
+       that.webcam('true')
     });
     keypress.combo("l", function() {
        if(that.videoInput.loop == false){
@@ -505,7 +467,7 @@ init: function() {
     });
     keypress.combo("m", function() {
       
-		  that.onToggleMenus();
+		  that.menu(true);
        
     });
 	$('.close-button').on('click',function(){
@@ -523,6 +485,7 @@ init: function() {
 	}
 	
 	that.initComplete = true;
+	
 	animate();
 	
     function animate() {
@@ -531,15 +494,6 @@ init: function() {
 	}
 	
 	
-},
-checkLoad: function() {
-		var that = this;
-        if (that.videoInput.readyState === 4) {
-           that.init();
-           animate();
-        } else {
-            setTimeout(that.checkLoad, 100);
-        }
 },
 playAudio: function(playlistId){
 		var that = this;
@@ -600,10 +554,7 @@ continueVideoPlay: function(context){
 		    that.playVideo(that.videoInput.current);
 		}
 },
-playVideo: function(playlistId){
-		//var that = Synth.prototype;
-		var that = this;
-    	//this.currentVideo = this.videoInput.current = playlistId;	  	  		
+playVideo: function(playlistId){  		
     	this.videoInput.pause();
     	this.videoisplaying = false;
 		this.videoInput.src = this.vplaylist[playlistId];
@@ -827,7 +778,7 @@ handleFileSelect: function(evt,type,context) {
 			   	
 	      })(file);
 	    }
-		//$('header h2').text('Change controls to achieve stunning new looks.');
+		$('header h2').text('Change controls to achieve stunning new looks.');
 	    $('header').delay(8000).fadeOut(2000);	    
 	});	
 },
@@ -837,13 +788,13 @@ handleDragOver: function(evt) {
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 },
 audioChange: function(){
-	if(this.guiSetup===true && this.audioisplaying===true){
+	if(this.audioisplaying===true){
 	this.bass = this.getFrequency( 140 ) * 100;
     this.mid = this.getFrequency( 210 ) * 100;
     this.treble = this.getFrequency( 460 ) * 100;
     }
 },
-onParamsChange: function(){
+paramsChange: function(){
  	var that = this;
  	
 	that.mesh.scale.x = that.mesh.scale.y = parseFloat(that.scale);
@@ -934,10 +885,8 @@ meshChange: function(shape){
 		that.scene.add(that.mesh);	
 },
 onDocumentMouseMove: function(event) {
-
 	this.mouseX = ( event.clientX - this.windowHalfX );
 	this.mouseY = ( event.clientY - this.windowHalfY ) * 0.3;
-
 },
 render: function() {
 	var that = this;
@@ -946,10 +895,9 @@ render: function() {
 		if ( this.videoMaterial ) this.videoMaterial.needsUpdate = true;
 	}	
 	this.camera.lookAt( that.scene.position );	
-	this.onParamsChange();
+	this.paramsChange();
 	//renderer.clear();
 	this.composer.render();
-
 }
 } // end prototype
 
