@@ -229,11 +229,7 @@ init: function() {
 	this.container = document.getElementById( 'canvas' );
 	document.body.appendChild( that.container );
 	
-	this.vplaylist.push( 'vid/wavves-1280x720-2500kbps.mp4' ); 
-	
-	this.videoInput.load();
-	this.videoInput.loop = true;
-	
+
 	this.camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
 	this.camera.position.z = 3600;
 	
@@ -300,33 +296,6 @@ init: function() {
 	this.effectHue.uniforms[ 'saturation' ].value = 0.0;
 	this.composer.addPass( that.effectHue );
 	
-	
-	if (Modernizr.filesystem) {
-	this.dropZone.context = this;
-	this.readFiles.context = this;
-	this.dropZoneVideo.context = this;
-	this.readFilesVideo.context = this;
-	
-	this.dropZone.addEventListener('dragover', that.handleDragOver, false);
-	this.dropZone.ondrop = function(evt){
-		that.handleFileSelect(evt,'audio',that);
-	}
-	this.readFiles.onmousedown = function(evt){
-		that.readFileSelect(evt,'audio');
-		$('#read_files').fadeOut(1000);
-	} 
-	this.dropZoneVideo.addEventListener('dragover', that.handleDragOver, false);	
-	this.dropZoneVideo.ondrop = function(evt){
-		that.handleFileSelect(evt,'video',that);
-	}
-	this.readFilesVideo.onmousedown = function(evt){
-		that.readFileSelect(evt,'video');
-		$('#read_video').fadeOut(1000);
-	}
-	} 
-	if (window.File && window.FileReader && window.FileList && window.Blob) {
-	window.requestFileSystem  =  window.requestFileSystem || window.webkitRequestFileSystem; 
-	}
 
 	this.light = new THREE.SpotLight(0xffffff);
 	this.light.position.set( 0, 0, 1000 ).normalize();
@@ -349,6 +318,35 @@ init: function() {
 	this.mesh.position.z = this.scene.position.z;
 	this.scene.add( that.mesh );
 
+	
+	function onWindowResize() {
+
+	that.camera.aspect = window.innerWidth / window.innerHeight;
+	that.camera.updateProjectionMatrix();
+
+	that.renderer.setSize( window.innerWidth, window.innerHeight );
+	that.composer.reset();
+
+	}
+	window.addEventListener( 'resize', onWindowResize, false );
+	
+		
+	this.initControls();
+	this.initWebcam();
+	
+	that.initComplete = true;
+	
+	animate();
+	
+    function animate() {
+	  requestAnimationFrame( animate );
+	  that.render();	
+	}
+	
+	
+},
+initWebcam: function(){
+	var that = this;
 	if (Modernizr.getusermedia) {
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		navigator.getUserMedia({
@@ -375,7 +373,45 @@ init: function() {
 	else{
 		$('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
 	}
+
+	if(that.webcamEnabled === false){
+		that.playVideo(0);
+	}
+},
+initControls: function(){
+	var that = this;
+		
+	
+	
+	
 	if (Modernizr.filesystem) {
+	this.dropZone.context = this;
+	this.readFiles.context = this;
+	this.dropZoneVideo.context = this;
+	this.readFilesVideo.context = this;
+	
+	this.dropZone.addEventListener('dragover', that.handleDragOver, false);
+	this.dropZone.ondrop = function(evt){
+		that.handleFileSelect(evt,'audio',that);
+	}
+	this.readFiles.onmousedown = function(evt){
+		that.readFileSelect(evt,'audio');
+		$('#read_files').fadeOut(1000);
+	} 
+	this.dropZoneVideo.addEventListener('dragover', that.handleDragOver, false);	
+	this.dropZoneVideo.ondrop = function(evt){
+		that.handleFileSelect(evt,'video',that);
+	}
+	this.readFilesVideo.onmousedown = function(evt){
+		that.readFileSelect(evt,'video');
+		$('#read_video').fadeOut(1000);
+	}
+	 
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+	window.requestFileSystem  =  window.requestFileSystem || window.webkitRequestFileSystem; 
+	}
+	
+
 		$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 	
 		$('#close_drop').on('click',function(){
@@ -402,17 +438,9 @@ init: function() {
 	else{
 		$('#close_drop,#video_drop,#drop_zone,audio').hide();
 	}	
+	
+	
 	document.addEventListener( 'mousemove', that.onDocumentMouseMove, false );
-	function onWindowResize() {
-
-	that.camera.aspect = window.innerWidth / window.innerHeight;
-	that.camera.updateProjectionMatrix();
-
-	that.renderer.setSize( window.innerWidth, window.innerHeight );
-	that.composer.reset();
-
-	}
-	window.addEventListener( 'resize', onWindowResize, false );
 	
 	keypress.combo("1", function() {
 	   that.playVideo(0);
@@ -479,21 +507,7 @@ init: function() {
 		that.controls = false;	
 		$('.close-button').removeClass('active');
 		}
-	});
-	if(that.webcamEnabled === false){
-		that.playVideo(0);
-	}
-	
-	that.initComplete = true;
-	
-	animate();
-	
-    function animate() {
-	  requestAnimationFrame( animate );
-	  that.render();	
-	}
-	
-	
+	});	
 },
 playAudio: function(playlistId){
 		var that = this;
@@ -597,6 +611,12 @@ errorHandler: function(err){
 defaultVideo: function(url){
 						//vplaylist.push( url ); 
 				   	  	var that = this;
+				   	  	
+				   	  	this.vplaylist.push( url ); 	
+				   	  	this.videoInput.load();
+				   	  	this.videoInput.loop = true;
+	
+	
 				   	  	var li = document.createElement('li');
 				   	  	var name = 'waves.mp4';
 				   	  	var correctName = 'waves.mp4';
@@ -717,13 +737,13 @@ handleFileSelect: function(evt,type,context) {
 	var files = evt.dataTransfer.files;
 	function loadEndHandler(context,fileEntry){
 						if(type === 'video'){
-		  				context.vplaylist.push( fileEntry.toURL() ); 
+		  				that.vplaylist.push( fileEntry.toURL() ); 
 		  				
 		  				}
 		  				if(type === 'audio'){
-		  				context.aplaylist.push( fileEntry.toURL() ); 
+		  				that.aplaylist.push( fileEntry.toURL() ); 
 		  				}
-		  				context.readFileSelect(evt,type);
+		  				that.readFileSelect(evt,type);
 	}
 	window.requestFileSystem(window.TEMPORARY, 800*1024*1024, function(fs) {
 	    fs.root.getDirectory(type, {create: true}, function(dirEntry) {
