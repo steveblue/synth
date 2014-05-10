@@ -49,7 +49,6 @@
        <equalizer class="equalizer" id="equalizer1"> 
 		<div class="wrapper">
 		<control class="control ui-widget-content" data-in1="0" data-in2="40" data-in3="80" data-in4="90" data-in5="100" data-in6="90" data-in7="80" data-in8="40" data-in9="0" data-in10="0"><ul class="bars"><li class="in10"></li><li class="in9"></li><li class="in8"></li><li class="in7"></li><li class="in6"></li><li class="in5"></li><li class="in4"></li><li class="in3"></li><li class="in2"></li><li class="in1"></li></ul></control> 
-		<div class="value"><p class="out1">0</p><p class="out2">90</p><p class="out3">40</p></div>
 		</div>
 		</equalizer> 
 		<fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="oZ" data-value="0.0" data-start="1200.0" data-end="-1200.0"><point></point></control><div class="value"></div></div></fader>		
@@ -64,7 +63,8 @@
 	    <fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="scaler" data-value="0.0" data-start="0.0" data-end="10.0"><point></point></control><div class="value"></div></div></fader>
 	    <fader class="fader v hue"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="color" data-value="0.0" data-start="0.0" data-end="360.0"><point></point></control><div class="value"></div></div></fader>	  
 	    <fader class="fader v sat"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="saturate" data-value="0.0" data-start="1.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 
-	    <fader class="fader v opacity"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="opacity" data-value="0.0" data-start="1.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 	    	      
+	    <fader class="fader v opacity"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="opacity" data-value="0.0" data-start="1.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 
+	    	    	      
 <!--		<fader class="fader h" id="fader2"> 
 		<div class="wrapper">
 		<control class="hor draggable control ui-widget-content" data-key="opacity" data-value="0.5" data-start="0.0" data-end="1.0"><point></point></control> 
@@ -79,6 +79,14 @@
 		</div>
 		</joystick>	
 		<fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-key="camZ" data-value="0.0" data-start="1200.0" data-end="-1200.0"><point></point></control><div class="value"></div></div></fader>	
+		<div class="togglefarm">
+		<toggle class="toggle model"><control class="control" data-key="plane" data-value="true">Plane</control></toggle>
+		<toggle class="toggle model"><control class="control" data-key="cube" data-value="false">Cube</control></toggle>
+		<toggle class="toggle model"><control class="control" data-key="sphere" data-value="false">Sphere</control></toggle>
+		<toggle class="toggle model"><control class="control" data-key="cylinder" data-value="false">Cylinder</control></toggle>
+		<toggle class="toggle model"><control class="control" data-key="torus" data-value="false">Torus</control></toggle>
+		<toggle class="toggle wire"><control class="control" data-key="wire" data-value="false">Wireframe</control></toggle>	
+		</div>
 	</div>
 	
 	

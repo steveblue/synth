@@ -309,7 +309,7 @@ equalizer{
 	height:100%;
 	margin:0;
 	padding:0;
-	border: 1px solid #fff;
+	border: 1px solid rgba(200,200,200,0.3);
 	float:left;
 	.wrapper{
 		width:100%;
@@ -342,7 +342,8 @@ equalizer{
 			 		position:relative;
 			 		top:0;
 			 		float:left;
-			 		background:#ABABAB;
+			 		background:rgba(200,200,200,0.5);
+			 		
 		 		}
 		 		}
 		}
@@ -365,11 +366,11 @@ fader{
 	width:40px;
 	margin: 0;
 	float:left;
-	border: 1px solid rgba(200,200,200,0.5);
+	border: 1px solid rgba(200,200,200,0.3);
 	//border-radius: 12px;
 	z-index:9999;
 	margin-left:0px;
-	background:rgba(0,0,0,0.8);
+	background:transparent;
 	.wrapper{
 		height:100%;
 		width:100%;
@@ -455,7 +456,7 @@ joystick{
 	height:240px;
 	width:240px;
 	margin: 0;
-	border: 1px solid #fff;
+	border: 1px solid rgba(200,200,200,0.3);
 	z-index:9999;
 	float:left;
 	margin-left:0px;
@@ -473,7 +474,7 @@ joystick{
 			top:0;
 			left:0;
 			-webkit-transform-origin:50% 50%;
-			background:#ABABAB;
+			background:url(../img/crosshair.png);
 			point{
 				display:none;
 			}
@@ -490,5 +491,29 @@ joystick{
 		}
 	}
 
+}
+.togglefarm{
+	display:block;
+	position:relative;
+	height:240px;
+	width:240px;
+	float:left;
+}
+toggle{
+	display:block;
+	position:relative;
+	width:100%;
+	height:30px;
+	border: 1px solid rgba(200,200,200,0.3);
+	clear:both;
+	text-align:center;
+	padding-top:10px;
+	font-family: 'Lato', sans-serif;
+	font-size:14px;
+	font-weight: 300;
+	letter-spacing: 0.2em;
+	&.active{
+		background:rgba(200,200,200,0.7);
+	}
 }
 

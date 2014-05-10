@@ -30,6 +30,7 @@ var Synth = function() {
 	this.audioInput = document.getElementById('audio');
 	this.audioInput.current = 0;
 	this.audioisplaying = false;
+	this.audiostream = [];
 	this.dancer = new Dancer();		
 	this.dropZone = document.getElementById('drop_zone');
 	this.readFiles = document.getElementById('read_files');  
@@ -43,9 +44,6 @@ var Synth = function() {
 	this.gui;
 	this.pointer = [];
 	this.setting = [];
-	this.bass = 0.0;
-	this.mid = 0.0;
-	this.treble = 0.0;
 	this.mousex = that.mouseX;
 	this.mousey = that.mouseY;
 	this.shape = 'plane';
@@ -71,16 +69,16 @@ var Synth = function() {
 	this.f4;
 	this.f5;
 	this.guiContainer;		
-	this.pointer.push(this.bass);
-	this.pointer.push(this.mid);
-	this.pointer.push(this.treble);
-	this.pointer.push(this.mousex);
-	this.pointer.push(this.mousey);		
-	this.setting.push('');
-	this.setting.push('');
-	this.setting.push('');
-	this.setting.push('');
-	this.setting.push('');	
+//	this.pointer.push(this.bass);
+//	this.pointer.push(this.mid);
+//	this.pointer.push(this.treble);
+//	this.pointer.push(this.mousex);
+//	this.pointer.push(this.mousey);		
+//	this.setting.push('');
+//	this.setting.push('');
+//	this.setting.push('');
+//	this.setting.push('');
+//	this.setting.push('');	
 }
 
 Synth.prototype = {
@@ -569,6 +567,37 @@ initControls: function(){
 		}
 	});
 	
+	$('.toggle.model').on('click',function(){
+		
+		if(!$(this).hasClass('active')){
+		
+			$('.toggle.model').removeClass('active');
+			$(this).addClass('active');
+			console.log("that.model='"+$(this).children('control').data('key')+"'");
+			eval("that.model='"+$(this).children('control').data('key')+"'");
+			
+		}
+	
+		
+		
+	});
+	$('.toggle.wire').on('click',function(){
+		
+		if(!$(this).hasClass('active')){
+		
+			
+			$(this).addClass('active');
+			eval("that.wire = true");
+			
+		}
+		else{
+			$(this).removeClass('active');
+			eval("that.wire = false");
+		}
+	
+		
+		
+	});	
 	
 	if (Modernizr.filesystem) {
 	this.dropZone.context = this;
@@ -707,17 +736,26 @@ playAudio: function(playlistId){
     	else{
 	    	$('audio').show();
     	}
-    	
+
     	this.audioInput.id = 'audio';
     	this.audioInput.controls = true;
 		this.audioInput.src = this.aplaylist[playlistId];  
 		this.dancer.after( 0, function() {
 			// After 0s, let's get this real and map a frequency to displacement of mesh
 			// Note that the instance of dancer is bound to "this"
-			that.bass = this.getFrequency( 140 ) * 100;
-			that.mid = this.getFrequency( 210 ) * 100;
-			that.treble = this.getFrequency( 460 ) * 100;
-			
+
+			that.audiostream[0] = Math.round(this.getFrequency( 0 )*200);
+			that.audiostream[1] = Math.round(this.getFrequency( 30 )*200);
+			that.audiostream[2] = Math.round(this.getFrequency( 60 )*200);
+			that.audiostream[3] = Math.round(this.getFrequency( 100 )*200);
+			that.audiostream[4] = Math.round(this.getFrequency( 150 )*200);
+			that.audiostream[5] = Math.round(this.getFrequency( 200 )*200);
+			that.audiostream[6] = Math.round(this.getFrequency( 250 )*200);
+			that.audiostream[7] = Math.round(this.getFrequency( 300 )*200);
+			that.audiostream[8] = Math.round(this.getFrequency( 350 )*200);
+			that.audiostream[9] = Math.round(this.getFrequency( 400 )*200);												
+			that.audiostream[10] = Math.round(this.getFrequency( 460 )*200);
+
 		}).load( that.audioInput );		
 		this.audioInput.play();
 		this.dancer.play();
@@ -993,13 +1031,6 @@ handleDragOver: function(evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 },
-audioChange: function(){
-	if(this.audioisplaying===true){
-	this.bass = this.getFrequency( 140 ) * 100;
-    this.mid = this.getFrequency( 210 ) * 100;
-    this.treble = this.getFrequency( 460 ) * 100;
-    }
-},
 paramsChange: function(){
  	var that = this;
  	
@@ -1028,17 +1059,30 @@ paramsChange: function(){
 	var newhex = parseInt(that.hex.replace('#','0x'));
 	that.renderer.setClearColor( newhex , 1.0 );
 	
-	that.pointer[0] = that.bass;
-	that.pointer[1] = that.mid;
-	that.pointer[2] = that.treble;
-	that.pointer[3] = that.mousex;
-	that.pointer[4] = that.mousey;
-	
-	for(var i=0; i<=4; i++){
-	
-	eval(that.setting[i]);
-	
+	if(that.audioisplaying === true){
+	$('.in1').css('height',that.audiostream[0]+'%');
+	$('.in2').css('height',that.audiostream[1]+'%');
+	$('.in3').css('height',that.audiostream[2]+'%');
+	$('.in4').css('height',that.audiostream[3]+'%');
+	$('.in5').css('height',that.audiostream[4]+'%');
+	$('.in6').css('height',that.audiostream[5]+'%');
+	$('.in7').css('height',that.audiostream[6]+'%');
+	$('.in8').css('height',that.audiostream[7]+'%');
+	$('.in9').css('height',that.audiostream[8]+'%');
+	$('.in10').css('height',that.audiostream[9]+'%');
 	}
+	
+//	that.pointer[0] = that.bass;
+//	that.pointer[1] = that.mid;
+//	that.pointer[2] = that.treble;
+//	that.pointer[3] = that.mousex;
+//	that.pointer[4] = that.mousey;
+//	
+//	for(var i=0; i<=4; i++){
+//	
+//	eval(that.setting[i]);
+//	
+//	}
 },
 meshChange: function(shape){
 		var that = this;

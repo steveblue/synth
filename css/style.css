@@ -361,7 +361,7 @@ equalizer {
   height: 100%;
   margin: 0;
   padding: 0;
-  border: 1px solid #fff;
+  border: 1px solid rgba(200, 200, 200, 0.3);
   float: left;
 }
 /* line 314, ../scss/style.scss */
@@ -399,22 +399,22 @@ equalizer .wrapper control .bars li {
   position: relative;
   top: 0;
   float: left;
-  background: #ABABAB;
+  background: rgba(200, 200, 200, 0.5);
 }
-/* line 349, ../scss/style.scss */
+/* line 350, ../scss/style.scss */
 equalizer .wrapper .value {
   width: 200px;
   position: relative;
   left: 50%;
   margin-left: -100px;
 }
-/* line 354, ../scss/style.scss */
+/* line 355, ../scss/style.scss */
 equalizer .wrapper .value p {
   float: left;
   padding-right: 50px;
 }
 
-/* line 361, ../scss/style.scss */
+/* line 362, ../scss/style.scss */
 fader {
   display: block;
   position: relative;
@@ -422,19 +422,19 @@ fader {
   width: 40px;
   margin: 0;
   float: left;
-  border: 1px solid rgba(200, 200, 200, 0.5);
+  border: 1px solid rgba(200, 200, 200, 0.3);
   z-index: 9999;
   margin-left: 0px;
-  background: rgba(0, 0, 0, 0.8);
+  background: transparent;
 }
-/* line 373, ../scss/style.scss */
+/* line 374, ../scss/style.scss */
 fader .wrapper {
   height: 100%;
   width: 100%;
   padding: 0px;
   margin: 0px;
 }
-/* line 378, ../scss/style.scss */
+/* line 379, ../scss/style.scss */
 fader .wrapper control.vert {
   display: block;
   width: 40px;
@@ -445,7 +445,7 @@ fader .wrapper control.vert {
   -webkit-transform-origin: 50% 50%;
   background: transparent;
 }
-/* line 387, ../scss/style.scss */
+/* line 388, ../scss/style.scss */
 fader .wrapper control.vert point {
   display: block;
   width: 40px;
@@ -455,7 +455,7 @@ fader .wrapper control.vert point {
   top: 20px;
   left: 0px;
 }
-/* line 397, ../scss/style.scss */
+/* line 398, ../scss/style.scss */
 fader .wrapper control.hor {
   display: block;
   width: 40px;
@@ -466,7 +466,7 @@ fader .wrapper control.hor {
   -webkit-transform-origin: 50% 50%;
   background: transparent;
 }
-/* line 406, ../scss/style.scss */
+/* line 407, ../scss/style.scss */
 fader .wrapper control.hor point {
   display: block;
   width: 1px;
@@ -476,7 +476,7 @@ fader .wrapper control.hor point {
   top: 0px;
   left: 20px;
 }
-/* line 416, ../scss/style.scss */
+/* line 417, ../scss/style.scss */
 fader .wrapper .value {
   display: block;
   position: absolute;
@@ -488,53 +488,53 @@ fader .wrapper .value {
   color: #ABABAB;
 }
 
-/* line 429, ../scss/style.scss */
+/* line 430, ../scss/style.scss */
 fader.h {
   width: 360px;
   height: 40px;
 }
 
-/* line 437, ../scss/style.scss */
+/* line 438, ../scss/style.scss */
 fader.hue {
   background: url(../img/hue.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 442, ../scss/style.scss */
+/* line 443, ../scss/style.scss */
 fader.sat {
   background: url(../img/saturation.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 447, ../scss/style.scss */
+/* line 448, ../scss/style.scss */
 fader.opacity {
   background: url(../img/opacity.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 452, ../scss/style.scss */
+/* line 453, ../scss/style.scss */
 joystick {
   display: block;
   position: relative;
   height: 240px;
   width: 240px;
   margin: 0;
-  border: 1px solid #fff;
+  border: 1px solid rgba(200, 200, 200, 0.3);
   z-index: 9999;
   float: left;
   margin-left: 0px;
 }
-/* line 463, ../scss/style.scss */
+/* line 464, ../scss/style.scss */
 joystick .wrapper {
   height: 100%;
   width: 100%;
   padding: 0px;
   margin: 0px;
 }
-/* line 468, ../scss/style.scss */
+/* line 469, ../scss/style.scss */
 joystick .wrapper control.xy {
   display: block;
   width: 40px;
@@ -543,13 +543,13 @@ joystick .wrapper control.xy {
   top: 0;
   left: 0;
   -webkit-transform-origin: 50% 50%;
-  background: #ABABAB;
+  background: url(../img/crosshair.png);
 }
-/* line 477, ../scss/style.scss */
+/* line 478, ../scss/style.scss */
 joystick .wrapper control.xy point {
   display: none;
 }
-/* line 481, ../scss/style.scss */
+/* line 482, ../scss/style.scss */
 joystick .wrapper .value {
   display: block;
   position: absolute;
@@ -559,4 +559,33 @@ joystick .wrapper .value {
   z-index: 100;
   font-size: 8px;
   color: #ABABAB;
+}
+
+/* line 495, ../scss/style.scss */
+.togglefarm {
+  display: block;
+  position: relative;
+  height: 240px;
+  width: 240px;
+  float: left;
+}
+
+/* line 502, ../scss/style.scss */
+toggle {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 30px;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  clear: both;
+  text-align: center;
+  padding-top: 10px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+}
+/* line 515, ../scss/style.scss */
+toggle.active {
+  background: rgba(200, 200, 200, 0.7);
 }
