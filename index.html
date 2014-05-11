@@ -31,6 +31,7 @@
 		<a href="info/index.php">Learn More</a>
 	</header>
 	<!--<div id="topfill"></div>-->
+ <div id="gui_container">
 	<div id="video_drop">
 		<ul id="videoplaylist"></ul>
 		<h5 id="read_video">Read Video Files</h5>
@@ -40,7 +41,8 @@
 		<h5 id="read_files">Read Audio Files</h5>
 	</div>
 	<audio id="audio" src="" controls="controls"></audio>
-	<div id="gui_container"></div>
+</div>
+
 	<video id="video" src="vid/wavves-1280x720-2500kbps.mp4" width="640" height="360" autoplay loop="loop" muted style="display:none"></video>
 	
 	<div id="canvas"></div>
@@ -93,7 +95,7 @@
 	<script src="js/synth.js"></script>
 	<script>
 
-		var s = new Synth();
+		var s = new Synth(true,false);
 			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
 			s.init();
 		

@@ -142,6 +142,7 @@ article{
 	background: url('img/dropzone.png');
 	background-size: cover;
 	background-repeat: repeat;
+
 	p{
 	  display:block; 
       position: relative;
@@ -159,17 +160,17 @@ article{
 }
 #video_drop{
 	position: absolute;
-	top:328px;
-	left:0;
+	top:0px;
+	left:298px;
 	display:block;
 	width:297px;
 	height:297px;
 	border:1px solid #101010;
 	z-index: 1000;
-	
 	background: url('img/dropvid.png');
 	background-size: cover;
 	background-repeat: repeat;
+
 	p{
 	  display:block; 
       position: relative;
@@ -212,19 +213,29 @@ article{
 }
 #close_drop{
 	position: absolute;
-	top: 627px;
+	top: 297px;
 	left:0px;
 	display:block;
-	width:300px;
+	width:598px;
 	height:20px;
-	background:#010101;
+	background:rgba(0,0,0,0.7);
 	text-align:center;
 }
-#close_drop:hover{
+#gui_drop{
+	position: absolute;
+	bottom: 33%;
+	left:0px;
+	display:block;
+	width:100%;
+	height:20px;
+	background:rgba(0,0,0,0.7);
+	text-align:center;
+}
+#close_drop:hover,#gui_drop:hover{
 	cursor:pointer; 
 	cursor:hand;
 }
-#close_drop {
+#close_drop, #gui_drop {
 	p{
 		  color:rgb(171, 171, 171);
 		  opacity: 0.8;
@@ -240,7 +251,7 @@ article{
 }
 audio{
 	position:absolute;
-	top:298px;
+	top:318px;
 	left:0;
 	display:none;
 }
@@ -269,10 +280,9 @@ audio{
 	position:absolute;
 	display:block;
 	top:0;
-	right:0px;
-	width:245px;
-	height:auto;
+	left:0px;
 	background:#010101;
+	display:none;
 }
 
 #container{
@@ -282,7 +292,7 @@ audio{
 	position:absolute;
 	bottom:0;
 	background:rgba(0,0,0,0.6);
-	
+	display:none;	
 }
 .cancel{
 	display:block;

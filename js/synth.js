@@ -1,6 +1,8 @@
 /*synth v185*/
-var Synth = function() {	
+var Synth = function(control,cam) {	
 	var that = this;
+	this.control = control;
+	this.cam = cam;
 	this.container;
 	this.camera;
 	this.scene;
@@ -245,13 +247,13 @@ set menu(val){
 
     if( this.menusEnabled === false  && val === true ){
     	
-		$('#close_drop,.close-button,#topfill').show();
+		$('#close_drop,#gui_drop,.close-button,#topfill').show();
 		this.menusEnabled = true;
 	
     }
     else{
     
-    	$('#close_drop,.close-button,#topfill').hide();
+    	$('#close_drop,#gui_drop,.close-button,#topfill').hide();
 		this.menusEnabled = false;
     }
  	
@@ -364,9 +366,12 @@ init: function() {
 	}
 	window.addEventListener( 'resize', onWindowResize, false );
 	
-		
+	if(this.control === true){	
 	this.initControls();
+	}
+	if(this.cam === true){	
 	this.initWebcam();
+	}
 	
 	that.initComplete = true;
 	
@@ -414,6 +419,9 @@ initWebcam: function(){
 },
 initControls: function(){
 	var that = this;
+	
+	$('#gui_container').show(); //make more dynamic
+	$('#container').show();
 	
 	function isFloat(n) {
     return n === +n && n !== (n|0);
@@ -628,6 +636,7 @@ initControls: function(){
 	
 
 		$('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
+		$('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
 	
 		$('#close_drop').on('click',function(){
 			$(this).toggleClass('active');
@@ -644,9 +653,24 @@ initControls: function(){
 			    $('#drop_zone').show();
 			    $('#video_drop').show();
 			    $('audio').show();
-			    $('audio').css('top','298px');
-				$(this).css('top', '627px');
+			    $('audio').css('top','318px');
+				$(this).css('top', '298px');
 				$(this).children('p').text('Close Playlist');
+			}
+		});
+		
+	    $('#gui_drop').on('click',function(){
+			$(this).toggleClass('active');
+			$('header').fadeOut(8000);
+			if($(this).is('.active')){
+				$('#container').hide();
+				$(this).css('bottom', '0px');
+				$(this).children('p').text('Open Controls');
+			}
+			else if($(this).not('.active')){
+			    $('#container').show();
+				$(this).css('bottom', '33%');
+				$(this).children('p').text('Close Controls');
 			}
 		});
 	}
@@ -698,19 +722,18 @@ initControls: function(){
     var mouseView = true;
 
     keypress.combo("x", function() {
-      if(that.menusEnabled === true){
-       if($('#close_drop').not('.active')){
-	        $('#close_drop').trigger('click');
-       }
-       if($('.close-button').not('.active')){
-	        $('.close-button').trigger('click');
-       }
-      }
+        $('#close_drop').trigger('click');
+	    $('#gui_drop').trigger('click');
        
     });
     keypress.combo("m", function() {
       
-		 // that.menu(true);
+      	if(that.menu = true){
+		  that.menu(false);
+		  }
+		  else{
+		  that.menu(true);  
+		  }
        
     });
 	$('.close-button').on('click',function(){
