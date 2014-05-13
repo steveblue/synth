@@ -18,22 +18,20 @@ With version .185 Synth now utilizes a prototypal archtiecture that allows anyon
 
 To use Synth, you must create a new Object that inherits the properties of the Synth.prototype.
 
-'''
+```
 		var s = new Synth(true,false);
 			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
 			s.init();
 			
-'''
+```
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
 
 Various properties of Synth can be set dynamically. In the example above, the default video is set. Another example woud be to change the background color of Synth (which is currently not supported in the gui).
 
-'''
-
+```
 s.hex = '#FF0000';
-
-'''
+```
 
 
 To instantiate Synth, the source must currently follow strict conventions. Plans are in place to abstract the container and display properties of Synth.
