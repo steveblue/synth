@@ -41,11 +41,12 @@ var Synth = function(control,cam) {
 	this.initComplete = false;
 	this.webcamEnabled = false;
 	this.menusEnabled = true;
-	this.hex = '#090000';	
+	this.hex = '#000000';	
 	this.controls = false;	
 	this.gui;
 	this.pointer = [];
 	this.setting = [];
+	this.trigger = null;
 	this.mousex = that.mouseX;
 	this.mousey = that.mouseY;
 	this.shape = 'plane';
@@ -64,18 +65,24 @@ var Synth = function(control,cam) {
 	this.saturation = 0.5;
 	this.background = '#090000';
 	this.webcam = false;
-	this.guiSetup = false;	
-	this.f1;
-	this.f2;
-	this.f3;
-	this.f4;
-	this.f5;
+	this.guiSetup = false;
 	this.guiContainer;		
-//	this.pointer.push(this.bass);
-//	this.pointer.push(this.mid);
-//	this.pointer.push(this.treble);
-//	this.pointer.push(this.mousex);
-//	this.pointer.push(this.mousey);		
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);	
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.pointer.push(0);
+	this.setting.current = 0;			
 //	this.setting.push('');
 //	this.setting.push('');
 //	this.setting.push('');
@@ -417,17 +424,7 @@ initWebcam: function(){
 		that.playVideo(0);
 	}
 },
-initControls: function(){
-	var that = this;
-	
-	$('#gui_container').show(); //make more dynamic
-	$('#container').show();
-	
-	function isFloat(n) {
-    return n === +n && n !== (n|0);
-	}
-
-	function convertToRange(value, srcRange, dstRange){
+convertToRange: function(value, srcRange, dstRange){
 	  // value is outside source range return
 	  if (value < srcRange[0] || value > srcRange[1]){
 	    return NaN; 
@@ -439,8 +436,48 @@ initControls: function(){
 	
 	  return (parseFloat(adjValue) * parseFloat(dstMax) / parseFloat(srcMax)) + parseFloat(dstRange[0]);
 	
-	}	
+},
+convertTo3dCoords: function(x,y,w,h,m) {
+ 
+        var nx = m * x / w - 1;
+        var ny = - m * y / h + 1;
+		console.log( nx + ' ' + ny );
 
+       return {
+       		x: nx,
+       		y: ny       
+       }
+     
+		
+},
+initControls: function(){
+	var that = this;
+ //   var canvas = document.getElementById('bgpicker').getContext('2d');	
+ //   $('#bgpicker').width($(this).parent('width'));
+ //	$('#bgpicker').height($(this).parent('width'));
+ //   var img = new Image();
+ //	img.src = 'img/hue.jpg';
+ //	
+ //	
+ //	$(img).load(function(){
+ //		canvas.drawImage(img,0,0,40,$('#bgpicker').height());
+ //	});
+    
+    $('#gui_container').show(); //make more dynamic
+	$('#container').show();
+   
+   
+   	// http://www.javascripter.net/faq/rgbtohex.htm
+	function rgbToHex(R,G,B) {return toHex(R)+toHex(G)+toHex(B)}
+	function toHex(n) {
+	  n = parseInt(n,10);
+	  if (isNaN(n)) return "00";
+	  n = Math.max(0,Math.min(n,255));
+	  return "0123456789ABCDEF".charAt((n-n%16)/16)  + "0123456789ABCDEF".charAt(n%16);
+	}
+    	
+
+	
 	function updateValue(obj,val){
 	
 				obj.html(val);
@@ -448,7 +485,7 @@ initControls: function(){
 				console.log(val);
 		
 	}
-	var value, value2, round, start, end, width, height, control, key1, key2, json;
+	var value, value2, round, start, end, width, height, control, key1, key2, json, coords;
 
 	$('.xy').draggable({ 
 		containment: "parent",
@@ -460,51 +497,62 @@ initControls: function(){
 		   	width = $(this).parent('.wrapper').parent('.joystick').width();
 		   	height = $(this).parent('.wrapper').parent('.joystick').height();
 		   	end = $(this).data('end');
+	
 		},
 		drag: function() {
 			   control = $(this).position();
 			   if(control.top < height && control.top > 0 ){
-			 		 value = convertToRange(control.top, [0,height], [start,end]);
+			 		 value = that.convertToRange(control.top, [0,height], [start,end]);
 			 		 
-			 	//	 value = value.toString();
-			 		 json = '{ "'+key1+'" : '+value+' }';
-			 		 console.log('that.'+key1+'='+value+'');
-			 		  eval('that.'+key1+'='+value+'');	
+			 	  //	 value = value.toString();
+			 		// json = '{ "'+key1+'" : '+value+' }';
+			 		// console.log('that.'+key1+'='+value+'');
+			 		 // eval('that.'+key1+'='+value+'');	
 			 		
 
 			  }
 			  if(control.left < width && control.left > 0){
-			  	 value2 = convertToRange(control.left, [0,width], [start,end]);
-			  	json = '{ "'+key2+'" : '+value2+' }';
-			  	 console.log('that.'+key2+'='+value2+'');
-			  	  eval('that.'+key2+'='+value+'');
-			  }		
+			  	 value2 = that.convertToRange(control.left, [0,width], [start,end]);
+			  	 //json = '{ "'+key2+'" : '+value2+' }';
+			  	 // console.log('that.'+key2+'='+value2+'');
+			  	 // eval('that.'+key2+'='+value+'');
+			  }	
+			   coords = that.convertTo3dCoords(value,value2,window.innerWidth,window.innerHeight,$(this).data('multiply'));
+			   eval('that.'+key1+'='+coords.x+'');
+			   eval('that.'+key2+'='+coords.y+'');	
+			   
+			   console.log(	'that.'+key1+'='+coords.x+'' + 'that.'+key2+'='+coords.y+'');
 			 
 				  	 
 		},
 		stop: function() {
 			   control = $(this).position();
 			   if(control.top < height && control.top > 0 ){
-			 		 value = convertToRange(control.top, [0,height], [start,end]);
-			 		 
-			 	//	 value = value.toString();
-			 		 json = '{ "'+key1+'" : '+value+' }';
-			 		 eval('that.'+key1+'='+value+'');	
+			 		 value = that.convertToRange(control.top, [0,height], [start,end]);
+			 	//	 json = '{ "'+key1+'" : '+value+' }';
+			 			
 			  }
 			  if(control.left < width && control.left > 0){
-			  	 value2 = convertToRange(control.left, [0,width], [start,end]);
-			  	json = '{ "'+key2+'" : '+value2+' }';
-			  	
-			  	  eval('that.'+key2+'='+value+'');	
-			  	
-
+			  	 value2 = that.convertToRange(control.left, [0,width], [start,end]);
+			  	 //json = '{ "'+key2+'" : '+value2+' }';
 			  }	
+			   coords = that.convertTo3dCoords(value,value2,window.innerWidth,window.innerHeight,$(this).data('multiply'));
+			   eval('that.'+key1+'='+coords.x+'');
+			   eval('that.'+key2+'='+coords.y+'');	
 			  
 			
 		}
 	});
 	var scale,posX,posY;
     // pinch to zoom goes here
+    $('.vert').on('click',function(){
+       var control;
+       $(this).parent('.wrapper').parent('.fader').addClass('input');
+	   if(that.trigger = true){
+		   control = $(this).position();
+		   control.top = that.setting.current;
+	   } 
+    });
 	$('.vert').draggable({ 
 		axis: "y", 
 		containment: "parent",
@@ -518,7 +566,7 @@ initControls: function(){
 		drag: function() {
 			  control = $(this).position();
 			  if(control.top < width && control.top >= 0){
-			 		 value = convertToRange(control.top, [0,width], [start,end]);
+			 		 value = that.convertToRange(control.top, [0,width], [start,end]);
 			 		// round = Math.round(value);
 			 		 //round = round.toString();
 			 		 json = '{ "'+key+'" : '+value+' }';
@@ -529,7 +577,7 @@ initControls: function(){
 		},
 		stop: function() {
 			 control = $(this).position();
-			 value = convertToRange(control.top, [0,width], [start,end]);
+			 value = that.convertToRange(control.top, [0,width], [start,end]);
 			// round = Math.round(value);
 			// round = round.toString();
 				   	json = '{ "'+key+'" : '+value+' }';
@@ -538,7 +586,27 @@ initControls: function(){
 
 		}
 	});
-	
+
+////	$('#bgpicker').click(function(event){
+////	  // getting user coordinates
+////	  var x = event.pageX - this.offsetLeft;
+////	  var y = event.pageY - this.offsetTop;
+////	  // getting image data and RGB values
+////	  var img_data = canvas.getImageData(x, y, 1, 1).data;
+////	  var R = img_data[0];
+////	  var G = img_data[1];
+////	  var B = img_data[2];  
+////	  var rgb = R + ',' + G + ',' + B;
+////	  console.log(rgb);
+////	  // convert RGB to HEX
+////	  var hex = rgbToHex(R,G,B);
+////	  var key = 'hex';
+////	  // making the color the value of the input
+////	 // $('#rgb input').val(rgb);
+////	 // $('#hex input').val('#' + hex);
+////	  console.log('that.'+key+'='+'"#'+hex+'"');
+////	  eval('that.'+key+'='+'"#'+hex+'"');
+////	});
 	$('.hor').draggable({ 
 		axis: "x", 
 		containment: "parent",
@@ -552,7 +620,7 @@ initControls: function(){
 		drag: function() {
 			  control = $(this).position();
 			  if(control.left < width && control.left >= 0){
-			 		 value = convertToRange(control.left, [0,width], [start,end]);
+			 		 value = that.convertToRange(control.left, [0,width], [start,end]);
 			 		 //round = Math.round(value);
 			 		 //round = round.toString();
 			 		 json = '{ "'+key+'" : '+value+' }';
@@ -564,7 +632,7 @@ initControls: function(){
 		stop: function() {
 			  control = $(this).position();
 			  if(control.left < width && control.left >= 0){
-			 		 value = convertToRange(control.left, [0,width], [start,end]);
+			 		 value = that.convertToRange(control.left, [0,width], [start,end]);
 			 		// round = Math.round(value);
 			 		 //round = round.toString();
 			 		 json = '{ "'+key+'" : '+value+' }';
@@ -607,6 +675,41 @@ initControls: function(){
 		
 	});	
 	
+	$('.bars li').on('click',function(){
+		if(!$(this).hasClass('controller') && that.audioisplaying===true){
+		that.trigger = true;
+		eval(that.setting.current = $(this).index());
+		that.setting.push($(this).index());
+		console.log(that.setting);	
+		$(this).attr('data-index',that.setting.length);
+		setTimeout(function(){
+			that.trigger = false;
+		},5000);
+		$(this).addClass('controller');
+		}
+		else{
+		$(this).removeClass('controller');	
+		}
+	});
+	$('.control').on('click',function(){
+			if(that.trigger === true && !$(this).hasClass('controller')){
+				$(this).css('top',that.pointer[that.setting.current]+'px');
+				console.log('top',that.pointer[that.setting.current]+'px');
+				$(this).attr('data-index',that.setting.current);
+				$(this).addClass('controlled');
+				$(this).parent().prepend('<div class="close red"></div>');
+				$(this).parent().children('.close').on('click',function(){
+					$(this).parent().children('.control').removeClass('controlled');
+					$('.bars li:eq('+$(this).parent().children('.control').data("index")+')').removeClass('controller');
+					$(this).remove();
+				});
+
+			}
+
+	});
+	$(document).on('click',function(){
+		that.trigger = false;
+	});
 	if (Modernizr.filesystem) {
 	this.dropZone.context = this;
 	this.readFiles.context = this;
@@ -767,17 +870,17 @@ playAudio: function(playlistId){
 			// After 0s, let's get this real and map a frequency to displacement of mesh
 			// Note that the instance of dancer is bound to "this"
 
-			that.audiostream[0] = Math.round(this.getFrequency( 0 )*200);
-			that.audiostream[1] = Math.round(this.getFrequency( 30 )*200);
-			that.audiostream[2] = Math.round(this.getFrequency( 60 )*200);
-			that.audiostream[3] = Math.round(this.getFrequency( 100 )*200);
-			that.audiostream[4] = Math.round(this.getFrequency( 150 )*200);
-			that.audiostream[5] = Math.round(this.getFrequency( 200 )*200);
-			that.audiostream[6] = Math.round(this.getFrequency( 250 )*200);
-			that.audiostream[7] = Math.round(this.getFrequency( 300 )*200);
-			that.audiostream[8] = Math.round(this.getFrequency( 350 )*200);
-			that.audiostream[9] = Math.round(this.getFrequency( 400 )*200);												
-			that.audiostream[10] = Math.round(this.getFrequency( 460 )*200);
+			that.audiostream[0] = Math.round(this.getFrequency( 30 )*600);
+			that.audiostream[1] = Math.round(this.getFrequency( 60 )*600);
+			that.audiostream[2] = Math.round(this.getFrequency( 90 )*600);
+			that.audiostream[3] = Math.round(this.getFrequency( 120 )*600);
+			that.audiostream[4] = Math.round(this.getFrequency( 150 )*600);
+			that.audiostream[5] = Math.round(this.getFrequency( 180 )*600);
+			that.audiostream[6] = Math.round(this.getFrequency( 210 )*600);
+			that.audiostream[7] = Math.round(this.getFrequency( 240 )*600);
+			that.audiostream[8] = Math.round(this.getFrequency( 270 )*600);
+			that.audiostream[9] = Math.round(this.getFrequency( 300 )*600);												
+			that.audiostream[10] = Math.round(this.getFrequency( 330 )*600);
 
 		}).load( that.audioInput );		
 		this.audioInput.play();
@@ -865,8 +968,8 @@ defaultVideo: function(url){
 	
 	
 				   	  	var li = document.createElement('li');
-				   	  	var name = 'waves.mp4';
-				   	  	var correctName = 'waves.mp4';
+				   	  	var name = 'default-video.mp4';
+				   	  	var correctName = 'default-video.mp4';
 				   	  	if(correctName.length > 30) correctName = correctName.substring(0,30);
 				   	  	li.innerHTML = ['<a class="track" href="#" data-href="',url,
 				   	  	                  '" data-title="', correctName, '">', correctName, '</a>'].join('');
@@ -908,7 +1011,7 @@ listResults: function(entries,type,context) {
   }
   function entryListener(entry,playlist){
 	  playlist.push( entry.toURL() ); 
-	  console.log(playlist);
+	 // console.log(playlist);
   }
   entries.forEach(function(entry, i) { 
 
@@ -1084,28 +1187,47 @@ paramsChange: function(){
 	
 	if(that.audioisplaying === true){
 	$('.in1').css('height',that.audiostream[0]+'%');
+	eval(that.pointer[$('.in1').index()] = $('.in1').height());
 	$('.in2').css('height',that.audiostream[1]+'%');
+	eval(that.pointer[$('.in2').index()] = $('.in2').height());
 	$('.in3').css('height',that.audiostream[2]+'%');
+	eval(that.pointer[$('.in3').index()] = $('.in3').height());
 	$('.in4').css('height',that.audiostream[3]+'%');
+	eval(that.pointer[$('.in4').index()] = $('.in4').height());
 	$('.in5').css('height',that.audiostream[4]+'%');
+	eval(that.pointer[$('.in5').index()] = $('.in5').height());
 	$('.in6').css('height',that.audiostream[5]+'%');
+	eval(that.pointer[$('.in6').index()] = $('.in6').height());
 	$('.in7').css('height',that.audiostream[6]+'%');
+	eval(that.pointer[$('.in7').index()] = $('.in7').height());
 	$('.in8').css('height',that.audiostream[7]+'%');
+	eval(that.pointer[$('.in8').index()] = $('.in8').height());
 	$('.in9').css('height',that.audiostream[8]+'%');
+	eval(that.pointer[$('.in9').index()] = $('.in9').height());
 	$('.in10').css('height',that.audiostream[9]+'%');
+	eval(that.pointer[$('.in10').index()] = $('.in10').height());
+	$('.control.controlled').each(function(){
+		
+		var control = $(this).position();
+		control.top = $('.bars li:eq('+$(this).data('index')+')').height();		
+		var value = that.convertToRange(control.top, [0,$(this).parent('.wrapper').parent('.fader').height() - $(this).height()], [$(this).data('start'),$(this).data('end')]);
+		var key = $(this).data('key');
+		eval('that.'+key+'='+value+'');
+		
+	});
 	}
-	
+	 
 //	that.pointer[0] = that.bass;
 //	that.pointer[1] = that.mid;
 //	that.pointer[2] = that.treble;
 //	that.pointer[3] = that.mousex;
 //	that.pointer[4] = that.mousey;
-//	
-//	for(var i=0; i<=4; i++){
-//	
-//	eval(that.setting[i]);
-//	
-//	}
+	
+	for(var i=0; i<=4; i++){
+	
+	eval(that.setting[i]);
+	
+	}
 },
 meshChange: function(shape){
 		var that = this;
@@ -1117,13 +1239,13 @@ meshChange: function(shape){
 		switch (shape)
 		{
 		case 'plane':
-		 		 	that.geometry = new THREE.PlaneGeometry(360, 180, 360, 180);
+		 		 	that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
 		 		 	that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		 
 		break;
 		
 		case 'sphere':
-		 			that.geometry = new THREE.SphereGeometry(360, 360, 360);
+		 			that.geometry = new THREE.SphereGeometry(120, 120, 120);
 		 			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		
 		break;
@@ -1142,7 +1264,7 @@ meshChange: function(shape){
 					that.geometry = new THREE.TorusGeometry( that.scale, 360, 360, 360 );
 					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
-		 
+		
 		default:
 		  			that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
 		  			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
