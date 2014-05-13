@@ -21,8 +21,7 @@ To use Synth, you must create a new Object that inherits the properties of the S
 ```
 		var s = new Synth(true,false);
 			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
-			s.init();
-			
+			s.init();			
 ```
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.

@@ -961,12 +961,11 @@ errorHandler: function(err){
 defaultVideo: function(url){
 						//vplaylist.push( url ); 
 				   	  	var that = this;
-				   	  	
+				   	  	$('video').attr('src',url);
 				   	  	this.vplaylist.push( url ); 	
 				   	  	this.videoInput.load();
 				   	  	this.videoInput.loop = true;
-	
-	
+				   	 	
 				   	  	var li = document.createElement('li');
 				   	  	var name = 'default-video.mp4';
 				   	  	var correctName = 'default-video.mp4';
