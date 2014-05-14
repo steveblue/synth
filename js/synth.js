@@ -43,7 +43,6 @@ var Synth = function(control,cam) {
 	this.menusEnabled = true;
 	this.hex = '#000000';	
 	this.controls = false;	
-	this.gui;
 	this.pointer = [];
 	this.setting = [];
 	this.trigger = null;
@@ -546,12 +545,14 @@ initControls: function(){
 	var scale,posX,posY;
     // pinch to zoom goes here
     $('.vert').on('click',function(){
+    if(that.trigger === true){
        var control;
        $(this).parent('.wrapper').parent('.fader').addClass('input');
 	   if(that.trigger = true){
 		   control = $(this).position();
 		   control.top = that.setting.current;
 	   } 
+	  }
     });
 	$('.vert').draggable({ 
 		axis: "y", 
@@ -567,11 +568,13 @@ initControls: function(){
 			  control = $(this).position();
 			  if(control.top < width && control.top >= 0){
 			 		 value = that.convertToRange(control.top, [0,width], [start,end]);
+			 		
 			 		// round = Math.round(value);
 			 		 //round = round.toString();
 			 		 json = '{ "'+key+'" : '+value+' }';
 			 		// console.log('that.'+key+'='+value+'');
 			 		 eval('that.'+key+'='+value+'');
+			 		  console.log('that.'+key+'='+value+'');
 
 			  }
 		},
@@ -1177,8 +1180,15 @@ paramsChange: function(){
 
 
 	that.effectHue.uniforms[ 'hue' ].value = that.hue;
+	if(that.saturation >= -1.0 && that.saturation < 1.0){
 	that.effectHue.uniforms[ 'saturation' ].value = that.saturation;
-	
+	}
+	else if(that.saturation < -1.0){
+	that.effectHue.uniforms[ 'saturation' ].value = -1.0;
+	}
+	else if(that.saturation > 1.0){
+	that.effectHue.uniforms[ 'saturation' ].value = 1.0;
+	}	
 	//that.hex = that.background;	
 	$('#canvas').css( 'background-color', that.hex );	
 	var newhex = parseInt(that.hex.replace('#','0x'));
@@ -1244,13 +1254,13 @@ meshChange: function(shape){
 		break;
 		
 		case 'sphere':
-		 			that.geometry = new THREE.SphereGeometry(120, 120, 120);
+		 			that.geometry = new THREE.SphereGeometry(640, 120, 120);
 		 			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		
 		break;
 		  
 		case 'cube':
-					that.geometry = new THREE.CubeGeometry(120, 120, 120, 120, 120, 120);
+					that.geometry = new THREE.BoxGeometry(640, 640, 640, 120, 120, 120);
 					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		
