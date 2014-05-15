@@ -82,14 +82,13 @@ var Synth = function(container,control,cam,shape,wireframe,scale,multiplier,disp
 	this.pointer.push(0);
 	this.pointer.push(0);
 	this.setting.current = 0;			
-//	this.setting.push('');
-//	this.setting.push('');
-//	this.setting.push('');
-//	this.setting.push('');
-//	this.setting.push('');	
 }
 
 Synth.prototype = {
+get settings(){
+	var that = this;
+	return that.container+','+that.control+','+that.cam+',"'+that.shape+'",'+that.wireframe+','+that.scale+','+that.multiplier+','+that.displace+','+that.transparency+','+that.hue+','+that.saturation+',"'+that.hex+'"';
+},
 get displacement(){
 	return this.displace;
 },
