@@ -75,11 +75,11 @@
 		</fader> -->			
 	    <joystick class="joystick"> 
 		<div class="wrapper">
-		<control class="xy draggable control ui-widget-content" data-key1="camY" data-key2="camX" data-value="0.0" data-start="1200.0" data-end="-1200.0" data-multiply="2000.0"><point></point></control> 
+		<control class="xy draggable control ui-widget-content" data-key1="camY" data-key2="camX" data-value="0.0" data-start="4000.0" data-end="-4000.0" data-multiply="2000.0"><point></point></control> 
 		<div class="value"></div>
 		</div>
 		</joystick>	
-		<fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="camZ" data-value="0.0" data-start="1200.0" data-end="-1200.0"><point></point></control><div class="value"></div></div></fader>	
+		<fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="camZ" data-value="0.0" data-start="4000.0" data-end="-4000.0"><point></point></control><div class="value"></div></div></fader>	
 	    <fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="scaler" data-value="0.0" data-start="10.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 
 		<div class="togglefarm">
 		<toggle class="toggle model"><control class="control" data-key="plane" data-value="true">Plane</control></toggle>
@@ -94,8 +94,7 @@
 	
 	<script src="js/synth.js"></script>
 	<script>
-
-		var s = new Synth(true,false);
+		var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.15,0.0,0.6,'#000000');
 			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
 			s.init();
 			setTimeout(function(){

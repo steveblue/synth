@@ -1,9 +1,9 @@
-/*synth v185*/
-var Synth = function(control,cam) {	
+/*synth v185.1*/
+var Synth = function(container,control,cam,shape,wireframe,scale,multiplier,displace,opacity,hue,sat,hex) {	
 	var that = this;
 	this.control = control;
 	this.cam = cam;
-	this.container;
+	this.container = container;
 	this.camera;
 	this.scene;
 	this.renderer;
@@ -38,33 +38,33 @@ var Synth = function(control,cam) {
 	this.readFiles = document.getElementById('read_files');  
 	this.dropZoneVideo = document.getElementById('video_drop');
 	this.readFilesVideo = document.getElementById('read_video');	
+	this.webcam = false;
+	this.guiSetup = false;
 	this.initComplete = false;
 	this.webcamEnabled = false;
 	this.menusEnabled = true;
-	this.hex = '#000000';	
 	this.controls = false;	
 	this.pointer = [];
 	this.setting = [];
-	this.trigger = null;
+	this.trigger = false;
 	this.mousex = that.mouseX;
 	this.mousey = that.mouseY;
-	this.shape = 'plane';
-	this.wireframe = false;
+	this.shape = shape;
+	this.meshUpdate = false;
+	this.wireframe = wireframe;
 	this.camerax = 0.0;
 	this.cameray = -1130.0;
 	this.cameraz = 1680.0;
-	this.scale = 6.0;
-	this.multiplier =  16.0;
-	this.displace = -6.0;
-	this.transparency = 0.2;
+	this.scale = scale;
+	this.multiplier = multiplier;
+	this.displace = displace;
+	this.transparency = opacity;
 	this.originX = 0.0;
 	this.originY = 0.0;
 	this.originZ = -2000.0;
-	this.hue = 0.0;
-	this.saturation = 0.5;
-	this.background = '#090000';
-	this.webcam = false;
-	this.guiSetup = false;
+	this.hue = hue;
+	this.saturation = sat;
+	this.hex = hex;	
 	this.guiContainer;		
 	this.pointer.push(0);
 	this.pointer.push(0);
@@ -268,7 +268,7 @@ init: function() {
     var that = this;
     
     window.URL = window.URL || window.webkitURL;
-	this.container = document.getElementById( 'canvas' );
+
 	document.body.appendChild( that.container );
 	
 
@@ -299,17 +299,16 @@ init: function() {
 	    fragmentShader: RuttEtraShader.fragmentShader,
 	    depthWrite: true,
 	    depthTest: true,
-	    wireframe: false, 
+	    wireframe: that.wireframe, 
 	    transparent: true,
 	    overdraw: false
 	   
 	});
 	this.videoMaterial.renderToScreen = true;
-	this.videoMaterial.wireframe = false;
-	this.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
-	this.geometry.overdraw = false;
-	this.geometry.dynamic = true;
-	this.geometry.verticesNeedUpdate = true;
+	this.videoMaterial.wireframe = that.wireframe;
+	
+	that.meshChange(that.shape);
+
 	
 	this.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 	this.mesh.doubleSided = true;
@@ -544,16 +543,16 @@ initControls: function(){
 	});
 	var scale,posX,posY;
     // pinch to zoom goes here
-    $('.vert').on('click',function(){
-    if(that.trigger === true){
-       var control;
-       $(this).parent('.wrapper').parent('.fader').addClass('input');
-	   if(that.trigger = true){
-		   control = $(this).position();
-		   control.top = that.setting.current;
-	   } 
-	  }
-    });
+  //  $('.vert').on('click',function(){
+  //  if(that.trigger === true){
+  //     var control;
+  //     $(this).parent('.wrapper').parent('.fader').addClass('input');
+  //	   if(that.trigger === true){
+  //		   control = $(this).position();
+  //		   control.top = that.setting.current;
+  //	   } 
+  //	  }
+  //  });
 	$('.vert').draggable({ 
 		axis: "y", 
 		containment: "parent",
@@ -687,7 +686,7 @@ initControls: function(){
 		$(this).attr('data-index',that.setting.length);
 		setTimeout(function(){
 			that.trigger = false;
-		},5000);
+		},10000);
 		$(this).addClass('controller');
 		}
 		else{
@@ -710,9 +709,9 @@ initControls: function(){
 			}
 
 	});
-	$(document).on('click',function(){
-		that.trigger = false;
-	});
+//	$(document).on('click',function(){
+		//that.trigger = false;
+//	});
 	if (Modernizr.filesystem) {
 	this.dropZone.context = this;
 	this.readFiles.context = this;
@@ -815,7 +814,9 @@ initControls: function(){
        that.playVideo(8);
     });
     keypress.combo("0", function() {
-       that.webcam('true')
+    if(that.webcamEnabled === true){
+       that.webcam=true;
+       }
     });
     keypress.combo("l", function() {
        if(that.videoInput.loop == false){
@@ -873,17 +874,17 @@ playAudio: function(playlistId){
 			// After 0s, let's get this real and map a frequency to displacement of mesh
 			// Note that the instance of dancer is bound to "this"
 
-			that.audiostream[0] = Math.round(this.getFrequency( 30 )*600);
-			that.audiostream[1] = Math.round(this.getFrequency( 60 )*600);
-			that.audiostream[2] = Math.round(this.getFrequency( 90 )*600);
-			that.audiostream[3] = Math.round(this.getFrequency( 120 )*600);
-			that.audiostream[4] = Math.round(this.getFrequency( 150 )*600);
-			that.audiostream[5] = Math.round(this.getFrequency( 180 )*600);
-			that.audiostream[6] = Math.round(this.getFrequency( 210 )*600);
-			that.audiostream[7] = Math.round(this.getFrequency( 240 )*600);
-			that.audiostream[8] = Math.round(this.getFrequency( 270 )*600);
-			that.audiostream[9] = Math.round(this.getFrequency( 300 )*600);												
-			that.audiostream[10] = Math.round(this.getFrequency( 330 )*600);
+			that.audiostream[0] = Math.round(this.getFrequency( 30 )*1000);
+			that.audiostream[1] = Math.round(this.getFrequency( 60 )*1000);
+			that.audiostream[2] = Math.round(this.getFrequency( 90 )*1000);
+			that.audiostream[3] = Math.round(this.getFrequency( 120 )*1000);
+			that.audiostream[4] = Math.round(this.getFrequency( 150 )*1000);
+			that.audiostream[5] = Math.round(this.getFrequency( 180 )*1000);
+			that.audiostream[6] = Math.round(this.getFrequency( 210 )*1000);
+			that.audiostream[7] = Math.round(this.getFrequency( 240 )*1000);
+			that.audiostream[8] = Math.round(this.getFrequency( 270 )*1000);
+			that.audiostream[9] = Math.round(this.getFrequency( 300 )*1000);												
+			that.audiostream[10] = Math.round(this.getFrequency( 330 )*1000);
 
 		}).load( that.audioInput );		
 		this.audioInput.play();
@@ -1240,14 +1241,21 @@ paramsChange: function(){
 },
 meshChange: function(shape){
 		var that = this;
+		
+		
+		
+		if(that.meshUpdate === true){
 		that.scene.remove(that.mesh);
-		that.shape = shape;
 		that.geometry.verticesNeedUpdate = false;
 		that.geometry.dynamic = false;
-		console.log(shape);
+		that.geometry = null;
+		that.videoMaterial.renderToScreen = false;
+		}
+		
 		switch (shape)
 		{
 		case 'plane':
+				
 		 		 	that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
 		 		 	that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		 		 
@@ -1265,7 +1273,7 @@ meshChange: function(shape){
 		break;
 		
 		case 'cylinder':
-					that.geometry = new THREE.CylinderGeometry( that.scale, that.scale, 240, 360, 240, false );
+					that.geometry = new THREE.CylinderGeometry( that.scale*4.0, that.scale*4.0, 240, 360, 240, false );
 					that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		break;
 		
@@ -1279,14 +1287,19 @@ meshChange: function(shape){
 		  			that.mesh = new THREE.Mesh( that.geometry, that.videoMaterial );
 		
 		}
-
-		that.geometry.dynamic = true;
-		that.geometry.verticesNeedUpdate = true;
+		setTimeout(function(){
+		that.shape = shape;
+		that.meshUpdate = true;
+		that.scene.add(that.mesh);
 		that.mesh.doubleSided = true;
 		that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0;
 		that.mesh.scale.x = that.mesh.scale.y = that.scale;	
-		that.shape = shape;
-		that.scene.add(that.mesh);	
+		that.geometry.dynamic = true;
+		that.geometry.verticesNeedUpdate = true;
+		that.videoMaterial.renderToScreen = true;		
+			
+		},100);
+
 },
 onDocumentMouseMove: function(event) {
 	this.mouseX = ( event.clientX - this.windowHalfX );
