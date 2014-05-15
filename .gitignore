@@ -6,3 +6,4 @@ config.rb
 /vid
 /info
 /dpth
+node_modules/

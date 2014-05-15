@@ -26,144 +26,143 @@
  *			coneOuterGain	// Amount of volume reduction outside of the coneOuterAngle.
  */
 
-THREE.AudioObject = function ( url, volume, playbackRate, loop ) {
+THREE.AudioObject = function(url, volume, playbackRate, loop) {
 
-	THREE.Object3D.call( this );
+  THREE.Object3D.call(this);
 
-	if ( playbackRate === undefined ) playbackRate = 1;
-	if ( volume === undefined ) volume = 1;
-	if ( loop === undefined ) loop = true;
+  if (playbackRate === undefined) playbackRate = 1;
+  if (volume === undefined) volume = 1;
+  if (loop === undefined) loop = true;
 
-	if ( ! this.context ) {
+  if (!this.context) {
 
-		try {
+    try {
 
-			THREE.AudioObject.prototype.context = new webkitAudioContext();
+      THREE.AudioObject.prototype.context = new webkitAudioContext();
 
-		} catch( error ) {
+    } catch (error) {
 
-			console.warn( "THREE.AudioObject: webkitAudioContext not found" );
-			return this;
+      console.warn("THREE.AudioObject: webkitAudioContext not found");
+      return this;
 
-		}
+    }
 
-	}
+  }
 
-	this.directionalSource = false;
+  this.directionalSource = false;
 
-	this.listener = this.context.listener;
-	this.panner = this.context.createPanner();
-	this.source = this.context.createBufferSource();
+  this.listener = this.context.listener;
+  this.panner = this.context.createPanner();
+  this.source = this.context.createBufferSource();
 
-	this.masterGainNode = this.context.createGainNode();
-	this.dryGainNode = this.context.createGainNode();
+  this.masterGainNode = this.context.createGainNode();
+  this.dryGainNode = this.context.createGainNode();
 
-	// Setup initial gains
+  // Setup initial gains
 
-	this.masterGainNode.gain.value = volume;
-	this.dryGainNode.gain.value = 3.0;
+  this.masterGainNode.gain.value = volume;
+  this.dryGainNode.gain.value = 3.0;
 
-	// Connect dry mix
+  // Connect dry mix
 
-	this.source.connect( this.panner );
-	this.panner.connect( this.dryGainNode );
-	this.dryGainNode.connect( this.masterGainNode );
+  this.source.connect(this.panner);
+  this.panner.connect(this.dryGainNode);
+  this.dryGainNode.connect(this.masterGainNode);
 
-	// Connect master gain
+  // Connect master gain
 
-	this.masterGainNode.connect( this.context.destination );
+  this.masterGainNode.connect(this.context.destination);
 
-	// Set source parameters and load sound
+  // Set source parameters and load sound
 
-	this.source.playbackRate.value = playbackRate;
-	this.source.loop = loop;
+  this.source.playbackRate.value = playbackRate;
+  this.source.loop = loop;
 
-	loadBufferAndPlay( url );
+  loadBufferAndPlay(url);
 
-	// private properties
+  // private properties
 
-	var soundPosition = new THREE.Vector3(),
-	cameraPosition = new THREE.Vector3(),
-	oldSoundPosition = new THREE.Vector3(),
-	oldCameraPosition = new THREE.Vector3(),
+  var soundPosition = new THREE.Vector3(),
+    cameraPosition = new THREE.Vector3(),
+    oldSoundPosition = new THREE.Vector3(),
+    oldCameraPosition = new THREE.Vector3(),
 
-	soundDelta = new THREE.Vector3(),
-	cameraDelta = new THREE.Vector3(),
+    soundDelta = new THREE.Vector3(),
+    cameraDelta = new THREE.Vector3(),
 
-	soundFront = new THREE.Vector3(),
-	cameraFront = new THREE.Vector3(),
-	soundUp = new THREE.Vector3(),
-	cameraUp = new THREE.Vector3();
+    soundFront = new THREE.Vector3(),
+    cameraFront = new THREE.Vector3(),
+    soundUp = new THREE.Vector3(),
+    cameraUp = new THREE.Vector3();
 
-	var _this = this;
+  var _this = this;
 
-	// API
+  // API
 
-	this.setVolume = function ( volume ) {
+  this.setVolume = function(volume) {
 
-		this.masterGainNode.gain.value = volume;
+    this.masterGainNode.gain.value = volume;
 
-	};
+  };
 
-	this.update = function ( camera ) {
+  this.update = function(camera) {
 
-		oldSoundPosition.copy( soundPosition );
-		oldCameraPosition.copy( cameraPosition );
+    oldSoundPosition.copy(soundPosition);
+    oldCameraPosition.copy(cameraPosition);
 
-		soundPosition.getPositionFromMatrix( this.matrixWorld );
-		cameraPosition.getPositionFromMatrix( camera.matrixWorld );
+    soundPosition.getPositionFromMatrix(this.matrixWorld);
+    cameraPosition.getPositionFromMatrix(camera.matrixWorld);
 
-		soundDelta.subVectors( soundPosition, oldSoundPosition );
-		cameraDelta.subVectors( cameraPosition, oldCameraPosition );
+    soundDelta.subVectors(soundPosition, oldSoundPosition);
+    cameraDelta.subVectors(cameraPosition, oldCameraPosition);
 
-		cameraUp.copy( camera.up );
+    cameraUp.copy(camera.up);
 
-		cameraFront.set( 0, 0, -1 );
-		cameraFront.transformDirection( camera.matrixWorld );
+    cameraFront.set(0, 0, -1);
+    cameraFront.transformDirection(camera.matrixWorld);
 
-		this.listener.setPosition( cameraPosition.x, cameraPosition.y, cameraPosition.z );
-		this.listener.setVelocity( cameraDelta.x, cameraDelta.y, cameraDelta.z );
-		this.listener.setOrientation( cameraFront.x, cameraFront.y, cameraFront.z, cameraUp.x, cameraUp.y, cameraUp.z );
+    this.listener.setPosition(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    this.listener.setVelocity(cameraDelta.x, cameraDelta.y, cameraDelta.z);
+    this.listener.setOrientation(cameraFront.x, cameraFront.y, cameraFront.z, cameraUp.x, cameraUp.y, cameraUp.z);
 
-		this.panner.setPosition( soundPosition.x, soundPosition.y, soundPosition.z );
-		this.panner.setVelocity( soundDelta.x, soundDelta.y, soundDelta.z );
+    this.panner.setPosition(soundPosition.x, soundPosition.y, soundPosition.z);
+    this.panner.setVelocity(soundDelta.x, soundDelta.y, soundDelta.z);
 
-		if ( this.directionalSource ) {
+    if (this.directionalSource) {
 
-			soundFront.set( 0, 0, -1 );
-			soundFront.transformDirection( this.matrixWorld );
+      soundFront.set(0, 0, -1);
+      soundFront.transformDirection(this.matrixWorld);
 
-			soundUp.copy( this.up );
-			this.panner.setOrientation( soundFront.x, soundFront.y, soundFront.z, soundUp.x, soundUp.y, soundUp.z );
+      soundUp.copy(this.up);
+      this.panner.setOrientation(soundFront.x, soundFront.y, soundFront.z, soundUp.x, soundUp.y, soundUp.z);
 
-		}
+    }
 
 
-	};
+  };
 
-	function loadBufferAndPlay( url ) {
+  function loadBufferAndPlay(url) {
 
-		// Load asynchronously
+    // Load asynchronously
 
-		var request = new XMLHttpRequest();
-		request.open( "GET", url, true );
-		request.responseType = "arraybuffer";
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
 
-		request.onload = function() {
+    request.onload = function() {
 
-			_this.source.buffer = _this.context.createBuffer( request.response, true );
-			_this.source.noteOn( 0 );
+      _this.source.buffer = _this.context.createBuffer(request.response, true);
+      _this.source.noteOn(0);
 
-		}
+    }
 
-		request.send();
+    request.send();
 
-	}
+  }
 
 };
 
-THREE.AudioObject.prototype = Object.create( THREE.Object3D.prototype );
+THREE.AudioObject.prototype = Object.create(THREE.Object3D.prototype);
 
 THREE.AudioObject.prototype.context = null;
 THREE.AudioObject.prototype.type = null;
-

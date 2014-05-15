@@ -8,1097 +8,1304 @@
 
 THREE.DeferredShaderChunk = {
 
-	// decode float to vec3
+  // decode float to vec3
 
-	unpackFloat: [
+  unpackFloat: [
 
-		"vec3 float_to_vec3( float data ) {",
+    "vec3 float_to_vec3( float data ) {",
 
-			"vec3 uncompressed;",
-			"uncompressed.x = fract( data );",
-			"float zInt = floor( data / 255.0 );",
-			"uncompressed.z = fract( zInt / 255.0 );",
-			"uncompressed.y = fract( floor( data - ( zInt * 255.0 ) ) / 255.0 );",
-			"return uncompressed;",
+    "vec3 uncompressed;",
+    "uncompressed.x = fract( data );",
+    "float zInt = floor( data / 255.0 );",
+    "uncompressed.z = fract( zInt / 255.0 );",
+    "uncompressed.y = fract( floor( data - ( zInt * 255.0 ) ) / 255.0 );",
+    "return uncompressed;",
 
-		"}"
+    "}"
 
-	].join("\n"),
+  ].join("\n"),
 
-	computeVertexPositionVS: [
+  computeVertexPositionVS: [
 
-		"vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
+    "vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
 
-		"vec4 normalDepth = texture2D( samplerNormalDepth, texCoord );",
-		"float z = normalDepth.w;",
+    "vec4 normalDepth = texture2D( samplerNormalDepth, texCoord );",
+    "float z = normalDepth.w;",
 
-		"if ( z == 0.0 ) discard;",
+    "if ( z == 0.0 ) discard;",
 
-		"vec2 xy = texCoord * 2.0 - 1.0;",
+    "vec2 xy = texCoord * 2.0 - 1.0;",
 
-		"vec4 vertexPositionProjected = vec4( xy, z, 1.0 );",
-		"vec4 vertexPositionVS = matProjInverse * vertexPositionProjected;",
-		"vertexPositionVS.xyz /= vertexPositionVS.w;",
-		"vertexPositionVS.w = 1.0;"
+    "vec4 vertexPositionProjected = vec4( xy, z, 1.0 );",
+    "vec4 vertexPositionVS = matProjInverse * vertexPositionProjected;",
+    "vertexPositionVS.xyz /= vertexPositionVS.w;",
+    "vertexPositionVS.w = 1.0;"
 
-	].join("\n"),
+  ].join("\n"),
 
-	computeNormal: [
+  computeNormal: [
 
-		"vec3 normal = normalDepth.xyz * 2.0 - 1.0;"
+    "vec3 normal = normalDepth.xyz * 2.0 - 1.0;"
 
-	].join("\n"),
+  ].join("\n"),
 
-	unpackColorMap: [
+  unpackColorMap: [
 
-		"vec4 colorMap = texture2D( samplerColor, texCoord );",
+    "vec4 colorMap = texture2D( samplerColor, texCoord );",
 
-		"vec3 albedo = float_to_vec3( abs( colorMap.x ) );",
-		"vec3 specularColor = float_to_vec3( abs( colorMap.y ) );",
-		"float shininess = abs( colorMap.z );",
-		"float wrapAround = sign( colorMap.z );",
-		"float additiveSpecular = sign( colorMap.y );"
+    "vec3 albedo = float_to_vec3( abs( colorMap.x ) );",
+    "vec3 specularColor = float_to_vec3( abs( colorMap.y ) );",
+    "float shininess = abs( colorMap.z );",
+    "float wrapAround = sign( colorMap.z );",
+    "float additiveSpecular = sign( colorMap.y );"
 
-	].join("\n"),
+  ].join("\n"),
 
-	computeDiffuse: [
+  computeDiffuse: [
 
-		"float dotProduct = dot( normal, lightVector );",
-		"float diffuseFull = max( dotProduct, 0.0 );",
+    "float dotProduct = dot( normal, lightVector );",
+    "float diffuseFull = max( dotProduct, 0.0 );",
 
-		"vec3 diffuse;",
+    "vec3 diffuse;",
 
-		"if ( wrapAround < 0.0 ) {",
+    "if ( wrapAround < 0.0 ) {",
 
-			// wrap around lighting
+    // wrap around lighting
 
-			"float diffuseHalf = max( 0.5 * dotProduct + 0.5, 0.0 );",
+    "float diffuseHalf = max( 0.5 * dotProduct + 0.5, 0.0 );",
 
-			"const vec3 wrapRGB = vec3( 1.0, 1.0, 1.0 );",
-			"diffuse = mix( vec3( diffuseFull ), vec3( diffuseHalf ), wrapRGB );",
+    "const vec3 wrapRGB = vec3( 1.0, 1.0, 1.0 );",
+    "diffuse = mix( vec3( diffuseFull ), vec3( diffuseHalf ), wrapRGB );",
 
-		"} else {",
+    "} else {",
 
-			// simple lighting
+    // simple lighting
 
-			"diffuse = vec3( diffuseFull );",
+    "diffuse = vec3( diffuseFull );",
 
-		"}"
+    "}"
 
-	].join("\n"),
+  ].join("\n"),
 
-	computeSpecular: [
+  computeSpecular: [
 
-		"vec3 halfVector = normalize( lightVector - normalize( vertexPositionVS.xyz ) );",
-		"float dotNormalHalf = max( dot( normal, halfVector ), 0.0 );",
+    "vec3 halfVector = normalize( lightVector - normalize( vertexPositionVS.xyz ) );",
+    "float dotNormalHalf = max( dot( normal, halfVector ), 0.0 );",
 
-		// simple specular
+    // simple specular
 
-		//"vec3 specular = specularColor * max( pow( dotNormalHalf, shininess ), 0.0 ) * diffuse;",
+    //"vec3 specular = specularColor * max( pow( dotNormalHalf, shininess ), 0.0 ) * diffuse;",
 
-		// physically based specular
+    // physically based specular
 
-		"float specularNormalization = ( shininess + 2.0001 ) / 8.0;",
+    "float specularNormalization = ( shininess + 2.0001 ) / 8.0;",
 
-		"vec3 schlick = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lightVector, halfVector ), 5.0 );",
-		"vec3 specular = schlick * max( pow( dotNormalHalf, shininess ), 0.0 ) * diffuse * specularNormalization;"
+    "vec3 schlick = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lightVector, halfVector ), 5.0 );",
+    "vec3 specular = schlick * max( pow( dotNormalHalf, shininess ), 0.0 ) * diffuse * specularNormalization;"
 
-	].join("\n"),
+  ].join("\n"),
 
-	combine: [
+  combine: [
 
-		"vec3 light = lightIntensity * lightColor;",
-		"gl_FragColor = vec4( light * ( albedo * diffuse + specular ), attenuation );"
+    "vec3 light = lightIntensity * lightColor;",
+    "gl_FragColor = vec4( light * ( albedo * diffuse + specular ), attenuation );"
 
-	].join("\n")
+  ].join("\n")
 
 };
 
 THREE.ShaderDeferred = {
 
-	"color" : {
+  "color": {
+
+    uniforms: THREE.UniformsUtils.merge([
+
+      THREE.UniformsLib["common"],
+      THREE.UniformsLib["fog"],
+      THREE.UniformsLib["shadowmap"],
+
+      {
+        "emissive": {
+          type: "c",
+          value: new THREE.Color(0x000000)
+        },
+        "specular": {
+          type: "c",
+          value: new THREE.Color(0x111111)
+        },
+        "shininess": {
+          type: "f",
+          value: 30
+        },
+        "wrapAround": {
+          type: "f",
+          value: 1
+        },
+        "additiveSpecular": {
+          type: "f",
+          value: 1
+        },
 
-		uniforms: THREE.UniformsUtils.merge( [
+        "samplerNormalDepth": {
+          type: "t",
+          value: null
+        },
+        "viewWidth": {
+          type: "f",
+          value: 800
+        },
+        "viewHeight": {
+          type: "f",
+          value: 600
+        }
+      }
 
-			THREE.UniformsLib[ "common" ],
-			THREE.UniformsLib[ "fog" ],
-			THREE.UniformsLib[ "shadowmap" ],
+    ]),
 
-			{
-				"emissive" :  { type: "c", value: new THREE.Color( 0x000000 ) },
-				"specular" :  { type: "c", value: new THREE.Color( 0x111111 ) },
-				"shininess":  { type: "f", value: 30 },
-				"wrapAround": 		{ type: "f", value: 1 },
-				"additiveSpecular": { type: "f", value: 1 },
+    fragmentShader: [
 
-				"samplerNormalDepth": { type: "t", value: null },
-				"viewWidth": 		{ type: "f", value: 800 },
-				"viewHeight": 		{ type: "f", value: 600 }
-			}
+      "uniform vec3 diffuse;",
+      "uniform vec3 specular;",
+      "uniform vec3 emissive;",
+      "uniform float shininess;",
+      "uniform float wrapAround;",
+      "uniform float additiveSpecular;",
 
-		] ),
+      THREE.ShaderChunk["color_pars_fragment"],
+      THREE.ShaderChunk["map_pars_fragment"],
+      THREE.ShaderChunk["lightmap_pars_fragment"],
 
-		fragmentShader : [
+      "#ifdef USE_ENVMAP",
 
-			"uniform vec3 diffuse;",
-			"uniform vec3 specular;",
-			"uniform vec3 emissive;",
-			"uniform float shininess;",
-			"uniform float wrapAround;",
-			"uniform float additiveSpecular;",
+      "varying vec3 vWorldPosition;",
 
-			THREE.ShaderChunk[ "color_pars_fragment" ],
-			THREE.ShaderChunk[ "map_pars_fragment" ],
-			THREE.ShaderChunk[ "lightmap_pars_fragment" ],
+      "uniform float reflectivity;",
+      "uniform samplerCube envMap;",
+      "uniform float flipEnvMap;",
+      "uniform int combine;",
 
-			"#ifdef USE_ENVMAP",
+      "uniform bool useRefract;",
+      "uniform float refractionRatio;",
 
-				"varying vec3 vWorldPosition;",
+      "uniform sampler2D samplerNormalDepth;",
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-				"uniform float reflectivity;",
-				"uniform samplerCube envMap;",
-				"uniform float flipEnvMap;",
-				"uniform int combine;",
+      "#endif",
 
-				"uniform bool useRefract;",
-				"uniform float refractionRatio;",
+      THREE.ShaderChunk["fog_pars_fragment"],
+      THREE.ShaderChunk["shadowmap_pars_fragment"],
+      THREE.ShaderChunk["specularmap_pars_fragment"],
 
-				"uniform sampler2D samplerNormalDepth;",
-				"uniform float viewHeight;",
-				"uniform float viewWidth;",
+      "const float unit = 255.0/256.0;",
 
-			"#endif",
+      "float vec3_to_float( vec3 data ) {",
 
-			THREE.ShaderChunk[ "fog_pars_fragment" ],
-			THREE.ShaderChunk[ "shadowmap_pars_fragment" ],
-			THREE.ShaderChunk[ "specularmap_pars_fragment" ],
+      "highp float compressed = fract( data.x * unit ) + floor( data.y * unit * 255.0 ) + floor( data.z * unit * 255.0 ) * 255.0;",
+      "return compressed;",
 
-			"const float unit = 255.0/256.0;",
+      "}",
 
-			"float vec3_to_float( vec3 data ) {",
+      "void main() {",
 
-				"highp float compressed = fract( data.x * unit ) + floor( data.y * unit * 255.0 ) + floor( data.z * unit * 255.0 ) * 255.0;",
-				"return compressed;",
+      "const float opacity = 1.0;",
 
-			"}",
+      "gl_FragColor = vec4( diffuse, opacity );",
 
-			"void main() {",
+      THREE.ShaderChunk["map_fragment"],
+      THREE.ShaderChunk["alphatest_fragment"],
+      THREE.ShaderChunk["specularmap_fragment"],
+      THREE.ShaderChunk["lightmap_fragment"],
+      THREE.ShaderChunk["color_fragment"],
 
-				"const float opacity = 1.0;",
+      "#ifdef USE_ENVMAP",
 
-				"gl_FragColor = vec4( diffuse, opacity );",
+      "vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
+      "vec4 normalDepth = texture2D( samplerNormalDepth, texCoord );",
+      "vec3 normal = normalDepth.xyz * 2.0 - 1.0;",
 
-				THREE.ShaderChunk[ "map_fragment" ],
-				THREE.ShaderChunk[ "alphatest_fragment" ],
-				THREE.ShaderChunk[ "specularmap_fragment" ],
-				THREE.ShaderChunk[ "lightmap_fragment" ],
-				THREE.ShaderChunk[ "color_fragment" ],
+      "vec3 reflectVec;",
 
-				"#ifdef USE_ENVMAP",
+      "vec3 cameraToVertex = normalize( vWorldPosition - cameraPosition );",
 
-					"vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
-					"vec4 normalDepth = texture2D( samplerNormalDepth, texCoord );",
-					"vec3 normal = normalDepth.xyz * 2.0 - 1.0;",
+      "if ( useRefract ) {",
 
-					"vec3 reflectVec;",
+      "reflectVec = refract( cameraToVertex, normal, refractionRatio );",
 
-					"vec3 cameraToVertex = normalize( vWorldPosition - cameraPosition );",
+      "} else { ",
 
-					"if ( useRefract ) {",
+      "reflectVec = reflect( cameraToVertex, normal );",
 
-						"reflectVec = refract( cameraToVertex, normal, refractionRatio );",
+      "}",
 
-					"} else { ",
+      "#ifdef DOUBLE_SIDED",
 
-						"reflectVec = reflect( cameraToVertex, normal );",
+      "float flipNormal = ( -1.0 + 2.0 * float( gl_FrontFacing ) );",
+      "vec4 cubeColor = textureCube( envMap, flipNormal * vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );",
 
-					"}",
+      "#else",
 
-					"#ifdef DOUBLE_SIDED",
+      "vec4 cubeColor = textureCube( envMap, vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );",
 
-						"float flipNormal = ( -1.0 + 2.0 * float( gl_FrontFacing ) );",
-						"vec4 cubeColor = textureCube( envMap, flipNormal * vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );",
+      "#endif",
 
-					"#else",
+      "#ifdef GAMMA_INPUT",
 
-						"vec4 cubeColor = textureCube( envMap, vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );",
+      "cubeColor.xyz *= cubeColor.xyz;",
 
-					"#endif",
+      "#endif",
 
-					"#ifdef GAMMA_INPUT",
+      "if ( combine == 1 ) {",
 
-						"cubeColor.xyz *= cubeColor.xyz;",
+      "gl_FragColor.xyz = mix( gl_FragColor.xyz, cubeColor.xyz, specularStrength * reflectivity );",
 
-					"#endif",
+      "} else if ( combine == 2 ) {",
 
-					"if ( combine == 1 ) {",
+      "gl_FragColor.xyz += cubeColor.xyz * specularStrength * reflectivity;",
 
-						"gl_FragColor.xyz = mix( gl_FragColor.xyz, cubeColor.xyz, specularStrength * reflectivity );",
+      "} else {",
 
-					"} else if ( combine == 2 ) {",
+      "gl_FragColor.xyz = mix( gl_FragColor.xyz, gl_FragColor.xyz * cubeColor.xyz, specularStrength * reflectivity );",
 
-						"gl_FragColor.xyz += cubeColor.xyz * specularStrength * reflectivity;",
+      "}",
 
-					"} else {",
+      "#endif",
 
-						"gl_FragColor.xyz = mix( gl_FragColor.xyz, gl_FragColor.xyz * cubeColor.xyz, specularStrength * reflectivity );",
+      THREE.ShaderChunk["shadowmap_fragment"],
+      THREE.ShaderChunk["fog_fragment"],
 
-					"}",
+      //
 
-				"#endif",
+      "const float compressionScale = 0.999;",
 
-				THREE.ShaderChunk[ "shadowmap_fragment" ],
-				THREE.ShaderChunk[ "fog_fragment" ],
+      //
 
-				//
+      "vec3 diffuseMapColor;",
 
-				"const float compressionScale = 0.999;",
+      "#ifdef USE_MAP",
 
-				//
+      "diffuseMapColor = texelColor.xyz;",
 
-				"vec3 diffuseMapColor;",
+      "#else",
 
-				"#ifdef USE_MAP",
+      "diffuseMapColor = vec3( 1.0 );",
 
-					"diffuseMapColor = texelColor.xyz;",
+      "#endif",
 
-				"#else",
+      // diffuse color
 
-					"diffuseMapColor = vec3( 1.0 );",
+      "gl_FragColor.x = vec3_to_float( compressionScale * gl_FragColor.xyz );",
 
-				"#endif",
+      // specular color
 
-				// diffuse color
+      "if ( additiveSpecular < 0.0 ) {",
 
-				"gl_FragColor.x = vec3_to_float( compressionScale * gl_FragColor.xyz );",
+      "gl_FragColor.y = vec3_to_float( compressionScale * specular );",
 
-				// specular color
+      "} else {",
 
-				"if ( additiveSpecular < 0.0 ) {",
+      "gl_FragColor.y = vec3_to_float( compressionScale * specular * diffuseMapColor );",
 
-					"gl_FragColor.y = vec3_to_float( compressionScale * specular );",
+      "}",
 
-				"} else {",
+      "gl_FragColor.y *= additiveSpecular;",
 
-					"gl_FragColor.y = vec3_to_float( compressionScale * specular * diffuseMapColor );",
+      // shininess
 
-				"}",
+      "gl_FragColor.z = wrapAround * shininess;",
 
-				"gl_FragColor.y *= additiveSpecular;",
+      // emissive color
 
-				// shininess
+      "#ifdef USE_COLOR",
 
-				"gl_FragColor.z = wrapAround * shininess;",
+      "gl_FragColor.w = vec3_to_float( compressionScale * emissive * diffuseMapColor * vColor );",
 
-				// emissive color
+      "#else",
 
-				"#ifdef USE_COLOR",
+      "gl_FragColor.w = vec3_to_float( compressionScale * emissive * diffuseMapColor );",
 
-					"gl_FragColor.w = vec3_to_float( compressionScale * emissive * diffuseMapColor * vColor );",
+      "#endif",
 
-				"#else",
+      "}"
 
-					"gl_FragColor.w = vec3_to_float( compressionScale * emissive * diffuseMapColor );",
+    ].join("\n"),
 
-				"#endif",
+    vertexShader: [
 
-			"}"
+      THREE.ShaderChunk["map_pars_vertex"],
+      THREE.ShaderChunk["lightmap_pars_vertex"],
+      THREE.ShaderChunk["color_pars_vertex"],
+      THREE.ShaderChunk["morphtarget_pars_vertex"],
+      THREE.ShaderChunk["skinning_pars_vertex"],
+      THREE.ShaderChunk["shadowmap_pars_vertex"],
 
-		].join("\n"),
+      "#ifdef USE_ENVMAP",
 
-		vertexShader : [
+      "varying vec3 vWorldPosition;",
 
-			THREE.ShaderChunk[ "map_pars_vertex" ],
-			THREE.ShaderChunk[ "lightmap_pars_vertex" ],
-			THREE.ShaderChunk[ "color_pars_vertex" ],
-			THREE.ShaderChunk[ "morphtarget_pars_vertex" ],
-			THREE.ShaderChunk[ "skinning_pars_vertex" ],
-			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+      "#endif",
 
-			"#ifdef USE_ENVMAP",
+      "void main() {",
 
-				"varying vec3 vWorldPosition;",
+      THREE.ShaderChunk["map_vertex"],
+      THREE.ShaderChunk["lightmap_vertex"],
+      THREE.ShaderChunk["color_vertex"],
 
-			"#endif",
+      THREE.ShaderChunk["skinbase_vertex"],
 
-			"void main() {",
+      THREE.ShaderChunk["morphtarget_vertex"],
+      THREE.ShaderChunk["skinning_vertex"],
+      THREE.ShaderChunk["default_vertex"],
 
-				THREE.ShaderChunk[ "map_vertex" ],
-				THREE.ShaderChunk[ "lightmap_vertex" ],
-				THREE.ShaderChunk[ "color_vertex" ],
+      THREE.ShaderChunk["worldpos_vertex"],
+      THREE.ShaderChunk["shadowmap_vertex"],
 
-				THREE.ShaderChunk[ "skinbase_vertex" ],
+      "#ifdef USE_ENVMAP",
 
-				THREE.ShaderChunk[ "morphtarget_vertex" ],
-				THREE.ShaderChunk[ "skinning_vertex" ],
-				THREE.ShaderChunk[ "default_vertex" ],
+      "vWorldPosition = worldPosition.xyz;",
 
-				THREE.ShaderChunk[ "worldpos_vertex" ],
-				THREE.ShaderChunk[ "shadowmap_vertex" ],
+      "#endif",
 
-				"#ifdef USE_ENVMAP",
+      "}"
 
-					"vWorldPosition = worldPosition.xyz;",
+    ].join("\n")
 
-				"#endif",
+  },
 
-			"}"
+  "normalDepth": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      bumpMap: {
+        type: "t",
+        value: null
+      },
+      bumpScale: {
+        type: "f",
+        value: 1
+      },
+      offsetRepeat: {
+        type: "v4",
+        value: new THREE.Vector4(0, 0, 1, 1)
+      }
 
-	"normalDepth" : {
+    },
 
-		uniforms: {
+    fragmentShader: [
 
-			bumpMap: 	  { type: "t", value: null },
-			bumpScale:	  { type: "f", value: 1 },
-			offsetRepeat: { type: "v4", value: new THREE.Vector4( 0, 0, 1, 1 ) }
+      "#ifdef USE_BUMPMAP",
 
-		},
+      "#extension GL_OES_standard_derivatives : enable\n",
 
-		fragmentShader : [
+      "varying vec2 vUv;",
+      "varying vec3 vViewPosition;",
 
-			"#ifdef USE_BUMPMAP",
+      THREE.ShaderChunk["bumpmap_pars_fragment"],
 
-				"#extension GL_OES_standard_derivatives : enable\n",
+      "#endif",
 
-				"varying vec2 vUv;",
-				"varying vec3 vViewPosition;",
+      "varying vec3 normalView;",
+      "varying vec4 clipPos;",
 
-				THREE.ShaderChunk[ "bumpmap_pars_fragment" ],
+      "void main() {",
 
-			"#endif",
+      "vec3 normal = normalize( normalView );",
 
-			"varying vec3 normalView;",
-			"varying vec4 clipPos;",
+      "#ifdef USE_BUMPMAP",
 
-			"void main() {",
+      "normal = perturbNormalArb( -vViewPosition, normal, dHdxy_fwd() );",
 
-				"vec3 normal = normalize( normalView );",
+      "#endif",
 
-				"#ifdef USE_BUMPMAP",
+      "gl_FragColor.xyz = normal * 0.5 + 0.5;",
+      "gl_FragColor.w = clipPos.z / clipPos.w;",
 
-					"normal = perturbNormalArb( -vViewPosition, normal, dHdxy_fwd() );",
+      "}"
 
-				"#endif",
+    ].join("\n"),
 
-				"gl_FragColor.xyz = normal * 0.5 + 0.5;",
-				"gl_FragColor.w = clipPos.z / clipPos.w;",
+    vertexShader: [
 
-			"}"
+      "varying vec3 normalView;",
+      "varying vec4 clipPos;",
 
-		].join("\n"),
+      "#ifdef USE_BUMPMAP",
 
-		vertexShader : [
+      "varying vec2 vUv;",
+      "varying vec3 vViewPosition;",
 
-			"varying vec3 normalView;",
-			"varying vec4 clipPos;",
+      "uniform vec4 offsetRepeat;",
 
-			"#ifdef USE_BUMPMAP",
+      "#endif",
 
-				"varying vec2 vUv;",
-				"varying vec3 vViewPosition;",
+      THREE.ShaderChunk["morphtarget_pars_vertex"],
+      THREE.ShaderChunk["skinning_pars_vertex"],
 
-				"uniform vec4 offsetRepeat;",
+      "void main() {",
 
-			"#endif",
+      THREE.ShaderChunk["morphnormal_vertex"],
+      THREE.ShaderChunk["skinbase_vertex"],
+      THREE.ShaderChunk["skinnormal_vertex"],
+      THREE.ShaderChunk["defaultnormal_vertex"],
 
-			THREE.ShaderChunk[ "morphtarget_pars_vertex" ],
-			THREE.ShaderChunk[ "skinning_pars_vertex" ],
+      THREE.ShaderChunk["morphtarget_vertex"],
+      THREE.ShaderChunk["skinning_vertex"],
+      THREE.ShaderChunk["default_vertex"],
 
-			"void main() {",
+      "normalView = normalize( normalMatrix * objectNormal );",
 
-				THREE.ShaderChunk[ "morphnormal_vertex" ],
-				THREE.ShaderChunk[ "skinbase_vertex" ],
-				THREE.ShaderChunk[ "skinnormal_vertex" ],
-				THREE.ShaderChunk[ "defaultnormal_vertex" ],
+      "#ifdef USE_BUMPMAP",
 
-				THREE.ShaderChunk[ "morphtarget_vertex" ],
-				THREE.ShaderChunk[ "skinning_vertex" ],
-				THREE.ShaderChunk[ "default_vertex" ],
+      "vUv = uv * offsetRepeat.zw + offsetRepeat.xy;",
+      "vViewPosition = -mvPosition.xyz;",
 
-				"normalView = normalize( normalMatrix * objectNormal );",
+      "#endif",
 
-				"#ifdef USE_BUMPMAP",
+      "clipPos = gl_Position;",
 
-					"vUv = uv * offsetRepeat.zw + offsetRepeat.xy;",
-					"vViewPosition = -mvPosition.xyz;",
+      "}"
 
-				"#endif",
+    ].join("\n")
 
-				"clipPos = gl_Position;",
+  },
 
-			"}"
+  "composite": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerLight: {
+        type: "t",
+        value: null
+      },
+      brightness: {
+        type: "f",
+        value: 1
+      }
 
-	"composite" : {
+    },
 
-		uniforms: {
+    fragmentShader: [
 
-			samplerLight: 	{ type: "t", value: null },
-			brightness:		{ type: "f", value: 1 }
+      "varying vec2 texCoord;",
+      "uniform sampler2D samplerLight;",
+      "uniform float brightness;",
 
-		},
+      // tonemapping operators
+      // based on John Hable's HLSL snippets
+      // from http://filmicgames.com/archives/75
 
-		fragmentShader : [
+      "#ifdef TONEMAP_UNCHARTED",
 
-			"varying vec2 texCoord;",
-			"uniform sampler2D samplerLight;",
-			"uniform float brightness;",
+      "const float A = 0.15;",
+      "const float B = 0.50;",
+      "const float C = 0.10;",
+      "const float D = 0.20;",
+      "const float E = 0.02;",
+      "const float F = 0.30;",
+      "const float W = 11.2;",
 
-			// tonemapping operators
-			// based on John Hable's HLSL snippets
-			// from http://filmicgames.com/archives/75
+      "vec3 Uncharted2Tonemap( vec3 x ) {",
 
-			"#ifdef TONEMAP_UNCHARTED",
+      "return ( ( x * ( A * x + C * B ) + D * E ) / ( x * ( A * x + B ) + D * F ) ) - E / F;",
 
-				"const float A = 0.15;",
-				"const float B = 0.50;",
-				"const float C = 0.10;",
-				"const float D = 0.20;",
-				"const float E = 0.02;",
-				"const float F = 0.30;",
-				"const float W = 11.2;",
+      "}",
 
-				"vec3 Uncharted2Tonemap( vec3 x ) {",
+      "#endif",
 
-				   "return ( ( x * ( A * x + C * B ) + D * E ) / ( x * ( A * x + B ) + D * F ) ) - E / F;",
+      "void main() {",
 
-				"}",
+      "vec3 inColor = texture2D( samplerLight, texCoord ).xyz;",
+      "inColor *= brightness;",
 
-			"#endif",
+      "vec3 outColor;",
 
-			"void main() {",
+      "#if defined( TONEMAP_SIMPLE )",
 
-				"vec3 inColor = texture2D( samplerLight, texCoord ).xyz;",
-				"inColor *= brightness;",
+      "outColor = sqrt( inColor );",
 
-				"vec3 outColor;",
+      "#elif defined( TONEMAP_LINEAR )",
 
-				"#if defined( TONEMAP_SIMPLE )",
+      // simple linear to gamma conversion
 
-					"outColor = sqrt( inColor );",
+      "outColor = pow( inColor, vec3( 1.0 / 2.2 ) );",
 
-				"#elif defined( TONEMAP_LINEAR )",
+      "#elif defined( TONEMAP_REINHARD )",
 
-					// simple linear to gamma conversion
+      // Reinhard operator
 
-					"outColor = pow( inColor, vec3( 1.0 / 2.2 ) );",
+      "inColor = inColor / ( 1.0 + inColor );",
+      "outColor = pow( inColor, vec3( 1.0 / 2.2 ) );",
 
-				"#elif defined( TONEMAP_REINHARD )",
+      "#elif defined( TONEMAP_FILMIC )",
 
-					// Reinhard operator
+      // filmic operator by Jim Hejl and Richard Burgess-Dawson
 
-					"inColor = inColor / ( 1.0 + inColor );",
-					"outColor = pow( inColor, vec3( 1.0 / 2.2 ) );",
+      "vec3 x = max( vec3( 0.0 ), inColor - 0.004 );",
+      "outColor = ( x * ( 6.2 * x + 0.5 ) ) / ( x * ( 6.2 * x + 1.7 ) + 0.06 );",
 
-				"#elif defined( TONEMAP_FILMIC )",
+      "#elif defined( TONEMAP_UNCHARTED )",
 
-					// filmic operator by Jim Hejl and Richard Burgess-Dawson
+      // tonemapping operator from Uncharted 2 by John Hable
 
-					"vec3 x = max( vec3( 0.0 ), inColor - 0.004 );",
-					"outColor = ( x * ( 6.2 * x + 0.5 ) ) / ( x * ( 6.2 * x + 1.7 ) + 0.06 );",
+      "float ExposureBias = 2.0;",
+      "vec3 curr = Uncharted2Tonemap( ExposureBias * inColor );",
 
-				"#elif defined( TONEMAP_UNCHARTED )",
+      "vec3 whiteScale = vec3( 1.0 ) / Uncharted2Tonemap( vec3( W ) );",
+      "vec3 color = curr * whiteScale;",
 
-					// tonemapping operator from Uncharted 2 by John Hable
+      "outColor = pow( color, vec3( 1.0 / 2.2 ) );",
 
-					"float ExposureBias = 2.0;",
-					"vec3 curr = Uncharted2Tonemap( ExposureBias * inColor );",
+      "#else",
 
-					"vec3 whiteScale = vec3( 1.0 ) / Uncharted2Tonemap( vec3( W ) );",
-					"vec3 color = curr * whiteScale;",
+      "outColor = inColor;",
 
-					"outColor = pow( color, vec3( 1.0 / 2.2 ) );",
+      "#endif",
 
-				"#else",
+      "gl_FragColor = vec4( outColor, 1.0 );",
 
-					"outColor = inColor;",
+      "}"
 
-				"#endif",
+    ].join("\n"),
 
-				"gl_FragColor = vec4( outColor, 1.0 );",
+    vertexShader: [
 
-			"}"
+      "varying vec2 texCoord;",
 
-		].join("\n"),
+      "void main() {",
 
-		vertexShader : [
+      "vec4 pos = vec4( sign( position.xy ), 0.0, 1.0 );",
+      "texCoord = pos.xy * vec2( 0.5 ) + 0.5;",
+      "gl_Position = pos;",
 
-			"varying vec2 texCoord;",
+      "}"
 
-			"void main() {",
+    ].join("\n")
 
-				"vec4 pos = vec4( sign( position.xy ), 0.0, 1.0 );",
-				"texCoord = pos.xy * vec2( 0.5 ) + 0.5;",
-				"gl_Position = pos;",
+  },
 
-			"}"
+  "pointLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerNormalDepth: {
+        type: "t",
+        value: null
+      },
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      matProjInverse: {
+        type: "m4",
+        value: new THREE.Matrix4()
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"pointLight" : {
+      lightPositionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 0, 0)
+      },
+      lightColor: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightIntensity: {
+        type: "f",
+        value: 1.0
+      },
+      lightRadius: {
+        type: "f",
+        value: 1.0
+      }
 
-		uniforms: {
+    },
 
-			samplerNormalDepth: { type: "t", value: null },
-			samplerColor: 		{ type: "t", value: null },
-			matProjInverse: { type: "m4", value: new THREE.Matrix4() },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+    fragmentShader: [
 
-			lightPositionVS:{ type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
-			lightColor: 	{ type: "c", value: new THREE.Color( 0x000000 ) },
-			lightIntensity: { type: "f", value: 1.0 },
-			lightRadius: 	{ type: "f", value: 1.0 }
+      "uniform sampler2D samplerColor;",
+      "uniform sampler2D samplerNormalDepth;",
 
-		},
+      "uniform float lightRadius;",
+      "uniform float lightIntensity;",
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-		fragmentShader : [
+      "uniform vec3 lightColor;",
+      "uniform vec3 lightPositionVS;",
 
-			"uniform sampler2D samplerColor;",
-			"uniform sampler2D samplerNormalDepth;",
+      "uniform mat4 matProjInverse;",
 
-			"uniform float lightRadius;",
-			"uniform float lightIntensity;",
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform vec3 lightColor;",
-			"uniform vec3 lightPositionVS;",
+      "void main() {",
 
-			"uniform mat4 matProjInverse;",
+      THREE.DeferredShaderChunk["computeVertexPositionVS"],
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      // bail out early when pixel outside of light sphere
 
-			"void main() {",
+      "vec3 lightVector = lightPositionVS - vertexPositionVS.xyz;",
+      "float distance = length( lightVector );",
 
-				THREE.DeferredShaderChunk[ "computeVertexPositionVS" ],
+      "if ( distance > lightRadius ) discard;",
 
-				// bail out early when pixel outside of light sphere
+      THREE.DeferredShaderChunk["computeNormal"],
+      THREE.DeferredShaderChunk["unpackColorMap"],
 
-				"vec3 lightVector = lightPositionVS - vertexPositionVS.xyz;",
-				"float distance = length( lightVector );",
+      // compute light
 
-				"if ( distance > lightRadius ) discard;",
+      "lightVector = normalize( lightVector );",
 
-				THREE.DeferredShaderChunk[ "computeNormal" ],
-				THREE.DeferredShaderChunk[ "unpackColorMap" ],
+      THREE.DeferredShaderChunk["computeDiffuse"],
+      THREE.DeferredShaderChunk["computeSpecular"],
 
-				// compute light
+      // combine
 
-				"lightVector = normalize( lightVector );",
+      "float cutoff = 0.3;",
+      "float denom = distance / lightRadius + 1.0;",
+      "float attenuation = 1.0 / ( denom * denom );",
+      "attenuation = ( attenuation - cutoff ) / ( 1.0 - cutoff );",
+      "attenuation = max( attenuation, 0.0 );",
+      "attenuation *= attenuation;",
 
-				THREE.DeferredShaderChunk[ "computeDiffuse" ],
-				THREE.DeferredShaderChunk[ "computeSpecular" ],
+      THREE.DeferredShaderChunk["combine"],
 
-				// combine
+      "}"
 
-				"float cutoff = 0.3;",
-				"float denom = distance / lightRadius + 1.0;",
-				"float attenuation = 1.0 / ( denom * denom );",
-				"attenuation = ( attenuation - cutoff ) / ( 1.0 - cutoff );",
-				"attenuation = max( attenuation, 0.0 );",
-				"attenuation *= attenuation;",
+    ].join("\n"),
 
-				THREE.DeferredShaderChunk[ "combine" ],
+    vertexShader: [
 
-			"}"
+      "void main() { ",
 
-		].join("\n"),
+      // sphere proxy needs real position
 
-		vertexShader : [
+      "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+      "gl_Position = projectionMatrix * mvPosition;",
 
-			"void main() { ",
+      "}"
 
-				// sphere proxy needs real position
+    ].join("\n")
 
-				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-				"gl_Position = projectionMatrix * mvPosition;",
+  },
 
-			"}"
+  "spotLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerNormalDepth: {
+        type: "t",
+        value: null
+      },
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      matProjInverse: {
+        type: "m4",
+        value: new THREE.Matrix4()
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"spotLight" : {
+      lightPositionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 1, 0)
+      },
+      lightDirectionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 1, 0)
+      },
+      lightColor: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightIntensity: {
+        type: "f",
+        value: 1.0
+      },
+      lightDistance: {
+        type: "f",
+        value: 1.0
+      },
+      lightAngle: {
+        type: "f",
+        value: 1.0
+      }
 
-		uniforms: {
+    },
 
-			samplerNormalDepth: { type: "t", value: null },
-			samplerColor: 		{ type: "t", value: null },
-			matProjInverse: { type: "m4", value: new THREE.Matrix4() },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+    fragmentShader: [
 
-			lightPositionVS :{ type: "v3", value: new THREE.Vector3( 0, 1, 0 ) },
-			lightDirectionVS:{ type: "v3", value: new THREE.Vector3( 0, 1, 0 ) },
-			lightColor: 	{ type: "c", value: new THREE.Color( 0x000000 ) },
-			lightIntensity: { type: "f", value: 1.0 },
-			lightDistance: 	{ type: "f", value: 1.0 },
-			lightAngle: 	{ type: "f", value: 1.0 }
+      "uniform vec3 lightPositionVS;",
+      "uniform vec3 lightDirectionVS;",
 
-		},
+      "uniform sampler2D samplerColor;",
+      "uniform sampler2D samplerNormalDepth;",
 
-		fragmentShader : [
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-			"uniform vec3 lightPositionVS;",
-			"uniform vec3 lightDirectionVS;",
+      "uniform float lightAngle;",
+      "uniform float lightIntensity;",
+      "uniform vec3 lightColor;",
 
-			"uniform sampler2D samplerColor;",
-			"uniform sampler2D samplerNormalDepth;",
+      "uniform mat4 matProjInverse;",
 
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform float lightAngle;",
-			"uniform float lightIntensity;",
-			"uniform vec3 lightColor;",
+      "void main() {",
 
-			"uniform mat4 matProjInverse;",
+      THREE.DeferredShaderChunk["computeVertexPositionVS"],
+      THREE.DeferredShaderChunk["computeNormal"],
+      THREE.DeferredShaderChunk["unpackColorMap"],
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      // compute light
 
-			"void main() {",
+      "vec3 lightVector = normalize( lightPositionVS.xyz - vertexPositionVS.xyz );",
 
-				THREE.DeferredShaderChunk[ "computeVertexPositionVS" ],
-				THREE.DeferredShaderChunk[ "computeNormal" ],
-				THREE.DeferredShaderChunk[ "unpackColorMap" ],
+      "float rho = dot( lightDirectionVS, lightVector );",
+      "float rhoMax = cos( lightAngle * 0.5 );",
 
-				// compute light
+      "if ( rho <= rhoMax ) discard;",
 
-				"vec3 lightVector = normalize( lightPositionVS.xyz - vertexPositionVS.xyz );",
+      "float theta = rhoMax + 0.0001;",
+      "float phi = rhoMax + 0.05;",
+      "float falloff = 4.0;",
 
-				"float rho = dot( lightDirectionVS, lightVector );",
-				"float rhoMax = cos( lightAngle * 0.5 );",
+      "float spot = 0.0;",
 
-				"if ( rho <= rhoMax ) discard;",
+      "if ( rho >= phi ) {",
 
-				"float theta = rhoMax + 0.0001;",
-				"float phi = rhoMax + 0.05;",
-				"float falloff = 4.0;",
+      "spot = 1.0;",
 
-				"float spot = 0.0;",
+      "} else if ( rho <= theta ) {",
 
-				"if ( rho >= phi ) {",
+      "spot = 0.0;",
 
-					"spot = 1.0;",
+      "} else { ",
 
-				"} else if ( rho <= theta ) {",
+      "spot = pow( ( rho - theta ) / ( phi - theta ), falloff );",
 
-					"spot = 0.0;",
+      "}",
 
-				"} else { ",
+      THREE.DeferredShaderChunk["computeDiffuse"],
 
-					"spot = pow( ( rho - theta ) / ( phi - theta ), falloff );",
+      "diffuse *= spot;",
 
-				"}",
+      THREE.DeferredShaderChunk["computeSpecular"],
 
-				THREE.DeferredShaderChunk[ "computeDiffuse" ],
+      // combine
 
-				"diffuse *= spot;",
+      "const float attenuation = 1.0;",
 
-				THREE.DeferredShaderChunk[ "computeSpecular" ],
+      THREE.DeferredShaderChunk["combine"],
 
-				// combine
+      "}"
 
-				"const float attenuation = 1.0;",
+    ].join("\n"),
 
-				THREE.DeferredShaderChunk[ "combine" ],
+    vertexShader: [
 
-			"}"
+      "void main() { ",
 
-		].join("\n"),
+      // full screen quad proxy
 
-		vertexShader : [
+      "gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
 
-			"void main() { ",
+      "}"
 
-				// full screen quad proxy
+    ].join("\n")
 
-				"gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
+  },
 
-			"}"
+  "directionalLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerNormalDepth: {
+        type: "t",
+        value: null
+      },
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      matProjInverse: {
+        type: "m4",
+        value: new THREE.Matrix4()
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"directionalLight" : {
+      lightDirectionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 1, 0)
+      },
+      lightColor: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightIntensity: {
+        type: "f",
+        value: 1.0
+      }
 
-		uniforms: {
+    },
 
-			samplerNormalDepth: { type: "t", value: null },
-			samplerColor: 		{ type: "t", value: null },
-			matProjInverse: { type: "m4", value: new THREE.Matrix4() },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+    fragmentShader: [
 
-			lightDirectionVS: { type: "v3", value: new THREE.Vector3( 0, 1, 0 ) },
-			lightColor: 	{ type: "c", value: new THREE.Color( 0x000000 ) },
-			lightIntensity: { type: "f", value: 1.0 }
+      "uniform sampler2D samplerColor;",
+      "uniform sampler2D samplerNormalDepth;",
 
-		},
+      "uniform float lightRadius;",
+      "uniform float lightIntensity;",
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-		fragmentShader : [
+      "uniform vec3 lightColor;",
+      "uniform vec3 lightDirectionVS;",
 
-			"uniform sampler2D samplerColor;",
-			"uniform sampler2D samplerNormalDepth;",
+      "uniform mat4 matProjInverse;",
 
-			"uniform float lightRadius;",
-			"uniform float lightIntensity;",
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform vec3 lightColor;",
-			"uniform vec3 lightDirectionVS;",
+      "void main() {",
 
-			"uniform mat4 matProjInverse;",
+      THREE.DeferredShaderChunk["computeVertexPositionVS"],
+      THREE.DeferredShaderChunk["computeNormal"],
+      THREE.DeferredShaderChunk["unpackColorMap"],
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      // compute light
 
-			"void main() {",
+      "vec3 lightVector = lightDirectionVS;",
 
-				THREE.DeferredShaderChunk[ "computeVertexPositionVS" ],
-				THREE.DeferredShaderChunk[ "computeNormal" ],
-				THREE.DeferredShaderChunk[ "unpackColorMap" ],
+      THREE.DeferredShaderChunk["computeDiffuse"],
+      THREE.DeferredShaderChunk["computeSpecular"],
 
-				// compute light
+      // combine
 
-				"vec3 lightVector = lightDirectionVS;",
+      "const float attenuation = 1.0;",
 
-				THREE.DeferredShaderChunk[ "computeDiffuse" ],
-				THREE.DeferredShaderChunk[ "computeSpecular" ],
+      THREE.DeferredShaderChunk["combine"],
 
-				// combine
+      "}"
 
-				"const float attenuation = 1.0;",
+    ].join("\n"),
 
-				THREE.DeferredShaderChunk[ "combine" ],
+    vertexShader: [
 
-			"}"
+      "void main() { ",
 
-		].join("\n"),
+      // full screen quad proxy
 
-		vertexShader : [
+      "gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
 
-			"void main() { ",
+      "}"
 
-				// full screen quad proxy
+    ].join("\n")
 
-				"gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
+  },
 
-			"}"
+  "hemisphereLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerNormalDepth: {
+        type: "t",
+        value: null
+      },
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      matProjInverse: {
+        type: "m4",
+        value: new THREE.Matrix4()
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"hemisphereLight" : {
+      lightDirectionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 1, 0)
+      },
+      lightColorSky: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightColorGround: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightIntensity: {
+        type: "f",
+        value: 1.0
+      }
 
-		uniforms: {
+    },
 
-			samplerNormalDepth: { type: "t", value: null },
-			samplerColor: 		{ type: "t", value: null },
-			matProjInverse: { type: "m4", value: new THREE.Matrix4() },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+    fragmentShader: [
 
-			lightDirectionVS: { type: "v3", value: new THREE.Vector3( 0, 1, 0 ) },
-			lightColorSky: 	  { type: "c", value: new THREE.Color( 0x000000 ) },
-			lightColorGround: { type: "c", value: new THREE.Color( 0x000000 ) },
-			lightIntensity:   { type: "f", value: 1.0 }
+      "uniform sampler2D samplerColor;",
+      "uniform sampler2D samplerNormalDepth;",
 
-		},
+      "uniform float lightRadius;",
+      "uniform float lightIntensity;",
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-		fragmentShader : [
+      "uniform vec3 lightColorSky;",
+      "uniform vec3 lightColorGround;",
+      "uniform vec3 lightDirectionVS;",
 
-			"uniform sampler2D samplerColor;",
-			"uniform sampler2D samplerNormalDepth;",
+      "uniform mat4 matProjInverse;",
 
-			"uniform float lightRadius;",
-			"uniform float lightIntensity;",
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform vec3 lightColorSky;",
-			"uniform vec3 lightColorGround;",
-			"uniform vec3 lightDirectionVS;",
+      "void main() {",
 
-			"uniform mat4 matProjInverse;",
+      THREE.DeferredShaderChunk["computeVertexPositionVS"],
+      THREE.DeferredShaderChunk["computeNormal"],
+      THREE.DeferredShaderChunk["unpackColorMap"],
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      // compute light
 
-			"void main() {",
+      "vec3 lightVector = lightDirectionVS;",
 
-				THREE.DeferredShaderChunk[ "computeVertexPositionVS" ],
-				THREE.DeferredShaderChunk[ "computeNormal" ],
-				THREE.DeferredShaderChunk[ "unpackColorMap" ],
+      // diffuse
 
-				// compute light
+      "float dotProduct = dot( normal, lightVector );",
+      "float hemiDiffuseWeight = 0.5 * dotProduct + 0.5;",
 
-				"vec3 lightVector = lightDirectionVS;",
+      "vec3 hemiColor = mix( lightColorGround, lightColorSky, hemiDiffuseWeight );",
 
-				// diffuse
+      "vec3 diffuse = hemiColor;",
 
-				"float dotProduct = dot( normal, lightVector );",
-				"float hemiDiffuseWeight = 0.5 * dotProduct + 0.5;",
+      // specular (sky light)
 
-				"vec3 hemiColor = mix( lightColorGround, lightColorSky, hemiDiffuseWeight );",
+      "vec3 hemiHalfVectorSky = normalize( lightVector - vertexPositionVS.xyz );",
+      "float hemiDotNormalHalfSky = 0.5 * dot( normal, hemiHalfVectorSky ) + 0.5;",
+      "float hemiSpecularWeightSky = max( pow( hemiDotNormalHalfSky, shininess ), 0.0 );",
 
-				"vec3 diffuse = hemiColor;",
+      // specular (ground light)
 
-				// specular (sky light)
+      "vec3 lVectorGround = -lightVector;",
 
-				"vec3 hemiHalfVectorSky = normalize( lightVector - vertexPositionVS.xyz );",
-				"float hemiDotNormalHalfSky = 0.5 * dot( normal, hemiHalfVectorSky ) + 0.5;",
-				"float hemiSpecularWeightSky = max( pow( hemiDotNormalHalfSky, shininess ), 0.0 );",
+      "vec3 hemiHalfVectorGround = normalize( lVectorGround - vertexPositionVS.xyz );",
+      "float hemiDotNormalHalfGround = 0.5 * dot( normal, hemiHalfVectorGround ) + 0.5;",
+      "float hemiSpecularWeightGround = max( pow( hemiDotNormalHalfGround, shininess ), 0.0 );",
 
-				// specular (ground light)
+      "float dotProductGround = dot( normal, lVectorGround );",
 
-				"vec3 lVectorGround = -lightVector;",
+      "float specularNormalization = ( shininess + 2.0001 ) / 8.0;",
 
-				"vec3 hemiHalfVectorGround = normalize( lVectorGround - vertexPositionVS.xyz );",
-				"float hemiDotNormalHalfGround = 0.5 * dot( normal, hemiHalfVectorGround ) + 0.5;",
-				"float hemiSpecularWeightGround = max( pow( hemiDotNormalHalfGround, shininess ), 0.0 );",
+      "vec3 schlickSky = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lightVector, hemiHalfVectorSky ), 5.0 );",
+      "vec3 schlickGround = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lVectorGround, hemiHalfVectorGround ), 5.0 );",
+      "vec3 specular = hemiColor * specularNormalization * ( schlickSky * hemiSpecularWeightSky * max( dotProduct, 0.0 ) + schlickGround * hemiSpecularWeightGround * max( dotProductGround, 0.0 ) );",
 
-				"float dotProductGround = dot( normal, lVectorGround );",
+      // combine
 
-				"float specularNormalization = ( shininess + 2.0001 ) / 8.0;",
+      "gl_FragColor = vec4( lightIntensity * ( albedo * diffuse + specular ), 1.0 );",
 
-				"vec3 schlickSky = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lightVector, hemiHalfVectorSky ), 5.0 );",
-				"vec3 schlickGround = specularColor + vec3( 1.0 - specularColor ) * pow( 1.0 - dot( lVectorGround, hemiHalfVectorGround ), 5.0 );",
-				"vec3 specular = hemiColor * specularNormalization * ( schlickSky * hemiSpecularWeightSky * max( dotProduct, 0.0 ) + schlickGround * hemiSpecularWeightGround * max( dotProductGround, 0.0 ) );",
+      "}"
 
-				// combine
+    ].join("\n"),
 
-				"gl_FragColor = vec4( lightIntensity * ( albedo * diffuse + specular ), 1.0 );",
+    vertexShader: [
 
-			"}"
+      "void main() { ",
 
-		].join("\n"),
+      // full screen quad proxy
 
-		vertexShader : [
+      "gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
 
-			"void main() { ",
+      "}"
 
-				// full screen quad proxy
+    ].join("\n")
 
-				"gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
+  },
 
-			"}"
+  "areaLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerNormalDepth: {
+        type: "t",
+        value: null
+      },
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      matProjInverse: {
+        type: "m4",
+        value: new THREE.Matrix4()
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"areaLight" : {
+      lightPositionVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, 1, 0)
+      },
+      lightNormalVS: {
+        type: "v3",
+        value: new THREE.Vector3(0, -1, 0)
+      },
+      lightRightVS: {
+        type: "v3",
+        value: new THREE.Vector3(1, 0, 0)
+      },
+      lightUpVS: {
+        type: "v3",
+        value: new THREE.Vector3(1, 0, 0)
+      },
 
-		uniforms: {
+      lightColor: {
+        type: "c",
+        value: new THREE.Color(0x000000)
+      },
+      lightIntensity: {
+        type: "f",
+        value: 1.0
+      },
 
-			samplerNormalDepth: { type: "t", value: null },
-			samplerColor: 		{ type: "t", value: null },
-			matProjInverse: { type: "m4", value: new THREE.Matrix4() },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+      lightWidth: {
+        type: "f",
+        value: 1.0
+      },
+      lightHeight: {
+        type: "f",
+        value: 1.0
+      },
 
-			lightPositionVS: { type: "v3", value: new THREE.Vector3( 0, 1, 0 ) },
-			lightNormalVS: 	 { type: "v3", value: new THREE.Vector3( 0, -1, 0 ) },
-			lightRightVS:  	 { type: "v3", value: new THREE.Vector3( 1, 0, 0 ) },
-			lightUpVS:  	 { type: "v3", value: new THREE.Vector3( 1, 0, 0 ) },
+      constantAttenuation: {
+        type: "f",
+        value: 1.5
+      },
+      linearAttenuation: {
+        type: "f",
+        value: 0.5
+      },
+      quadraticAttenuation: {
+        type: "f",
+        value: 0.1
+      }
 
-			lightColor: 	{ type: "c", value: new THREE.Color( 0x000000 ) },
-			lightIntensity: { type: "f", value: 1.0 },
+    },
 
-			lightWidth:  { type: "f", value: 1.0 },
-			lightHeight: { type: "f", value: 1.0 },
+    fragmentShader: [
 
-			constantAttenuation:  { type: "f", value: 1.5 },
-			linearAttenuation:    { type: "f", value: 0.5 },
-			quadraticAttenuation: { type: "f", value: 0.1 }
+      "uniform vec3 lightPositionVS;",
+      "uniform vec3 lightNormalVS;",
+      "uniform vec3 lightRightVS;",
+      "uniform vec3 lightUpVS;",
 
-		},
+      "uniform sampler2D samplerColor;",
+      "uniform sampler2D samplerNormalDepth;",
 
-		fragmentShader : [
+      "uniform float lightWidth;",
+      "uniform float lightHeight;",
 
-			"uniform vec3 lightPositionVS;",
-			"uniform vec3 lightNormalVS;",
-			"uniform vec3 lightRightVS;",
-			"uniform vec3 lightUpVS;",
+      "uniform float constantAttenuation;",
+      "uniform float linearAttenuation;",
+      "uniform float quadraticAttenuation;",
 
-			"uniform sampler2D samplerColor;",
-			"uniform sampler2D samplerNormalDepth;",
+      "uniform float lightIntensity;",
+      "uniform vec3 lightColor;",
 
-			"uniform float lightWidth;",
-			"uniform float lightHeight;",
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-			"uniform float constantAttenuation;",
-			"uniform float linearAttenuation;",
-			"uniform float quadraticAttenuation;",
+      "uniform mat4 matProjInverse;",
 
-			"uniform float lightIntensity;",
-			"uniform vec3 lightColor;",
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      "vec3 projectOnPlane( vec3 point, vec3 planeCenter, vec3 planeNorm ) {",
 
-			"uniform mat4 matProjInverse;",
+      "return point - dot( point - planeCenter, planeNorm ) * planeNorm;",
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      "}",
 
-			"vec3 projectOnPlane( vec3 point, vec3 planeCenter, vec3 planeNorm ) {",
+      "bool sideOfPlane( vec3 point, vec3 planeCenter, vec3 planeNorm ) {",
 
-				"return point - dot( point - planeCenter, planeNorm ) * planeNorm;",
+      "return ( dot( point - planeCenter, planeNorm ) >= 0.0 );",
 
-			"}",
+      "}",
 
-			"bool sideOfPlane( vec3 point, vec3 planeCenter, vec3 planeNorm ) {",
+      "vec3 linePlaneIntersect( vec3 lp, vec3 lv, vec3 pc, vec3 pn ) {",
 
-				"return ( dot( point - planeCenter, planeNorm ) >= 0.0 );",
+      "return lp + lv * ( dot( pn, pc - lp ) / dot( pn, lv ) );",
 
-			"}",
+      "}",
 
-			"vec3 linePlaneIntersect( vec3 lp, vec3 lv, vec3 pc, vec3 pn ) {",
+      "float calculateAttenuation( float dist ) {",
 
-				"return lp + lv * ( dot( pn, pc - lp ) / dot( pn, lv ) );",
+      "return ( 1.0 / ( constantAttenuation + linearAttenuation * dist + quadraticAttenuation * dist * dist ) );",
 
-			"}",
+      "}",
 
-			"float calculateAttenuation( float dist ) {",
+      "void main() {",
 
-				"return ( 1.0 / ( constantAttenuation + linearAttenuation * dist + quadraticAttenuation * dist * dist ) );",
+      THREE.DeferredShaderChunk["computeVertexPositionVS"],
+      THREE.DeferredShaderChunk["computeNormal"],
+      THREE.DeferredShaderChunk["unpackColorMap"],
 
-			"}",
+      "float w = lightWidth;",
+      "float h = lightHeight;",
 
-			"void main() {",
+      "vec3 proj = projectOnPlane( vertexPositionVS.xyz, lightPositionVS, lightNormalVS );",
+      "vec3 dir = proj - lightPositionVS;",
 
-				THREE.DeferredShaderChunk[ "computeVertexPositionVS" ],
-				THREE.DeferredShaderChunk[ "computeNormal" ],
-				THREE.DeferredShaderChunk[ "unpackColorMap" ],
+      "vec2 diagonal = vec2( dot( dir, lightRightVS ), dot( dir, lightUpVS ) );",
+      "vec2 nearest2D = vec2( clamp( diagonal.x, -w, w ), clamp( diagonal.y, -h, h ) );",
+      "vec3 nearestPointInside = vec3( lightPositionVS ) + ( lightRightVS * nearest2D.x + lightUpVS * nearest2D.y );",
 
-				"float w = lightWidth;",
-				"float h = lightHeight;",
+      "vec3 lightDir = normalize( nearestPointInside - vertexPositionVS.xyz );",
+      "float NdotL = max( dot( lightNormalVS, -lightDir ), 0.0 );",
+      "float NdotL2 = max( dot( normal, lightDir ), 0.0 );",
 
-				"vec3 proj = projectOnPlane( vertexPositionVS.xyz, lightPositionVS, lightNormalVS );",
-				"vec3 dir = proj - lightPositionVS;",
+      //"if ( NdotL2 * NdotL > 0.0 && sideOfPlane( vertexPositionVS.xyz, lightPositionVS, lightNormalVS ) ) {",
+      "if ( NdotL2 * NdotL > 0.0 ) {",
 
-				"vec2 diagonal = vec2( dot( dir, lightRightVS ), dot( dir, lightUpVS ) );",
-				"vec2 nearest2D = vec2( clamp( diagonal.x, -w, w ), clamp( diagonal.y, -h, h ) );",
-				"vec3 nearestPointInside = vec3( lightPositionVS ) + ( lightRightVS * nearest2D.x + lightUpVS * nearest2D.y );",
+      // diffuse
 
-				"vec3 lightDir = normalize( nearestPointInside - vertexPositionVS.xyz );",
-				"float NdotL = max( dot( lightNormalVS, -lightDir ), 0.0 );",
-				"float NdotL2 = max( dot( normal, lightDir ), 0.0 );",
+      "vec3 diffuse = vec3( sqrt( NdotL * NdotL2 ) );",
 
-				//"if ( NdotL2 * NdotL > 0.0 && sideOfPlane( vertexPositionVS.xyz, lightPositionVS, lightNormalVS ) ) {",
-				"if ( NdotL2 * NdotL > 0.0 ) {",
+      // specular
 
-					// diffuse
+      "vec3 specular = vec3( 0.0 );",
 
-					"vec3 diffuse = vec3( sqrt( NdotL * NdotL2 ) );",
+      "vec3 R = reflect( normalize( -vertexPositionVS.xyz ), normal );",
+      "vec3 E = linePlaneIntersect( vertexPositionVS.xyz, R, vec3( lightPositionVS ), lightNormalVS );",
 
-					// specular
+      "float specAngle = dot( R, lightNormalVS );",
 
-					"vec3 specular = vec3( 0.0 );",
+      "if ( specAngle > 0.0 ) {",
 
-					"vec3 R = reflect( normalize( -vertexPositionVS.xyz ), normal );",
-					"vec3 E = linePlaneIntersect( vertexPositionVS.xyz, R, vec3( lightPositionVS ), lightNormalVS );",
+      "vec3 dirSpec = E - vec3( lightPositionVS );",
+      "vec2 dirSpec2D = vec2( dot( dirSpec, lightRightVS ), dot( dirSpec, lightUpVS ) );",
+      "vec2 nearestSpec2D = vec2( clamp( dirSpec2D.x, -w, w ), clamp( dirSpec2D.y, -h, h ) );",
+      "float specFactor = 1.0 - clamp( length( nearestSpec2D - dirSpec2D ) * 0.05 * shininess, 0.0, 1.0 );",
+      "specular = specularColor * specFactor * specAngle * diffuse;",
 
-					"float specAngle = dot( R, lightNormalVS );",
+      "}",
 
-					"if ( specAngle > 0.0 ) {",
+      // combine
 
-						"vec3 dirSpec = E - vec3( lightPositionVS );",
-						"vec2 dirSpec2D = vec2( dot( dirSpec, lightRightVS ), dot( dirSpec, lightUpVS ) );",
-						"vec2 nearestSpec2D = vec2( clamp( dirSpec2D.x, -w, w ), clamp( dirSpec2D.y, -h, h ) );",
-						"float specFactor = 1.0 - clamp( length( nearestSpec2D - dirSpec2D ) * 0.05 * shininess, 0.0, 1.0 );",
-						"specular = specularColor * specFactor * specAngle * diffuse;",
+      "float dist = distance( vertexPositionVS.xyz, nearestPointInside );",
+      "float attenuation = calculateAttenuation( dist );",
 
-					"}",
+      THREE.DeferredShaderChunk["combine"],
 
-					// combine
+      "} else {",
 
-					"float dist = distance( vertexPositionVS.xyz, nearestPointInside );",
-					"float attenuation = calculateAttenuation( dist );",
+      "discard;",
 
-					THREE.DeferredShaderChunk[ "combine" ],
+      "}",
 
-				"} else {",
+      "}"
 
-					"discard;",
+    ].join("\n"),
 
-				"}",
+    vertexShader: [
 
-			"}"
+      "void main() {",
 
-		].join("\n"),
+      // full screen quad proxy
 
-		vertexShader : [
+      "gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
 
-			"void main() {",
+      "}"
 
-				// full screen quad proxy
+    ].join("\n")
 
-				"gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
+  },
 
-			"}"
+  "emissiveLight": {
 
-		].join("\n")
+    uniforms: {
 
-	},
+      samplerColor: {
+        type: "t",
+        value: null
+      },
+      viewWidth: {
+        type: "f",
+        value: 800
+      },
+      viewHeight: {
+        type: "f",
+        value: 600
+      },
 
-	"emissiveLight" : {
+    },
 
-		uniforms: {
+    fragmentShader: [
 
-			samplerColor: 	{ type: "t", value: null },
-			viewWidth: 		{ type: "f", value: 800 },
-			viewHeight: 	{ type: "f", value: 600 },
+      "uniform sampler2D samplerColor;",
 
-		},
+      "uniform float viewHeight;",
+      "uniform float viewWidth;",
 
-		fragmentShader : [
+      THREE.DeferredShaderChunk["unpackFloat"],
 
-			"uniform sampler2D samplerColor;",
+      "void main() {",
 
-			"uniform float viewHeight;",
-			"uniform float viewWidth;",
+      "vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
 
-			THREE.DeferredShaderChunk[ "unpackFloat" ],
+      "vec4 colorMap = texture2D( samplerColor, texCoord );",
+      "vec3 emissiveColor = float_to_vec3( abs( colorMap.w ) );",
 
-			"void main() {",
+      "gl_FragColor = vec4( emissiveColor, 1.0 );",
 
-				"vec2 texCoord = gl_FragCoord.xy / vec2( viewWidth, viewHeight );",
+      "}"
 
-				"vec4 colorMap = texture2D( samplerColor, texCoord );",
-				"vec3 emissiveColor = float_to_vec3( abs( colorMap.w ) );",
+    ].join("\n"),
 
-				"gl_FragColor = vec4( emissiveColor, 1.0 );",
+    vertexShader: [
 
-			"}"
+      "void main() { ",
 
-		].join("\n"),
+      // full screen quad proxy
 
-		vertexShader : [
+      "gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
 
-			"void main() { ",
+      "}"
 
-				// full screen quad proxy
+    ].join("\n")
 
-				"gl_Position = vec4( sign( position.xy ), 0.0, 1.0 );",
-
-			"}"
-
-		].join("\n")
-
-	}
+  }
 
 };
