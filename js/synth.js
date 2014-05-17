@@ -1257,11 +1257,17 @@ Synth.prototype = {
 
     }
   },
-  meshChange: function(shape) {
+  meshChange: function(shape,x,s) {
     var that = this;
 
+	if(x === null || x === undefined){
+		x = 720;
+	}
 
-
+	if(s === null || s === undefined){
+		s = 360;
+	}
+	
     if (that.meshUpdate === true) {
       that.scene.remove(that.mesh);
       that.geometry.verticesNeedUpdate = false;
@@ -1273,34 +1279,34 @@ Synth.prototype = {
     switch (shape) {
       case 'plane':
 
-        that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
+        that.geometry = new THREE.PlaneGeometry(x, s, x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
         break;
 
       case 'sphere':
-        that.geometry = new THREE.SphereGeometry(640, 120, 120);
+        that.geometry = new THREE.SphereGeometry(x,s,s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
         break;
 
       case 'cube':
-        that.geometry = new THREE.BoxGeometry(640, 640, 640, 120, 120, 120);
+        that.geometry = new THREE.BoxGeometry(x, x, x, s, s, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
       case 'cylinder':
-        that.geometry = new THREE.CylinderGeometry(that.scale * 4.0, that.scale * 4.0, 240, 360, 240, false);
+        that.geometry = new THREE.CylinderGeometry(that.scale * 4.0, that.scale * 4.0, s, x, s, false);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
       case 'torus':
-        that.geometry = new THREE.TorusGeometry(that.scale, 360, 360, 360);
+        that.geometry = new THREE.TorusGeometry(that.scale, x, x, x);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
       default:
-        that.geometry = new THREE.PlaneGeometry(640, 360, 640, 360);
+        that.geometry = new THREE.PlaneGeometry(x, s, x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
     }
