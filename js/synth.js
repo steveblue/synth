@@ -661,7 +661,7 @@ Synth.prototype = {
         $('.toggle.model').removeClass('active');
         $(this).addClass('active');
       //  console.log("that.meshChange('" + $(this).children('control').data('key') + "',64,64)");
-        eval("that.meshChange('" + $(this).children('control').data('key') + "',128,128)");
+        eval("that.meshChange('" + $(this).children('control').data('key') + "',140,140)");
 
       }
 
@@ -703,7 +703,7 @@ Synth.prototype = {
     $('.control').on('click', function() {
       if (that.trigger === true && !$(this).hasClass('controller')) {
         $(this).css('top', that.pointer[that.setting.current] + 'px');
-        console.log('top', that.pointer[that.setting.current] + 'px');
+       // console.log('top', that.pointer[that.setting.current] + 'px');
         $(this).attr('data-index', that.setting.current);
         $(this).addClass('controlled');
         $(this).parent().prepend('<div class="close red"></div>');
@@ -874,17 +874,17 @@ Synth.prototype = {
       // After 0s, let's get this real and map a frequency to displacement of mesh
       // Note that the instance of dancer is bound to "this"
 
-      that.audiostream[0] = Math.round(this.getFrequency(30) * 1000);
-      that.audiostream[1] = Math.round(this.getFrequency(60) * 1000);
-      that.audiostream[2] = Math.round(this.getFrequency(90) * 1000);
-      that.audiostream[3] = Math.round(this.getFrequency(120) * 1000);
-      that.audiostream[4] = Math.round(this.getFrequency(150) * 1000);
-      that.audiostream[5] = Math.round(this.getFrequency(180) * 1000);
-      that.audiostream[6] = Math.round(this.getFrequency(210) * 1000);
-      that.audiostream[7] = Math.round(this.getFrequency(240) * 1000);
-      that.audiostream[8] = Math.round(this.getFrequency(270) * 1000);
-      that.audiostream[9] = Math.round(this.getFrequency(300) * 1000);
-      that.audiostream[10] = Math.round(this.getFrequency(330) * 1000);
+      that.audiostream[0] = Math.round(this.getFrequency(30) * 5000);
+      that.audiostream[1] = Math.round(this.getFrequency(60) * 5000);
+      that.audiostream[2] = Math.round(this.getFrequency(90) * 5000);
+      that.audiostream[3] = Math.round(this.getFrequency(120) * 5000);
+      that.audiostream[4] = Math.round(this.getFrequency(150) * 5000);
+      that.audiostream[5] = Math.round(this.getFrequency(180) * 5000);
+      that.audiostream[6] = Math.round(this.getFrequency(210) * 5000);
+      that.audiostream[7] = Math.round(this.getFrequency(240) * 5000);
+      that.audiostream[8] = Math.round(this.getFrequency(270) * 5000);
+      that.audiostream[9] = Math.round(this.getFrequency(300) * 5000);
+      that.audiostream[10] = Math.round(this.getFrequency(330) * 5000);
 
     }).load(that.audioInput);
     this.audioInput.play();
@@ -1250,10 +1250,10 @@ Synth.prototype = {
     var that = this;
 	that.shape = shape;
 	if(x === null || x === undefined){
-		x = 72;
+		x = 64;
 	}	
 	if(s === null || s === undefined){
-		s = 72;
+		s = 64;
 	}
 	
     if (that.meshUpdate === true) {
@@ -1279,6 +1279,9 @@ Synth.prototype = {
         break;
 
       case 'cube':
+       	if(x > 60 || s > 60){
+	   	    x = s = 60;
+       	}
         that.geometry = new THREE.BoxGeometry(x, x, x, s, s, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;

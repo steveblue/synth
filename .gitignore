@@ -7,3 +7,4 @@ config.rb
 /info
 /dpth
 node_modules/
+codekit-config.json
