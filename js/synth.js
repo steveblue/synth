@@ -170,7 +170,6 @@ Synth.prototype = {
   },
   set model(shape) {
     if (shape === 'plane' || shape === 'cube' || shape === 'torus' || shape === 'sphere' || shape === 'cylinder') {
-      this.shape = shape;
       this.meshChange(shape);
     }
   },
@@ -324,15 +323,7 @@ Synth.prototype = {
     this.videoMaterial.renderToScreen = true;
     this.videoMaterial.wireframe = that.wireframe;
 
-    that.meshChange(that.shape);
-
-
-    this.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
-    this.mesh.doubleSided = true;
-    this.mesh.position.x = 0;
-    this.mesh.position.y = 0;
-    this.mesh.visible = true;
-    this.mesh.scale.x = this.mesh.scale.y = 6.0;
+    that.meshChange(that.shape,720,360);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -347,8 +338,9 @@ Synth.prototype = {
     this.renderModel = new THREE.RenderPass(that.scene, that.camera);
     this.composer.addPass(that.renderModel);
 
-    this.effectBloom = new THREE.BloomPass(3.3, 20, 4.0, 256);
-    this.composer.addPass(that.effectBloom);
+    //this.effectBloom = new THREE.BloomPass(3.3, 20, 4.0, 256);
+   // this.effectBloom = new THREE.BloomPass(1.4, 20, 1.4, 256);
+   //  this.composer.addPass(that.effectBloom);
 
     this.effectHue = new THREE.ShaderPass(THREE.HueSaturationShader);
     this.effectHue.renderToScreen = true;
@@ -374,9 +366,6 @@ Synth.prototype = {
     this.directionalLightFill.castShadow = true;
     this.scene.add(that.directionalLightFill);
 
-
-    this.mesh.position.z = this.scene.position.z;
-    this.scene.add(that.mesh);
 
 
     function onWindowResize() {
@@ -671,8 +660,8 @@ Synth.prototype = {
 
         $('.toggle.model').removeClass('active');
         $(this).addClass('active');
-        console.log("that.model='" + $(this).children('control').data('key') + "'");
-        eval("that.model='" + $(this).children('control').data('key') + "'");
+      //  console.log("that.meshChange('" + $(this).children('control').data('key') + "',64,64)");
+        eval("that.meshChange('" + $(this).children('control').data('key') + "',128,128)");
 
       }
 
@@ -1259,13 +1248,12 @@ Synth.prototype = {
   },
   meshChange: function(shape,x,s) {
     var that = this;
-
+	that.shape = shape;
 	if(x === null || x === undefined){
-		x = 720;
-	}
-
+		x = 72;
+	}	
 	if(s === null || s === undefined){
-		s = 360;
+		s = 72;
 	}
 	
     if (that.meshUpdate === true) {
@@ -1296,7 +1284,7 @@ Synth.prototype = {
         break;
 
       case 'cylinder':
-        that.geometry = new THREE.CylinderGeometry(that.scale * 4.0, that.scale * 4.0, s, x, s, false);
+        that.geometry = new THREE.CylinderGeometry(that.scale * 2.0, that.scale * 2.0, x*8.0, s, x, false);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
@@ -1311,7 +1299,7 @@ Synth.prototype = {
 
     }
     setTimeout(function() {
-      that.shape = shape;
+    //  that.shape = shape;
       that.meshUpdate = true;
       that.scene.add(that.mesh);
       that.mesh.doubleSided = true;
@@ -1320,9 +1308,17 @@ Synth.prototype = {
       that.geometry.dynamic = true;
       that.geometry.verticesNeedUpdate = true;
       that.videoMaterial.renderToScreen = true;
-
+	  console.log(that.mesh);
     }, 100);
 
+  },
+  removeMesh: function(mesh){
+  	var that = this;
+	that.scene.remove(mesh);  
+  },
+  addMesh: function(mesh){
+	var that = this;
+	that.scene.add(mesh);   
   },
   onDocumentMouseMove: function(event) {
     this.mouseX = (event.clientX - this.windowHalfX);

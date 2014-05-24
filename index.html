@@ -6,8 +6,8 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href='http://fonts.googleapis.com/css?family=Exo:100,200,400,500,700italic' rel='stylesheet' type='text/css'>
 		<link href='css/style.css' rel='stylesheet' type='text/css'>
-		<script src="js/libs/jquery.min.js"></script>
-		<script src="js/libs/jquery.ui.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<script src="js/libs/modernizr.custom.js"></script>
 		<script src="js/libs/three.min.js"></script>
 		<script src="js/libs/dancer.js"></script>
@@ -80,7 +80,7 @@
 		</div>
 		</joystick>	
 		<fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="camZ" data-value="0.0" data-start="4000.0" data-end="-4000.0"><point></point></control><div class="value"></div></div></fader>	
-	    <fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="scaler" data-value="0.0" data-start="10.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 
+	    <fader class="fader v"><div class="wrapper"><control class="vert draggable control ui-widget-content" data-index="" data-key="scaler" data-value="0.0" data-start="20.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>	 
 		<div class="togglefarm">
 		<toggle class="toggle model"><control class="control" data-key="plane" data-value="true">Plane</control></toggle>
 		<toggle class="toggle model"><control class="control" data-key="cube" data-value="false">Cube</control></toggle>
@@ -94,7 +94,7 @@
 	
 	<script src="js/synth.js"></script>
 	<script>
-		var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.15,0.0,0.6,'#000000');
+		var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.75,0.0,0.6,'#000000');
 			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
 			s.init();
 			setTimeout(function(){
