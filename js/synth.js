@@ -829,8 +829,23 @@ Synth.prototype = {
         that.videoInput.loop = false;
       }
     });
+    
     var mouseView = true;
-
+	keypress.combo("y", function() {
+		$('.toggle.model.plane').trigger('click');
+    });
+	keypress.combo("u", function() {
+		$('.toggle.model.cube').trigger('click');
+    }); 
+	keypress.combo("i", function() {
+		$('.toggle.model.sphere').trigger('click');
+    });  
+ 	keypress.combo("o", function() {
+		$('.toggle.model.cylinder').trigger('click');
+    });
+ 	keypress.combo("p", function() {
+		$('.toggle.model.torus').trigger('click');
+    });                
     keypress.combo("x", function() {
       $('#close_drop').trigger('click');
       $('#gui_drop').trigger('click');
