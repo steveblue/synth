@@ -1,4 +1,4 @@
-/*synth v185.1*/
+/*synth v186*/
 var Synth = function(container, control, cam, shape, wireframe, scale, multiplier, displace, opacity, hue, sat, hex) {
   var that = this;
   this.control = control;

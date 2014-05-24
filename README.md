@@ -1,4 +1,4 @@
-Synth v.185
+Synth v.186
 
 
 For news and release updates visit http://kineticvideo.co/info/
@@ -30,6 +30,7 @@ Various properties of Synth can be set dynamically. In the example above, the de
 
 ```
 s.hex = '#FF0000';
+
 ```
 
 
