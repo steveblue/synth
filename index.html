@@ -94,9 +94,12 @@
 	
 	<script src="js/synth.js"></script>
 	<script>
-		var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.75,0.0,0.6,'#000000');
-			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
+	//	var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.75,0.0,0.6,'#000000');
+	
+		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,10,63.7,7.62,0.55,0,0.6,"#000000");
+			s.defaultVideo('vid/kinetic-light.mp4');
 			s.init();
+			$('.toggle.wire').addClass('active'); // temp
 			setTimeout(function(){
 				$('header').fadeOut();
 			}, 10000)
