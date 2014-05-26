@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Synth</title>
+		<title>Synth v.187</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href='http://fonts.googleapis.com/css?family=Exo:100,200,400,500,700italic' rel='stylesheet' type='text/css'>
@@ -27,18 +27,18 @@
 	<body>
 	<header>
 	    <h1>Synth</h1>
-	    <h2>v.186</h2>
+	    <h2>Visualize audio and video with 3D objects.</h2>
 		<a href="info/index.php">Learn More</a>
 	</header>
 	<!--<div id="topfill"></div>-->
  <div id="gui_container">
 	<div id="video_drop">
 		<ul id="videoplaylist"></ul>
-		<h5 id="read_video">Read Video Files</h5>
+		<h5 id="read_video">Load Video Files</h5>
 	</div>
 	<div id="drop_zone">
 		<ul id="playlist"></ul>
-		<h5 id="read_files">Read Audio Files</h5>
+		<h5 id="read_files">Load Audio Files</h5>
 	</div>
 	<audio id="audio" src="" controls="controls"></audio>
 </div>
@@ -96,7 +96,7 @@
 	<script>
 	//	var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.75,0.0,0.6,'#000000');
 	
-		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,10,63.7,7.62,0.55,0,0.6,"#000000");
+		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,16.0,36.9,1.1,0.25,0,0.6,"#000000");
 			s.defaultVideo('vid/kinetic-light.mp4');
 			s.init();
 			$('.toggle.wire').addClass('active'); // temp

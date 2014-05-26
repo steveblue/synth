@@ -1,4 +1,4 @@
-Synth v.186
+Synth v.187
 
 
 For news and release updates visit http://kineticvideo.co/info/
@@ -19,14 +19,14 @@ With version .185 Synth now utilizes a prototypal archtiecture that allows anyon
 To use Synth, you must create a new Object that inherits the properties of the Synth.prototype.
 
 ```
-		var s = new Synth(true,false);
-			s.defaultVideo('vid/wavves-1280x720-2500kbps.mp4');
+		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,16.0,36.9,1.1,0.25,0,0.6,"#000000");
+			s.defaultVideo('/path/to/default-video.mp4');
 			s.init();			
 ```
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
 
-Various properties of Synth can be set dynamically. In the example above, the default video is set. Another example woud be to change the background color of Synth (which is currently not supported in the gui).
+Various properties of Synth can be set dynamically including container, control init, webcam init, shape, wireframe, scale, multiplier, displacement, opacity, hue, sat, and background color. In the example above, the default video is set with the defaultVideo method. Another example woud be to change the background color of Synth (which is currently not supported in the gui).
 
 ```
 s.hex = '#FF0000';

@@ -10,8 +10,9 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
   this.texture;
   this.material;
   this.mesh;
-  this.light;
-  this.directionalLightFill;
+  this.back;
+  this.fill;
+  this.key;
   this.composer;
   this.renderModel;
   this.effectBloom;
@@ -267,7 +268,9 @@ Synth.prototype = {
     document.body.appendChild(that.container);
 
 
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 20000);
+    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+    //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 10000);
+    
     this.camera.position.z = 3600;
 
 
@@ -348,25 +351,25 @@ Synth.prototype = {
     this.effectHue.uniforms['saturation'].value = 0.0;
     this.composer.addPass(that.effectHue);
 
+    
+    this.fill = new THREE.AmbientLight( 0x707070 ); // soft white light
+	this.scene.add( that.fill );
 
-    this.light = new THREE.SpotLight(0xffffff);
-    this.light.position.set(0, 0, 1000).normalize();
-    this.light.target = this.mesh;
-    //light.shadowCameraVisible = true;
-    //light.shadowDarkness = 0.25;
-    this.light.intensity = 1200;
-    this.light.castShadow = true;
-    this.scene.add(that.light);
+    this.key = new THREE.SpotLight(0xffffff);
+    this.key.position.set(0, 0, 5000).normalize();
+    this.key.target = this.mesh;
 
-    this.directionalLightFill = new THREE.SpotLight(0xffffff);
-    this.directionalLightFill.position.set(0, 0, -1000).normalize();
-    this.directionalLightFill.target = this.mesh;
+    this.key.intensity = 5000;
+    this.key.castShadow = true;
+    this.scene.add(that.key);
 
-    this.directionalLightFill.intensity = 1200;
-    this.directionalLightFill.castShadow = true;
-    this.scene.add(that.directionalLightFill);
+    this.back = new THREE.SpotLight(0xffffff);
+    this.back.position.set(0, 0, -5000).normalize();
+    this.back.target = this.mesh;
 
-
+    this.back.intensity = 5000;
+    this.back.castShadow = true;
+    this.scene.add(that.back);
 
     function onWindowResize() {
 
@@ -1187,7 +1190,7 @@ Synth.prototype = {
   paramsChange: function() {
     var that = this;
 
-    that.mesh.scale.x = that.mesh.scale.y = parseFloat(that.scale);
+    that.mesh.scale.x = that.mesh.scale.y = that.mesh.scale.z = parseFloat(that.scale);
 
     that.mousex = that.mouseX;
     that.mousey = that.mouseY;
@@ -1322,7 +1325,7 @@ Synth.prototype = {
       that.scene.add(that.mesh);
       that.mesh.doubleSided = true;
       that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0;
-      that.mesh.scale.x = that.mesh.scale.y = that.scale;
+      that.mesh.scale.x = that.mesh.scale.y =  that.mesh.scale.z = that.scale;
       that.geometry.dynamic = true;
       that.geometry.verticesNeedUpdate = true;
       that.videoMaterial.renderToScreen = true;
