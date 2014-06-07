@@ -9,7 +9,7 @@ html, body {
   height: 100%;
 }
 
-/* line 10, ../scss/style.scss */
+/* line 11, ../scss/style.scss */
 a:link, a:visited {
   display: block;
   color: #FFF;
@@ -25,21 +25,21 @@ a:link, a:visited {
   -webkit-transition: all 0.5s ease-in-out;
 }
 
-/* line 24, ../scss/style.scss */
+/* line 25, ../scss/style.scss */
 a:hover {
   color: #FFF;
   opacity: 1.0em;
   text-transform: none;
 }
 
-/* line 30, ../scss/style.scss */
+/* line 31, ../scss/style.scss */
 a:active {
   color: #FEE;
   opacity: 1.0em;
   text-transform: none;
 }
 
-/* line 35, ../scss/style.scss */
+/* line 36, ../scss/style.scss */
 .dg, .dg li.title, .dg.main .close-button {
   color: #ABABAB;
   font-family: 'Lato', sans-serif;
@@ -51,7 +51,7 @@ a:active {
   opacity: 50%;
 }
 
-/* line 45, ../scss/style.scss */
+/* line 46, ../scss/style.scss */
 header {
   color: #FFF;
   position: absolute;
@@ -65,7 +65,7 @@ header {
   opacity: 0.95;
 }
 
-/* line 59, ../scss/style.scss */
+/* line 60, ../scss/style.scss */
 h1 {
   font-family: 'Exo', sans-serif;
   font-size: 96px;
@@ -74,14 +74,14 @@ h1 {
   text-rendering: optimizeLegibility;
 }
 
-/* line 66, ../scss/style.scss */
+/* line 67, ../scss/style.scss */
 h2 {
   font-family: 'Exo', sans-serif;
   color: #FFF;
   font-weight: 300;
 }
 
-/* line 72, ../scss/style.scss */
+/* line 73, ../scss/style.scss */
 h5 {
   font-family: 'Exo', sans-serif;
   color: #FFF;
@@ -90,7 +90,7 @@ h5 {
   letter-spacing: 0.2em;
 }
 
-/* line 80, ../scss/style.scss */
+/* line 81, ../scss/style.scss */
 p, li {
   color: #FFF;
   font-family: 'Lato', sans-serif;
@@ -103,7 +103,7 @@ p, li {
   letter-spacing: 2px;
 }
 
-/* line 91, ../scss/style.scss */
+/* line 92, ../scss/style.scss */
 select {
   background: #303030;
   width: auto;
@@ -121,28 +121,28 @@ select {
   cursor: hand;
 }
 
-/* line 107, ../scss/style.scss */
+/* line 108, ../scss/style.scss */
 article p, article li {
   font-size: 16px;
 }
 
-/* line 111, ../scss/style.scss */
+/* line 112, ../scss/style.scss */
 header p, header a:link, header a:visited {
   text-align: center;
   padding-top: 40px;
   font-size: 14px;
 }
-/* line 115, ../scss/style.scss */
+/* line 116, ../scss/style.scss */
 header p img, header a:link img, header a:visited img {
   width: 100%;
   height: auto;
 }
-/* line 120, ../scss/style.scss */
+/* line 121, ../scss/style.scss */
 header h1, header h2 {
   text-align: center;
 }
 
-/* line 124, ../scss/style.scss */
+/* line 125, ../scss/style.scss */
 article {
   display: block;
   width: 60%;
@@ -153,7 +153,7 @@ article {
   padding-bottom: 60px;
 }
 
-/* line 133, ../scss/style.scss */
+/* line 134, ../scss/style.scss */
 #drop_zone {
   position: absolute;
   top: 0;
@@ -167,7 +167,7 @@ article {
   background-size: cover;
   background-repeat: repeat;
 }
-/* line 146, ../scss/style.scss */
+/* line 147, ../scss/style.scss */
 #drop_zone p {
   display: block;
   position: relative;
@@ -175,17 +175,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
-/* line 153, ../scss/style.scss */
+/* line 154, ../scss/style.scss */
 #drop_zone li {
   padding-bottom: 2px;
   padding-top: 2px;
 }
-/* line 157, ../scss/style.scss */
+/* line 158, ../scss/style.scss */
 #drop_zone li:first-child {
   padding-top: 6px;
 }
 
-/* line 161, ../scss/style.scss */
+/* line 162, ../scss/style.scss */
 #video_drop {
   position: absolute;
   top: 0px;
@@ -199,7 +199,7 @@ article {
   background-size: cover;
   background-repeat: repeat;
 }
-/* line 174, ../scss/style.scss */
+/* line 175, ../scss/style.scss */
 #video_drop p {
   display: block;
   position: relative;
@@ -207,17 +207,17 @@ article {
   margin-left: -300px;
   margin-top: 0px;
 }
-/* line 181, ../scss/style.scss */
+/* line 182, ../scss/style.scss */
 #video_drop li {
   padding-bottom: 2px;
   padding-top: 2px;
 }
-/* line 185, ../scss/style.scss */
+/* line 186, ../scss/style.scss */
 #video_drop li:first-child {
   padding-top: 6px;
 }
 
-/* line 189, ../scss/style.scss */
+/* line 190, ../scss/style.scss */
 #topfill {
   position: absolute;
   top: 0;
@@ -228,7 +228,7 @@ article {
   background: #010101;
 }
 
-/* line 198, ../scss/style.scss */
+/* line 199, ../scss/style.scss */
 #read_files {
   position: relative;
   top: -45px;
@@ -238,7 +238,7 @@ article {
   cursor: hand;
 }
 
-/* line 206, ../scss/style.scss */
+/* line 207, ../scss/style.scss */
 #read_video {
   position: relative;
   top: -50px;
@@ -248,7 +248,7 @@ article {
   cursor: hand;
 }
 
-/* line 214, ../scss/style.scss */
+/* line 215, ../scss/style.scss */
 #close_drop {
   position: absolute;
   top: 297px;
@@ -260,7 +260,7 @@ article {
   text-align: center;
 }
 
-/* line 224, ../scss/style.scss */
+/* line 225, ../scss/style.scss */
 #gui_drop {
   position: absolute;
   bottom: 33%;
@@ -272,27 +272,27 @@ article {
   text-align: center;
 }
 
-/* line 234, ../scss/style.scss */
+/* line 235, ../scss/style.scss */
 #close_drop:hover, #gui_drop:hover {
   cursor: pointer;
   cursor: hand;
 }
 
-/* line 239, ../scss/style.scss */
+/* line 240, ../scss/style.scss */
 #close_drop p, #gui_drop p {
   color: #ababab;
   opacity: 0.8;
   position: relative;
   top: -10px;
 }
-/* line 246, ../scss/style.scss */
+/* line 247, ../scss/style.scss */
 #close_drop p:hover, #gui_drop p:hover {
   color: #FFF;
   opacity: 1.0;
   text-transform: none;
 }
 
-/* line 252, ../scss/style.scss */
+/* line 253, ../scss/style.scss */
 audio {
   position: absolute;
   top: 318px;
@@ -300,7 +300,7 @@ audio {
   display: none;
 }
 
-/* line 258, ../scss/style.scss */
+/* line 259, ../scss/style.scss */
 #playlist, #videoplaylist {
   list-style-type: none;
   display: block;
@@ -310,7 +310,7 @@ audio {
   margin: 0;
   padding: 0;
 }
-/* line 266, ../scss/style.scss */
+/* line 267, ../scss/style.scss */
 #playlist li, #videoplaylist li {
   list-style-type: none;
   display: block;
@@ -318,12 +318,12 @@ audio {
   height: 20px;
   background: rgba(10, 10, 10, 0.8);
 }
-/* line 273, ../scss/style.scss */
+/* line 274, ../scss/style.scss */
 #playlist li a:link, #playlist li a:visited, #videoplaylist li a:link, #videoplaylist li a:visited {
   color: #ABABAB;
 }
 
-/* line 279, ../scss/style.scss */
+/* line 280, ../scss/style.scss */
 #gui_container {
   position: absolute;
   display: block;
@@ -331,9 +331,12 @@ audio {
   left: 0px;
   background: #010101;
   display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* line 288, ../scss/style.scss */
+/* line 292, ../scss/style.scss */
 #container {
   display: block;
   width: 100%;
@@ -342,9 +345,12 @@ audio {
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* line 297, ../scss/style.scss */
+/* line 304, ../scss/style.scss */
 .cancel {
   display: block;
   width: 4%;
@@ -357,7 +363,7 @@ audio {
   z-index: 9999;
 }
 
-/* line 309, ../scss/style.scss */
+/* line 316, ../scss/style.scss */
 .play {
   width: 100px;
   height: 100px;
@@ -365,7 +371,7 @@ audio {
   background: #ABABAB;
 }
 
-/* line 315, ../scss/style.scss */
+/* line 322, ../scss/style.scss */
 equalizer {
   display: block;
   position: relative;
@@ -376,14 +382,14 @@ equalizer {
   border: 1px solid rgba(200, 200, 200, 0.3);
   float: left;
 }
-/* line 324, ../scss/style.scss */
+/* line 331, ../scss/style.scss */
 equalizer .wrapper {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
-/* line 330, ../scss/style.scss */
+/* line 337, ../scss/style.scss */
 equalizer .wrapper control {
   display: block;
   width: 100%;
@@ -394,7 +400,7 @@ equalizer .wrapper control {
   -webkit-transform: rotate(180deg);
   overflow: hidden;
 }
-/* line 340, ../scss/style.scss */
+/* line 347, ../scss/style.scss */
 equalizer .wrapper control .bars {
   display: block;
   list-style-type: none;
@@ -405,7 +411,7 @@ equalizer .wrapper control .bars {
   cursor: pointer;
   cursor: hand;
 }
-/* line 350, ../scss/style.scss */
+/* line 357, ../scss/style.scss */
 equalizer .wrapper control .bars li {
   display: block;
   width: 10%;
@@ -415,24 +421,24 @@ equalizer .wrapper control .bars li {
   float: left;
   background: rgba(200, 200, 200, 0.5);
 }
-/* line 358, ../scss/style.scss */
+/* line 365, ../scss/style.scss */
 equalizer .wrapper control .bars li.controller {
   background: #f00;
 }
-/* line 365, ../scss/style.scss */
+/* line 372, ../scss/style.scss */
 equalizer .wrapper .value {
   width: 200px;
   position: relative;
   left: 50%;
   margin-left: -100px;
 }
-/* line 370, ../scss/style.scss */
+/* line 377, ../scss/style.scss */
 equalizer .wrapper .value p {
   float: left;
   padding-right: 50px;
 }
 
-/* line 377, ../scss/style.scss */
+/* line 384, ../scss/style.scss */
 fader, picker {
   display: block;
   position: relative;
@@ -445,21 +451,21 @@ fader, picker {
   margin-left: 0px;
   background: transparent;
 }
-/* line 389, ../scss/style.scss */
+/* line 396, ../scss/style.scss */
 fader .wrapper, picker .wrapper {
   height: 100%;
   width: 100%;
   padding: 0px;
   margin: 0px;
 }
-/* line 394, ../scss/style.scss */
+/* line 401, ../scss/style.scss */
 fader .wrapper canvas, picker .wrapper canvas {
   height: 100%;
   width: 100%;
   padding: 0px;
   margin: 0px;
 }
-/* line 400, ../scss/style.scss */
+/* line 407, ../scss/style.scss */
 fader .wrapper .close, picker .wrapper .close {
   position: relative;
   top: -40px;
@@ -467,7 +473,7 @@ fader .wrapper .close, picker .wrapper .close {
   height: 40px;
   background: url(../img/close-red.png);
 }
-/* line 407, ../scss/style.scss */
+/* line 414, ../scss/style.scss */
 fader .wrapper control.vert, picker .wrapper control.vert {
   display: block;
   width: 40px;
@@ -480,7 +486,7 @@ fader .wrapper control.vert, picker .wrapper control.vert {
   cursor: pointer;
   cursor: hand;
 }
-/* line 418, ../scss/style.scss */
+/* line 425, ../scss/style.scss */
 fader .wrapper control.vert point, picker .wrapper control.vert point {
   display: block;
   width: 40px;
@@ -490,11 +496,11 @@ fader .wrapper control.vert point, picker .wrapper control.vert point {
   top: 20px;
   left: 0px;
 }
-/* line 429, ../scss/style.scss */
+/* line 436, ../scss/style.scss */
 fader .wrapper control.vert.controlled .point, picker .wrapper control.vert.controlled .point {
   background: #f00;
 }
-/* line 434, ../scss/style.scss */
+/* line 441, ../scss/style.scss */
 fader .wrapper control.hor, picker .wrapper control.hor {
   display: block;
   width: 40px;
@@ -507,7 +513,7 @@ fader .wrapper control.hor, picker .wrapper control.hor {
   cursor: pointer;
   cursor: hand;
 }
-/* line 445, ../scss/style.scss */
+/* line 452, ../scss/style.scss */
 fader .wrapper control.hor point, picker .wrapper control.hor point {
   display: block;
   width: 1px;
@@ -517,7 +523,7 @@ fader .wrapper control.hor point, picker .wrapper control.hor point {
   top: 0px;
   left: 20px;
 }
-/* line 455, ../scss/style.scss */
+/* line 462, ../scss/style.scss */
 fader .wrapper .value, picker .wrapper .value {
   display: block;
   position: absolute;
@@ -529,34 +535,34 @@ fader .wrapper .value, picker .wrapper .value {
   color: #ABABAB;
 }
 
-/* line 468, ../scss/style.scss */
+/* line 475, ../scss/style.scss */
 fader.h {
   width: 360px;
   height: 40px;
 }
 
-/* line 476, ../scss/style.scss */
+/* line 483, ../scss/style.scss */
 fader.hue {
   background: url(../img/hue.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 481, ../scss/style.scss */
+/* line 488, ../scss/style.scss */
 fader.sat {
   background: url(../img/saturation.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 486, ../scss/style.scss */
+/* line 493, ../scss/style.scss */
 fader.opacity {
   background: url(../img/opacity.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
-/* line 491, ../scss/style.scss */
+/* line 498, ../scss/style.scss */
 joystick {
   display: block;
   position: relative;
@@ -568,14 +574,14 @@ joystick {
   float: left;
   margin-left: 0px;
 }
-/* line 502, ../scss/style.scss */
+/* line 509, ../scss/style.scss */
 joystick .wrapper {
   height: 100%;
   width: 100%;
   padding: 0px;
   margin: 0px;
 }
-/* line 509, ../scss/style.scss */
+/* line 516, ../scss/style.scss */
 joystick .wrapper .close {
   position: relative;
   top: -40px;
@@ -583,7 +589,7 @@ joystick .wrapper .close {
   height: 40px;
   background: url(../img/close-red.png);
 }
-/* line 517, ../scss/style.scss */
+/* line 524, ../scss/style.scss */
 joystick .wrapper control.xy {
   display: block;
   width: 40px;
@@ -596,11 +602,11 @@ joystick .wrapper control.xy {
   cursor: pointer;
   cursor: hand;
 }
-/* line 528, ../scss/style.scss */
+/* line 535, ../scss/style.scss */
 joystick .wrapper control.xy point {
   display: none;
 }
-/* line 532, ../scss/style.scss */
+/* line 539, ../scss/style.scss */
 joystick .wrapper .value {
   display: block;
   position: absolute;
@@ -612,7 +618,7 @@ joystick .wrapper .value {
   color: #ABABAB;
 }
 
-/* line 545, ../scss/style.scss */
+/* line 552, ../scss/style.scss */
 .togglefarm {
   display: block;
   position: relative;
@@ -621,7 +627,7 @@ joystick .wrapper .value {
   float: left;
 }
 
-/* line 552, ../scss/style.scss */
+/* line 559, ../scss/style.scss */
 toggle {
   display: block;
   position: relative;
@@ -638,7 +644,7 @@ toggle {
   cursor: pointer;
   cursor: hand;
 }
-/* line 567, ../scss/style.scss */
+/* line 574, ../scss/style.scss */
 toggle.active {
   background: rgba(200, 200, 200, 0.7);
 }

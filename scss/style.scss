@@ -6,6 +6,7 @@ html,body {
     overflow: hidden;
     width:100%;
     height:100%;
+  
 }
 a:link, a:visited {
 	display:block;
@@ -283,6 +284,9 @@ audio{
 	left:0px;
 	background:#010101;
 	display:none;
+	  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 #container{
@@ -293,6 +297,9 @@ audio{
 	bottom:0;
 	background:rgba(0,0,0,0.6);
 	display:none;	
+	  -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 .cancel{
 	display:block;
