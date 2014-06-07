@@ -56,7 +56,13 @@ header {
     opacity:0.95;
 }
 
-
+.title{
+	font-family: 'Lato', sans-serif;
+	font-size:8px;
+	letter-spacing:0.12em;
+	font-weight: 100;
+	opacity:0.3;
+}
 h1{
     font-family: 'Exo', sans-serif;
     font-size:96px;
@@ -203,6 +209,7 @@ article{
 	margin-left: -59px;
 	cursor:pointer;
 	cursor:hand;
+	opacity:0.5;
 }
 #read_video{
 	position: relative;
@@ -211,6 +218,7 @@ article{
 	margin-left: -60px;
 	cursor:pointer;
 	cursor:hand;
+	opacity:0.5;
 }
 #close_drop{
 	position: absolute;
@@ -221,6 +229,12 @@ article{
 	height:20px;
 	background:rgba(0,0,0,0.7);
 	text-align:center;
+	opacity:0.5;
+}
+#close_drop,#read_video{
+	&:hover{
+		opacity:0.8;
+	}
 }
 #gui_drop{
 	position: absolute;
@@ -241,7 +255,8 @@ article{
 		  color:rgb(171, 171, 171);
 		  opacity: 0.8;
 		  position:relative;
-		  top: -10px;
+		  top: -7px;
+		  font-size:10px;
 		 
 	}
 	p:hover{
@@ -273,6 +288,12 @@ audio{
 
 	a:link, a:visited {
 	color:#ABABAB;
+	font-size:10px;
+	padding-top:6px;
+	padding-left:6px;
+	}
+	h5{
+		opacity: 0.5;
 	}
 
 	}
@@ -319,6 +340,7 @@ audio{
 	float:left;
 	background: #ABABAB;
 }
+
 equalizer{
 	display: block;
 	position:relative;
@@ -326,14 +348,14 @@ equalizer{
 	height:100%;
 	margin:0;
 	padding:0;
-	border: 1px solid rgba(200,200,200,0.3);
+	border: 1px solid rgba(200,200,200,0.1);
 	float:left;
 	.wrapper{
 		width:100%;
 		height:100%;
 		margin:0;
 		padding:0;
-
+		
 		control{
 				display: block;
 		 		width:100%;
@@ -344,6 +366,7 @@ equalizer{
 
 		 		-webkit-transform:rotate(180deg);
 		 				 		overflow:hidden;
+		 				 		opacity:0.7;
 		 		.bars{
 		 		display: block;
 		 		list-style-type: none;
@@ -388,12 +411,23 @@ fader,picker{
 	width:40px;
 	margin: 0;
 	float:left;
-	border: 1px solid rgba(200,200,200,0.3);
+	border: 1px solid rgba(200,200,200,0.1);
 	//border-radius: 12px;
 	z-index:9999;
 	margin-left:0px;
 	background:transparent;
 	.wrapper{
+	
+	.title{
+
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	position: relative;
+	top: 120px;
+	
+	}
 		height:100%;
 		width:100%;
 		padding:0px;
@@ -422,6 +456,7 @@ fader,picker{
 			background:transparent;
 			cursor:pointer;
 			cursor:hand;
+			opacity:0.7;
 			point{
 				display:block;
 				width:40px;
@@ -430,6 +465,7 @@ fader,picker{
 				position:relative;
 				top:20px;
 				left:0px;
+				opacity:0.7;
 
 			}
 			&.controlled{
@@ -449,6 +485,7 @@ fader,picker{
 			background:transparent;
 			cursor:pointer;
 			cursor:hand;
+			opacity:0.7;
 			point{
 				display:block;
 				width:1px;
@@ -501,7 +538,7 @@ joystick{
 	height:240px;
 	width:240px;
 	margin: 0;
-	border: 1px solid rgba(200,200,200,0.3);
+	border: 1px solid rgba(200,200,200,0.1);
 	z-index:9999;
 	float:left;
 	margin-left:0px;
@@ -511,7 +548,11 @@ joystick{
 	    width:100%;
 		padding:0px;
 		margin:0px;
-		
+		.title{
+			position:relative;
+			left: 6px;
+			top: 6px;
+		}
 		
 		.close{
 			position:relative;
@@ -526,12 +567,13 @@ joystick{
 			width:40px;
 			height:40px;
 			position:relative;		
-			top:50%;
-			left:50%;
+			top:42%;
+			left:43%;
 			-webkit-transform-origin:50% 50%;
 			background:url(../img/crosshair.png);
 			cursor:pointer;
 			cursor:hand;
+			opacity:0.7;
 			point{
 				display:none;
 			}
@@ -555,24 +597,35 @@ joystick{
 	height:240px;
 	width:240px;
 	float:left;
+	.title{
+			position:relative;
+			top: -2px;
+			left:6px;
+		
+	}
 }
 toggle{
 	display:block;
 	position:relative;
+	top:6px;
 	width:100%;
 	height:30px;
 	border: 1px solid rgba(200,200,200,0.3);
 	clear:both;
 	text-align:center;
-	padding-top:10px;
+	padding-top:14px;
 	font-family: 'Lato', sans-serif;
-	font-size:14px;
+	font-size:12px;
+	opacity:0.5;
 	font-weight: 300;
 	letter-spacing: 0.2em;
 	cursor:pointer;
     cursor:hand;
 	&.active{
-		background:rgba(200,200,200,0.7);
+		background:rgba(200,200,200,0.45);
+	}
+	&:hover{
+		opacity:0.8;
 	}
 }
 
