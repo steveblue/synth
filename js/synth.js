@@ -820,7 +820,7 @@ Synth.prototype = {
     keypress.combo("9", function() {
       that.playVideo(8);
     });
-    keypress.combo("0", function() {
+    keypress.combo("`", function() {
       if (that.webcam === false) {
         that.channel = true;
       }
