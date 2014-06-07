@@ -42,7 +42,6 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
   this.webcam = false;
   this.guiSetup = false;
   this.initComplete = false;
-  this.webcamEnabled = false;
   this.menusEnabled = true;
   this.controls = false;
   this.pointer = [];
@@ -83,6 +82,7 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
   this.pointer.push(0);
   this.pointer.push(0);
   this.setting.current = 0;
+  this.init();
 }
 
 Synth.prototype = {
@@ -226,17 +226,17 @@ Synth.prototype = {
   },
   set channel(val) {
 
-    if (this.webcamEnabled === false && val === true) {
+    if (this.webcam === false && val === true) {
 
       this.videoInput.src = this.videoObject;
-      this.webcamEnabled = true;
+  
       this.webcam = true;
 
 
     } else {
 
       this.playVideo(this.currentVideo);
-      this.webcamEnabled = false;
+      
       this.webcam = false;
 
     }
@@ -326,7 +326,7 @@ Synth.prototype = {
     this.videoMaterial.renderToScreen = true;
     this.videoMaterial.wireframe = that.wireframe;
 
-    that.meshChange(that.shape,720,360);
+    that.meshChange(that.shape,480,270);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -413,7 +413,7 @@ Synth.prototype = {
           that.videoInput.mozSrcObject = stream;
         } else {
           var vendorURL = window.URL || window.webkitURL;
-          that.webcamEnabled = true;
+          that.webcam = true;
           that.videoObject = vendorURL.createObjectURL(stream);
           that.videoInput.src = that.videoObject;
         }
@@ -424,10 +424,10 @@ Synth.prototype = {
         $('header h2').text('Unable to capture WebCam. Please reload the page or try with Google Chrome.');
       });
     } else {
-      $('header h2').text('Synth requires WebRTC & HTML5 Filesystem. Try it out with Google Chrome.');
+      $('header h2').text('Use your webcam and upload music and video in Google Chrome. Stay around and play with the controls in Safari.');
     }
 
-    if (that.webcamEnabled === false) {
+    if (that.webcam === false) {
       that.playVideo(0);
     }
   },
@@ -448,7 +448,7 @@ Synth.prototype = {
 
     var nx = m * x / w - 1;
     var ny = -m * y / h + 1;
-    console.log(nx + ' ' + ny);
+   // console.log(nx + ' ' + ny);
 
     return {
       x: nx,
@@ -693,7 +693,7 @@ Synth.prototype = {
         that.trigger = true;
         eval(that.setting.current = $(this).index());
         that.setting.push($(this).index());
-        console.log(that.setting);
+      //  console.log(that.setting);
         $(this).attr('data-index', that.setting.length);
         setTimeout(function() {
           that.trigger = false;
@@ -794,7 +794,7 @@ Synth.prototype = {
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
     keypress.combo("1", function() {
-      that.playVideo(0);
+      that.playVideo(0);     
     });
     keypress.combo("2", function() {
       that.playVideo(1);
@@ -821,8 +821,8 @@ Synth.prototype = {
       that.playVideo(8);
     });
     keypress.combo("0", function() {
-      if (that.webcamEnabled === true) {
-        that.webcam = true;
+      if (that.webcam === false) {
+        that.channel = true;
       }
     });
     keypress.combo("l", function() {
@@ -939,6 +939,9 @@ Synth.prototype = {
     }
   },
   playVideo: function(playlistId) {
+  	var that = this;
+  	this.webcam = false;
+  	//that.channel = false;
     this.videoInput.pause();
     this.videoisplaying = false;
     this.videoInput.src = this.vplaylist[playlistId];
@@ -1314,6 +1317,27 @@ Synth.prototype = {
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
+      case 'ring':
+        that.geometry = new THREE.RingGeometry(x, x, s, s);
+        that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
+        break;
+   
+      case 'tetra':
+        that.geometry = new THREE.TetrahedronGeometry(x, s);
+        that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
+        break;        
+      
+      case 'icos':
+        that.geometry = new THREE.IcosahedronGeometry(x, s);
+        that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
+        break;        
+      
+      case 'poly':
+        that.geometry = new THREE.PolyhedronGeometry(x,s,that.scale,that.scale);
+        that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
+        break;        
+                  
+        
       default:
         that.geometry = new THREE.PlaneGeometry(x, s, x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
@@ -1329,7 +1353,7 @@ Synth.prototype = {
       that.geometry.dynamic = true;
       that.geometry.verticesNeedUpdate = true;
       that.videoMaterial.renderToScreen = true;
-	  console.log(that.mesh);
+	 // console.log(that.mesh);
     }, 100);
 
   },
