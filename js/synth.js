@@ -516,7 +516,7 @@ Synth.prototype = {
 
           //	 value = value.toString();
           // json = '{ "'+key1+'" : '+value+' }';
-          // console.log('that.'+key1+'='+value+'');
+           console.log('that.'+key1+'='+value+'');
           // eval('that.'+key1+'='+value+'');	
 
 
@@ -524,7 +524,7 @@ Synth.prototype = {
         if (control.left < width && control.left > 0) {
           value2 = that.convertToRange(control.left, [0, width], [start, end]);
           //json = '{ "'+key2+'" : '+value2+' }';
-          // console.log('that.'+key2+'='+value2+'');
+           console.log('that.'+key2+'='+value2+'');
           // eval('that.'+key2+'='+value+'');
         }
         coords = that.convertTo3dCoords(value, value2, window.innerWidth, window.innerHeight, $(this).data('multiply'));
@@ -722,6 +722,7 @@ Synth.prototype = {
     //	$(document).on('click',function(){
     //that.trigger = false;
     //	});
+    $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
     if (Modernizr.filesystem) {
       this.dropZone.context = this;
       this.readFiles.context = this;
@@ -751,7 +752,7 @@ Synth.prototype = {
 
 
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
-      $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
+      
 
       $('#close_drop').on('click', function() {
         $(this).toggleClass('active');
@@ -773,7 +774,14 @@ Synth.prototype = {
         }
       });
 
-      $('#gui_drop').on('click', function() {
+
+      $('#container,#gui_drop').css('width','1386px').css('margin-left','-693px');
+    } else {
+      $('#close_drop,#video_drop,#drop_zone,audio,.equalizer').hide();
+      $('#container,#gui_drop').css('width','1024px').css('margin-left','-512px');
+      
+    }
+	$('#gui_drop').on('click', function() {
         $(this).toggleClass('active');
         $('header').fadeOut(8000);
         if ($(this).is('.active')) {
@@ -786,10 +794,6 @@ Synth.prototype = {
           $(this).children('p').text('Close Controls');
         }
       });
-    } else {
-      $('#close_drop,#video_drop,#drop_zone,audio').hide();
-    }
-
 
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
@@ -824,6 +828,12 @@ Synth.prototype = {
       if (that.webcam === false) {
         that.channel = true;
       }
+    });
+    keypress.combo("0", function() {
+      that.cameraPos = '0,0,1000';
+    });
+    keypress.combo(")", function() {
+      that.originPos = '0,0,0';
     });
     keypress.combo("l", function() {
       if (that.videoInput.loop == false) {
