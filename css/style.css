@@ -642,8 +642,8 @@ joystick .wrapper control.xy {
   margin-left: -20px;
   margin-top: -20px;
   position: relative;
-  top: 42%;
-  left: 43%;
+  top: 50%;
+  left: 50%;
   -webkit-transform-origin: 50% 50%;
   background: url(../img/crosshair.png);
   cursor: pointer;

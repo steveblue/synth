@@ -831,9 +831,13 @@ Synth.prototype = {
     });
     keypress.combo("0", function() {
       that.cameraPos = '0,0,1000';
+      $('.joycam .control').css('top','50%');
+      $('.joycam .control').css('left','50%');
     });
     keypress.combo(")", function() {
       that.originPos = '0,0,0';
+      $('.joywarp .control').css('top','50%');
+       $('.joywarp .control').css('left','50%');
     });
     keypress.combo("l", function() {
       if (that.videoInput.loop == false) {
