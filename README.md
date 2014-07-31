@@ -21,7 +21,7 @@ To use Synth, you must create a new Object that inherits the properties of the S
 ```
 		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,16.0,36.9,1.1,0.25,0,0.6,"#000000");
 			s.defaultVideo('/path/to/default-video.mp4');
-		   /* Note: synth now initialized when called */		
+		   /* Note: synth now initialized and video set */		
 ```
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
