@@ -82,6 +82,49 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
   this.pointer.push(0);
   this.pointer.push(0);
   this.setting.current = 0;
+  this.res = new res([{
+    "state": "portrait",
+    "breakpoint": 420,
+    "cols": 4,
+    "margin": 10,
+    "gutter": 10
+  }, {
+    "state": "landscape",
+    "breakpoint": 640,
+    "cols": 4,
+    "margin": 10,
+    "gutter": 10
+  }, {
+    "state": "tablet",
+    "breakpoint": 768,
+    "cols": 12,
+    "margin": 40,
+    "gutter": 10
+  }, {
+    "state": "small",
+    "breakpoint": 1024,
+    "cols": 12,
+    "margin": 40,
+    "gutter": 10
+  }, {
+    "state": "medium",
+    "breakpoint": 1440,
+    "cols": 16,
+    "margin": 80,
+    "gutter": 20
+  }, {
+    "state": "large",
+    "breakpoint": 1920,
+    "cols": 16,
+    "margin": 80,
+    "gutter": 20
+  }, {
+    "state": "retina",
+    "breakpoint": 3840,
+    "cols": 16,
+    "margin": 160,
+    "gutter": 40
+  }]);
   this.init();
 }
 
@@ -229,14 +272,14 @@ Synth.prototype = {
     if (this.webcam === false && val === true) {
 
       this.videoInput.src = this.videoObject;
-  
+
       this.webcam = true;
 
 
     } else {
 
       this.playVideo(this.currentVideo);
-      
+
       this.webcam = false;
 
     }
@@ -270,7 +313,7 @@ Synth.prototype = {
 
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
     //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 10000);
-    
+
     this.camera.position.z = 3600;
 
 
@@ -326,7 +369,7 @@ Synth.prototype = {
     this.videoMaterial.renderToScreen = true;
     this.videoMaterial.wireframe = that.wireframe;
 
-    that.meshChange(that.shape,480,270);
+    that.meshChange(that.shape, 480, 270);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -342,8 +385,8 @@ Synth.prototype = {
     this.composer.addPass(that.renderModel);
 
     //this.effectBloom = new THREE.BloomPass(3.3, 20, 4.0, 256);
-   // this.effectBloom = new THREE.BloomPass(1.4, 20, 1.4, 256);
-   //  this.composer.addPass(that.effectBloom);
+    // this.effectBloom = new THREE.BloomPass(1.4, 20, 1.4, 256);
+    //  this.composer.addPass(that.effectBloom);
 
     this.effectHue = new THREE.ShaderPass(THREE.HueSaturationShader);
     this.effectHue.renderToScreen = true;
@@ -351,9 +394,9 @@ Synth.prototype = {
     this.effectHue.uniforms['saturation'].value = 0.0;
     this.composer.addPass(that.effectHue);
 
-    
-    this.fill = new THREE.AmbientLight( 0x707070 ); // soft white light
-	this.scene.add( that.fill );
+
+    this.fill = new THREE.AmbientLight(0x707070); // soft white light
+    this.scene.add(that.fill);
 
     this.key = new THREE.SpotLight(0xffffff);
     this.key.position.set(0, 0, 5000).normalize();
@@ -424,7 +467,28 @@ Synth.prototype = {
         $('header h2').text('Unable to capture WebCam. Please reload the page or try with Google Chrome.');
       });
     } else {
-      $('header h2').text('Use your webcam and upload music and video in Google Chrome. Stay around and play with the controls in Safari.');
+      if (this.res.device === 'desktop') {
+        if (this.res.browser === 'chrome') {
+          $('header h2').text('Use your webcam, upload music and video, use the controls to distort.');
+        }
+        if (this.res.browser === 'firefox') {
+          $('header h2').text('Use your webcam or playback the included video, use the controls to distort.');
+        }
+        if (this.res.browser === 'safari') {
+          $('header h2').text('Not all features are supported in your browser. Use the controls to distort the video.');
+        }
+      } else {
+        if (this.res.device === 'ipad') {
+          $('header h2').text('Use the controls to distort the video.');
+        }
+        if (this.res.device === 'iphone') {
+          $('header h2').text('Video playback is not supported inline on iPhone.');
+        }
+        if (this.res.device === 'android') {
+          $('header h2').text('Your browser is not supported. Use Chrome on a desktop instead.');
+        }
+
+      }
     }
 
     if (that.webcam === false) {
@@ -448,7 +512,7 @@ Synth.prototype = {
 
     var nx = m * x / w - 1;
     var ny = -m * y / h + 1;
-   // console.log(nx + ' ' + ny);
+    // console.log(nx + ' ' + ny);
 
     return {
       x: nx,
@@ -516,7 +580,7 @@ Synth.prototype = {
 
           //	 value = value.toString();
           // json = '{ "'+key1+'" : '+value+' }';
-           console.log('that.'+key1+'='+value+'');
+          // console.log('that.'+key1+'='+value+'');
           // eval('that.'+key1+'='+value+'');	
 
 
@@ -524,7 +588,7 @@ Synth.prototype = {
         if (control.left < width && control.left > 0) {
           value2 = that.convertToRange(control.left, [0, width], [start, end]);
           //json = '{ "'+key2+'" : '+value2+' }';
-           console.log('that.'+key2+'='+value2+'');
+          // console.log('that.'+key2+'='+value2+'');
           // eval('that.'+key2+'='+value+'');
         }
         coords = that.convertTo3dCoords(value, value2, window.innerWidth, window.innerHeight, $(this).data('multiply'));
@@ -663,7 +727,7 @@ Synth.prototype = {
 
         $('.toggle.model').removeClass('active');
         $(this).addClass('active');
-      //  console.log("that.meshChange('" + $(this).children('control').data('key') + "',64,64)");
+        //  console.log("that.meshChange('" + $(this).children('control').data('key') + "',64,64)");
         eval("that.meshChange('" + $(this).children('control').data('key') + "',140,140)");
 
       }
@@ -693,7 +757,7 @@ Synth.prototype = {
         that.trigger = true;
         eval(that.setting.current = $(this).index());
         that.setting.push($(this).index());
-      //  console.log(that.setting);
+        //  console.log(that.setting);
         $(this).attr('data-index', that.setting.length);
         setTimeout(function() {
           that.trigger = false;
@@ -706,7 +770,7 @@ Synth.prototype = {
     $('.control').on('click', function() {
       if (that.trigger === true && !$(this).hasClass('controller')) {
         $(this).css('top', that.pointer[that.setting.current] + 'px');
-       // console.log('top', that.pointer[that.setting.current] + 'px');
+        // console.log('top', that.pointer[that.setting.current] + 'px');
         $(this).attr('data-index', that.setting.current);
         $(this).addClass('controlled');
         $(this).parent().prepend('<div class="close red"></div>');
@@ -719,11 +783,11 @@ Synth.prototype = {
       }
 
     });
-    //	$(document).on('click',function(){
-    //that.trigger = false;
-    //	});
+
+
     $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
-    if (Modernizr.filesystem) {
+    // if(this.res.os != 'ios')
+    if (Modernizr.filesystem) { // possible bug in ios8
       this.dropZone.context = this;
       this.readFiles.context = this;
       this.dropZoneVideo.context = this;
@@ -752,7 +816,7 @@ Synth.prototype = {
 
 
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
-      
+
 
       $('#close_drop').on('click', function() {
         $(this).toggleClass('active');
@@ -775,30 +839,30 @@ Synth.prototype = {
       });
 
 
-      $('#container,#gui_drop').css('width','1386px').css('margin-left','-693px');
+      $('#container,#gui_drop').css('width', '1386px').css('margin-left', '-693px');
     } else {
       $('#close_drop,#video_drop,#drop_zone,audio,.equalizer').hide();
-      $('#container,#gui_drop').css('width','1024px').css('margin-left','-512px');
-      
+      $('#container,#gui_drop').css('width', '1024px').css('margin-left', '-512px');
+
     }
-	$('#gui_drop').on('click', function() {
-        $(this).toggleClass('active');
-        $('header').fadeOut(8000);
-        if ($(this).is('.active')) {
-          $('#container').hide();
-          $(this).css('bottom', '0px');
-          $(this).children('p').text('Open Controls');
-        } else if ($(this).not('.active')) {
-          $('#container').show();
-          $(this).css('bottom', '33%');
-          $(this).children('p').text('Close Controls');
-        }
-      });
+    $('#gui_drop').on('click', function() {
+      $(this).toggleClass('active');
+      $('header').fadeOut(8000);
+      if ($(this).is('.active')) {
+        $('#container').hide();
+        $(this).css('bottom', '0px');
+        $(this).children('p').text('Open Controls');
+      } else if ($(this).not('.active')) {
+        $('#container').show();
+        $(this).css('bottom', '33%');
+        $(this).children('p').text('Close Controls');
+      }
+    });
 
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
     keypress.combo("1", function() {
-      that.playVideo(0);     
+      that.playVideo(0);
     });
     keypress.combo("2", function() {
       that.playVideo(1);
@@ -831,13 +895,13 @@ Synth.prototype = {
     });
     keypress.combo("0", function() {
       that.cameraPos = '0,0,1000';
-      $('.joycam .control').css('top','50%');
-      $('.joycam .control').css('left','50%');
+      $('.joycam .control').css('top', '50%');
+      $('.joycam .control').css('left', '50%');
     });
     keypress.combo(")", function() {
       that.originPos = '0,0,0';
-      $('.joywarp .control').css('top','50%');
-       $('.joywarp .control').css('left','50%');
+      $('.joywarp .control').css('top', '50%');
+      $('.joywarp .control').css('left', '50%');
     });
     keypress.combo("l", function() {
       if (that.videoInput.loop == false) {
@@ -846,23 +910,23 @@ Synth.prototype = {
         that.videoInput.loop = false;
       }
     });
-    
+
     var mouseView = true;
-	keypress.combo("y", function() {
-		$('.toggle.model.plane').trigger('click');
+    keypress.combo("y", function() {
+      $('.toggle.model.plane').trigger('click');
     });
-	keypress.combo("u", function() {
-		$('.toggle.model.cube').trigger('click');
-    }); 
-	keypress.combo("i", function() {
-		$('.toggle.model.sphere').trigger('click');
-    });  
- 	keypress.combo("o", function() {
-		$('.toggle.model.cylinder').trigger('click');
+    keypress.combo("u", function() {
+      $('.toggle.model.cube').trigger('click');
     });
- 	keypress.combo("p", function() {
-		$('.toggle.model.torus').trigger('click');
-    });                
+    keypress.combo("i", function() {
+      $('.toggle.model.sphere').trigger('click');
+    });
+    keypress.combo("o", function() {
+      $('.toggle.model.cylinder').trigger('click');
+    });
+    keypress.combo("p", function() {
+      $('.toggle.model.torus').trigger('click');
+    });
     keypress.combo("x", function() {
       $('#close_drop').trigger('click');
       $('#gui_drop').trigger('click');
@@ -953,15 +1017,18 @@ Synth.prototype = {
     }
   },
   playVideo: function(playlistId) {
-  	var that = this;
-  	this.webcam = false;
-  	//that.channel = false;
+    var that = this;
+    this.webcam = false;
+    //that.channel = false;
     this.videoInput.pause();
     this.videoisplaying = false;
     this.videoInput.src = this.vplaylist[playlistId];
     this.videoInput.muted = true;
+
     this.videoInput.play();
     this.videoisplaying = true;
+
+
     $('#videoplaylist').children('li').css('background-color', 'rgba(10,10,10,0.7)');
     $('#videoplaylist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
@@ -1014,6 +1081,15 @@ Synth.prototype = {
 
     var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
     var index = nodeList.indexOf(0);
+    //todo
+    if (this.res.device === 'ipad' || this.res.device === 'iphone') {
+      $('#play_button').show();
+      $('#play_button').on('touchend', function() {
+        that.videoInput.current = 0;
+        that.playVideo(0);
+        $('#play_button').hide();
+      });
+    }
 
     li.onclick = function() {
       that.videoInput.current = 0;
@@ -1281,16 +1357,16 @@ Synth.prototype = {
 
     }
   },
-  meshChange: function(shape,x,s) {
+  meshChange: function(shape, x, s) {
     var that = this;
-	that.shape = shape;
-	if(x === null || x === undefined){
-		x = 64;
-	}	
-	if(s === null || s === undefined){
-		s = 64;
-	}
-	
+    that.shape = shape;
+    if (x === null || x === undefined) {
+      x = 64;
+    }
+    if (s === null || s === undefined) {
+      s = 64;
+    }
+
     if (that.meshUpdate === true) {
       that.scene.remove(that.mesh);
       that.geometry.verticesNeedUpdate = false;
@@ -1308,21 +1384,21 @@ Synth.prototype = {
         break;
 
       case 'sphere':
-        that.geometry = new THREE.SphereGeometry(x,s,s);
+        that.geometry = new THREE.SphereGeometry(x, s, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
         break;
 
       case 'cube':
-       	if(x > 60 || s > 60){
-	   	    x = s = 60;
-       	}
+        if (x > 60 || s > 60) {
+          x = s = 60;
+        }
         that.geometry = new THREE.BoxGeometry(x, x, x, s, s, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
       case 'cylinder':
-        that.geometry = new THREE.CylinderGeometry(that.scale * 2.0, that.scale * 2.0, x*8.0, s, x, false);
+        that.geometry = new THREE.CylinderGeometry(that.scale * 2.0, that.scale * 2.0, x * 8.0, s, x, false);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
@@ -1335,49 +1411,49 @@ Synth.prototype = {
         that.geometry = new THREE.RingGeometry(x, x, s, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
-   
+
       case 'tetra':
         that.geometry = new THREE.TetrahedronGeometry(x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
-        break;        
-      
-      case 'icos':
-        that.geometry = new THREE.IcosahedronGeometry(x, s);
+        break;
+
+      case 'octa':
+        that.geometry = new THREE.OctahedronGeometry(x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
-        break;        
-      
+        break;
+
       case 'poly':
-        that.geometry = new THREE.PolyhedronGeometry(x,s,that.scale,that.scale);
+        that.geometry = new THREE.PolyhedronGeometry(x, s, that.scale, that.scale);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
-        break;        
-                  
-        
+        break;
+
+
       default:
         that.geometry = new THREE.PlaneGeometry(x, s, x, s);
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
     }
     setTimeout(function() {
-    //  that.shape = shape;
+      //  that.shape = shape;
       that.meshUpdate = true;
       that.scene.add(that.mesh);
       that.mesh.doubleSided = true;
       that.mesh.position.x = that.mesh.position.y = that.mesh.position.z = 0;
-      that.mesh.scale.x = that.mesh.scale.y =  that.mesh.scale.z = that.scale;
+      that.mesh.scale.x = that.mesh.scale.y = that.mesh.scale.z = that.scale;
       that.geometry.dynamic = true;
       that.geometry.verticesNeedUpdate = true;
       that.videoMaterial.renderToScreen = true;
-	 // console.log(that.mesh);
+      // console.log(that.mesh);
     }, 100);
 
   },
-  removeMesh: function(mesh){
-  	var that = this;
-	that.scene.remove(mesh);  
+  removeMesh: function(mesh) {
+    var that = this;
+    that.scene.remove(mesh);
   },
-  addMesh: function(mesh){
-	var that = this;
-	that.scene.add(mesh);   
+  addMesh: function(mesh) {
+    var that = this;
+    that.scene.add(mesh);
   },
   onDocumentMouseMove: function(event) {
     this.mouseX = (event.clientX - this.windowHalfX);

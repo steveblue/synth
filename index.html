@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Synth v.188</title>
+		<title>Synth v.189</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href='http://fonts.googleapis.com/css?family=Exo:100,200,400,500,700italic' rel='stylesheet' type='text/css'>
 		<link href='css/style.css' rel='stylesheet' type='text/css'>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="js/libs/jquery.ui.touch-punch.js"></script>
 		<script src="js/libs/modernizr.custom.js"></script>
+		<script src="js/libs/res.min.js"></script>
 		<script src="js/libs/three.min.js"></script>
 		<script src="js/libs/dancer.js"></script>
 		<script src="js/libs/keypress-1.0.8.min.js"></script>
@@ -23,6 +25,7 @@
 		<script src="js/postprocessing/BloomPass.js"></script>
 		<script src="js/postprocessing/HueSaturationPass.js"></script>
 		<script src="js/postprocessing/ShaderPass.js"></script>
+		
 	</head>
 	<body>
 	<header>
@@ -43,8 +46,8 @@
 	<audio id="audio" src="" controls="controls"></audio>
 </div>
 
-	<video id="video" src="" width="640" height="360" autoplay loop="loop" muted style="display:none"></video>
-	
+	<video id="video" src="" width="640" height="360" autoplay loop="loop" muted webkit-playsinline style="display:none"></video>
+	<div id="play_button"></div>
 	<div id="canvas"></div>
 	
 	<div id="container">
@@ -98,7 +101,8 @@
 	<script>
 	//	var s = new Synth(document.getElementById( 'canvas' ),true,false,'plane',false,10.0,16.0,-6.0,0.75,0.0,0.6,'#000000');
 	
-		var s = new Synth(document.getElementById( 'canvas' ),true,true,"plane",true,10.0,15.0,3.3,0.25,0,0.6,"#000000");
+		var s = new Synth(document.getElementById( 'canvas' ),true,true,"plane",false,10.0,15.0,3.3,0.25,0,0.6,"#000000");
+
 			s.defaultVideo('vid/kinetic-light.mp4');
 			$('.toggle.wire').addClass('active'); // temp
 			setTimeout(function(){

@@ -634,3 +634,17 @@ toggle{
 	}
 }
 
+#play_button{
+  display:none;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-top:-50px;
+  margin-left:-50px;
+  width:50px;
+  height:50px;
+  background:url('../img/play-button-png.png');
+  background-size: cover;
+  background-repeat: none;
+  z-index:1000;
+}

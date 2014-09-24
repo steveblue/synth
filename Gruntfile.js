@@ -130,5 +130,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-prettysass');
   grunt.loadNpmTasks('grunt-combine-media-queries');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.registerTask('default', ['jshint', 'compass', 'watch']);
+  grunt.registerTask('default', ['compass', 'watch']);
 };
