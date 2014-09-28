@@ -118,7 +118,19 @@ var Synth = function(container, control, json) {
 Synth.prototype = {
   get settings() {
     var that = this;
-    return that.container + ',' + that.control + ',' + that.cam + ',"' + that.shape + '",' + that.wireframe + ',' + that.scale + ',' + that.multiplier + ',' + that.displace + ',' + that.transparency + ',' + that.hue + ',' + that.saturation + ',"' + that.bgColor + '"';
+    return  {
+              "camera": this.camerax+','+this.cameray+','+this.cameraz,
+              "shape": this.shape,
+              "scale" : this.scale,
+              "wireframe": this.wireframe,
+              "multiplier": this.multiplier,
+              "displace": this.displace,
+              "origin": this.originX+','+this.originY+','+this.originZ,
+              "opacity": this.transparency,
+              "hue": this.hue,
+              "saturation": this.saturation,
+              "bgColor": this.bgColor
+            }
   },
   get displacement() {
     return this.displace;
@@ -928,13 +940,6 @@ Synth.prototype = {
         $('.close-button').removeClass('active');
       }
     });
-
-    that.saveControls();
-
-  },
-
-  saveControls: function() {
-
   },
 
   setSettings: function(json) {
@@ -1004,6 +1009,7 @@ Synth.prototype = {
     }
     console.log(that.audioInput.current);
   },
+
   continueVideoPlay: function(context) {
     var that = context;
     console.log(that);
@@ -1102,6 +1108,7 @@ Synth.prototype = {
       $('#close_drop').trigger('click');
     }
   },
+
   listResults: function(entries, type, context) {
     // Document fragments can improve performance since they're only appended
     // to the DOM once. Only one browser reflow occurs.
