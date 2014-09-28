@@ -1,8 +1,7 @@
 /*synth v188*/
-var Synth = function(container, control, cam, shape, wireframe, scale, multiplier, displace, opacity, hue, sat, hex) {
+var Synth = function(container, control, json) {
   var that = this;
   this.control = control;
-  this.cam = cam;
   this.container = container;
   this.camera;
   this.scene;
@@ -49,39 +48,27 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
   this.trigger = false;
   this.mousex = that.mouseX;
   this.mousey = that.mouseY;
-  this.shape = shape;
+  this.shape = json.shape;
   this.meshUpdate = false;
-  this.wireframe = wireframe;
+  this.wireframe = json.wireframe;
   this.camerax = 0.0;
   this.cameray = -1130.0;
   this.cameraz = 1680.0;
-  this.scale = scale;
-  this.multiplier = multiplier;
-  this.displace = displace;
-  this.transparency = opacity;
+  this.scale = 5.0;
+  this.multiplier = 1.0;
+  this.displace = 1.0;
+  this.transparency = 0.8;
   this.originX = 0.0;
   this.originY = 0.0;
   this.originZ = -2000.0;
-  this.hue = hue;
-  this.saturation = sat;
-  this.hex = hex;
+  this.hue = 0;
+  this.saturation = 0.9;
+  this.bgColor = '#000000';
   this.guiContainer;
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
-  this.pointer.push(0);
   this.setting.current = 0;
+  for (var pointers = 0; pointers < 16; pointers++) {
+    this.pointer.push(0);
+  }
   this.res = new res([{
     "state": "portrait",
     "breakpoint": 420,
@@ -125,13 +112,13 @@ var Synth = function(container, control, cam, shape, wireframe, scale, multiplie
     "margin": 160,
     "gutter": 40
   }]);
-  this.init();
+  this.init(json);
 }
 
 Synth.prototype = {
   get settings() {
     var that = this;
-    return that.container + ',' + that.control + ',' + that.cam + ',"' + that.shape + '",' + that.wireframe + ',' + that.scale + ',' + that.multiplier + ',' + that.displace + ',' + that.transparency + ',' + that.hue + ',' + that.saturation + ',"' + that.hex + '"';
+    return that.container + ',' + that.control + ',' + that.cam + ',"' + that.shape + '",' + that.wireframe + ',' + that.scale + ',' + that.multiplier + ',' + that.displace + ',' + that.transparency + ',' + that.hue + ',' + that.saturation + ',"' + that.bgColor + '"';
   },
   get displacement() {
     return this.displace;
@@ -236,14 +223,14 @@ Synth.prototype = {
     this.transparency = val;
   },
   get bg() {
-    return this.hex;
+    return this.bgColor;
   },
   set bg(val) {
     var that = this;
-    this.hex = val;
-    console.log(this.hex);
-    $('#canvas').css('background-color', that.hex);
-    var newhex = parseInt(that.hex.replace('#', '0x'));
+    this.bgColor = val;
+    console.log(this.bgColor);
+    $('#canvas').css('background-color', that.bgColor);
+    var newhex = parseInt(that.bgColor.replace('#', '0x'));
     this.renderer.setClearColor(newhex, 1.0);
 
   },
@@ -303,7 +290,7 @@ Synth.prototype = {
     }
 
   },
-  init: function() {
+  init: function(json) {
     var that = this;
 
     window.URL = window.URL || window.webkitURL;
@@ -314,9 +301,7 @@ Synth.prototype = {
     this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
     //this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 10000);
 
-    this.camera.position.z = 3600;
-
-
+    //this.camera.position.z = 3600;
     this.scene = new THREE.Scene();
 
     this.texture = new THREE.Texture(that.videoInput);
@@ -366,10 +351,10 @@ Synth.prototype = {
       overdraw: false
 
     });
-    this.videoMaterial.renderToScreen = true;
+    this.videoMaterial.renderToScreen = false;
     this.videoMaterial.wireframe = that.wireframe;
 
-    that.meshChange(that.shape, 480, 270);
+    //that.meshChange(that.shape, 480, 270);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
@@ -432,6 +417,8 @@ Synth.prototype = {
       this.initWebcam();
     }
 
+    that.setSettings(json);
+
     that.initComplete = true;
 
     animate();
@@ -461,21 +448,19 @@ Synth.prototype = {
           that.videoInput.src = that.videoObject;
         }
 
-
-
       }, function(error) {
         $('header h2').text('Unable to capture WebCam. Please reload the page or try with Google Chrome.');
       });
     } else {
       if (this.res.device === 'desktop') {
         if (this.res.browser === 'chrome') {
-          $('header h2').text('Use your webcam, upload music and video, use the controls to distort.');
+          $('header h2').text('Use your webcam, upload music and video, use the controls to distort the video.');
         }
         if (this.res.browser === 'firefox') {
-          $('header h2').text('Use your webcam or playback the included video, use the controls to distort.');
+          $('header h2').text('Use the controls to distort the video.');
         }
         if (this.res.browser === 'safari') {
-          $('header h2').text('Not all features are supported in your browser. Use the controls to distort the video.');
+          $('header h2').text('Use the controls to distort the video.');
         }
       } else {
         if (this.res.device === 'ipad') {
@@ -495,6 +480,7 @@ Synth.prototype = {
       that.playVideo(0);
     }
   },
+
   convertToRange: function(value, srcRange, dstRange) {
     // value is outside source range return
     if (value < srcRange[0] || value > srcRange[1]) {
@@ -508,6 +494,7 @@ Synth.prototype = {
     return (parseFloat(adjValue) * parseFloat(dstMax) / parseFloat(srcMax)) + parseFloat(dstRange[0]);
 
   },
+
   convertTo3dCoords: function(x, y, w, h, m) {
 
     var nx = m * x / w - 1;
@@ -518,18 +505,17 @@ Synth.prototype = {
       x: nx,
       y: ny
     }
-
-
   },
+
   initControls: function() {
     var that = this;
-    //   var canvas = document.getElementById('bgpicker').getContext('2d');	
+    //   var canvas = document.getElementById('bgpicker').getContext('2d');
     //   $('#bgpicker').width($(this).parent('width'));
     //	$('#bgpicker').height($(this).parent('width'));
     //   var img = new Image();
     //	img.src = 'img/hue.jpg';
-    //	
-    //	
+    //
+    //
     //	$(img).load(function(){
     //		canvas.drawImage(img,0,0,40,$('#bgpicker').height());
     //	});
@@ -550,8 +536,6 @@ Synth.prototype = {
       return "0123456789ABCDEF".charAt((n - n % 16) / 16) + "0123456789ABCDEF".charAt(n % 16);
     }
 
-
-
     function updateValue(obj, val) {
 
       obj.html(val);
@@ -559,6 +543,7 @@ Synth.prototype = {
       console.log(val);
 
     }
+
     var value, value2, round, start, end, width, height, control, key1, key2, json, coords;
 
     $('.xy').draggable({
@@ -581,7 +566,7 @@ Synth.prototype = {
           //	 value = value.toString();
           // json = '{ "'+key1+'" : '+value+' }';
           // console.log('that.'+key1+'='+value+'');
-          // eval('that.'+key1+'='+value+'');	
+          // eval('that.'+key1+'='+value+'');
 
 
         }
@@ -617,8 +602,9 @@ Synth.prototype = {
 
       }
     });
+
     var scale, posX, posY;
-    // pinch to zoom goes here
+    // TODO: pinch to zoom goes here
     //  $('.vert').on('click',function(){
     //  if(that.trigger === true){
     //     var control;
@@ -626,7 +612,7 @@ Synth.prototype = {
     //	   if(that.trigger === true){
     //		   control = $(this).position();
     //		   control.top = that.setting.current;
-    //	   } 
+    //	   }
     //	  }
     //  });
     $('.vert').draggable({
@@ -673,7 +659,7 @@ Synth.prototype = {
     ////	  var img_data = canvas.getImageData(x, y, 1, 1).data;
     ////	  var R = img_data[0];
     ////	  var G = img_data[1];
-    ////	  var B = img_data[2];  
+    ////	  var B = img_data[2];
     ////	  var rgb = R + ',' + G + ',' + B;
     ////	  console.log(rgb);
     ////	  // convert RGB to HEX
@@ -685,6 +671,7 @@ Synth.prototype = {
     ////	  console.log('that.'+key+'='+'"#'+hex+'"');
     ////	  eval('that.'+key+'='+'"#'+hex+'"');
     ////	});
+
     $('.hor').draggable({
       axis: "x",
       containment: "parent",
@@ -731,10 +718,8 @@ Synth.prototype = {
         eval("that.meshChange('" + $(this).children('control').data('key') + "',140,140)");
 
       }
-
-
-
     });
+
     $('.toggle.wire').on('click', function() {
 
       if (!$(this).hasClass('active')) {
@@ -747,9 +732,6 @@ Synth.prototype = {
         $(this).removeClass('active');
         eval("that.wire = false");
       }
-
-
-
     });
 
     $('.bars li').on('click', function() {
@@ -767,6 +749,7 @@ Synth.prototype = {
         $(this).removeClass('controller');
       }
     });
+
     $('.control').on('click', function() {
       if (that.trigger === true && !$(this).hasClass('controller')) {
         $(this).css('top', that.pointer[that.setting.current] + 'px');
@@ -781,9 +764,7 @@ Synth.prototype = {
         });
 
       }
-
     });
-
 
     $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
     // if(this.res.os != 'ios')
@@ -814,9 +795,7 @@ Synth.prototype = {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
       }
 
-
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
-
 
       $('#close_drop').on('click', function() {
         $(this).toggleClass('active');
@@ -838,13 +817,12 @@ Synth.prototype = {
         }
       });
 
-
       $('#container,#gui_drop').css('width', '1386px').css('margin-left', '-693px');
     } else {
       $('#close_drop,#video_drop,#drop_zone,audio,.equalizer').hide();
       $('#container,#gui_drop').css('width', '1024px').css('margin-left', '-512px');
-
     }
+
     $('#gui_drop').on('click', function() {
       $(this).toggleClass('active');
       $('header').fadeOut(8000);
@@ -950,7 +928,29 @@ Synth.prototype = {
         $('.close-button').removeClass('active');
       }
     });
+
+    that.saveControls();
+
   },
+
+  saveControls: function() {
+
+  },
+
+  setSettings: function(json) {
+    var that = this;
+    that.originPos = json.origin;
+    that.cameraPos = json.camera;
+    that.meshChange(json.shape, 480, 270);
+    that.wire = json.wireframe;
+    that.scaler = json.scale;
+    that.multiply = json.multiplier;
+    that.displacement = json.displace;
+    that.opacity = json.opacity;
+    that.saturate = json.saturation;
+    that.bg = json.bgColor;
+  },
+
   playAudio: function(playlistId) {
     var that = this;
     this.audioisplaying = false;
@@ -989,6 +989,7 @@ Synth.prototype = {
     $('#playlist').children('li').css('background-color', 'rgba(10,10,10,0.7)');
     $('#playlist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
+
   continueAudioPlay: function(context) {
     var that = context;
 
@@ -1015,7 +1016,8 @@ Synth.prototype = {
     } else {
       that.playVideo(that.videoInput.current);
     }
-  },
+  }, // end initControls
+
   playVideo: function(playlistId) {
     var that = this;
     this.webcam = false;
@@ -1027,14 +1029,14 @@ Synth.prototype = {
 
     this.videoInput.play();
     this.videoisplaying = true;
-
-
     $('#videoplaylist').children('li').css('background-color', 'rgba(10,10,10,0.7)');
     $('#videoplaylist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
+
   toArray: function(list) {
     return Array.prototype.slice.call(list || [], 0);
   },
+
   errorHandler: function(err) {
     var msg = 'An error occured: ';
 
@@ -1062,8 +1064,9 @@ Synth.prototype = {
 
     console.log(msg);
   },
+
   defaultVideo: function(url) {
-    //vplaylist.push( url ); 
+    //vplaylist.push( url );
     var that = this;
     $('video').attr('src', url);
     this.vplaylist.push(url);
@@ -1163,6 +1166,7 @@ Synth.prototype = {
     //$('#video_drop').css('background', 'transparent');
     //$('#read_video').fadeOut(1000);
   },
+
   readFileSelect: function(evt, type) {
 
     evt.stopPropagation();
@@ -1196,6 +1200,7 @@ Synth.prototype = {
 
     });
   },
+
   handleFileSelect: function(evt, type, context) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -1209,6 +1214,9 @@ Synth.prototype = {
       }
       if (type === 'audio') {
         that.aplaylist.push(fileEntry.toURL());
+      }
+      if (type === 'json') {
+
       }
       that.readFileSelect(evt, type);
     }
@@ -1275,11 +1283,13 @@ Synth.prototype = {
       $('header').delay(8000).fadeOut(2000);
     });
   },
+
   handleDragOver: function(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
   },
+
   paramsChange: function() {
     var that = this;
 
@@ -1308,9 +1318,9 @@ Synth.prototype = {
     } else if (that.saturation > 1.0) {
       that.effectHue.uniforms['saturation'].value = 1.0;
     }
-    //that.hex = that.background;	
-    $('#canvas').css('background-color', that.hex);
-    var newhex = parseInt(that.hex.replace('#', '0x'));
+    //that.hex = that.background;
+    $('#canvas').css('background-color', that.bgColor);
+    var newhex = parseInt(that.bgColor.replace('#', '0x'));
     that.renderer.setClearColor(newhex, 1.0);
 
     if (that.audioisplaying === true) {
@@ -1357,6 +1367,7 @@ Synth.prototype = {
 
     }
   },
+
   meshChange: function(shape, x, s) {
     var that = this;
     that.shape = shape;
@@ -1447,18 +1458,22 @@ Synth.prototype = {
     }, 100);
 
   },
+
   removeMesh: function(mesh) {
     var that = this;
     that.scene.remove(mesh);
   },
+
   addMesh: function(mesh) {
     var that = this;
     that.scene.add(mesh);
   },
+
   onDocumentMouseMove: function(event) {
     this.mouseX = (event.clientX - this.windowHalfX);
     this.mouseY = (event.clientY - this.windowHalfY) * 0.3;
   },
+
   render: function() {
     var that = this;
     if (this.videoInput.readyState === this.videoInput.HAVE_ENOUGH_DATA) {
