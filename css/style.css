@@ -406,7 +406,7 @@ audio:hover {
 #playlist li a:visited,
 #videoplaylist li a:link,
 #videoplaylist li a:visited {
-	color: #FFF;
+	color: #BCBCBC;
 	font-size: 10px;
 	padding-top: 4px;
 	padding-bottom: 8px;
@@ -427,7 +427,16 @@ audio:hover {
 	background: rgba(122, 122, 122, 0.3);
 }
 
-/* line 306, ../scss/style.scss */
+/* line 301, ../scss/style.scss */
+
+#playlist li:hover a:link,
+#playlist li:hover a:visited,
+#videoplaylist li:hover a:link,
+#videoplaylist li:hover a:visited {
+	color: #FFFFFF;
+}
+
+/* line 309, ../scss/style.scss */
 
 #gui_container {
 	position: absolute;
@@ -441,7 +450,7 @@ audio:hover {
 	-ms-user-select: none;
 }
 
-/* line 318, ../scss/style.scss */
+/* line 321, ../scss/style.scss */
 
 #container {
 	display: block;
@@ -457,7 +466,7 @@ audio:hover {
 	-ms-user-select: none;
 }
 
-/* line 332, ../scss/style.scss */
+/* line 335, ../scss/style.scss */
 
 .cancel {
 	display: block;
@@ -471,7 +480,7 @@ audio:hover {
 	z-index: 9999;
 }
 
-/* line 344, ../scss/style.scss */
+/* line 347, ../scss/style.scss */
 
 .play {
 	width: 100px;
@@ -480,7 +489,7 @@ audio:hover {
 	background: #ABABAB;
 }
 
-/* line 351, ../scss/style.scss */
+/* line 354, ../scss/style.scss */
 
 #preset_selector {
 	position: absolute;
@@ -492,7 +501,7 @@ audio:hover {
 	background: rgba(0, 0, 0, 0.6);
 }
 
-/* line 359, ../scss/style.scss */
+/* line 362, ../scss/style.scss */
 
 #preset_selector ul {
 	list-style-type: none;
@@ -501,7 +510,7 @@ audio:hover {
 	height: 100%;
 }
 
-/* line 364, ../scss/style.scss */
+/* line 367, ../scss/style.scss */
 
 #preset_selector ul li {
 	width: 9.0909090909%;
@@ -513,7 +522,7 @@ audio:hover {
 	opacity: 0.3;
 }
 
-/* line 372, ../scss/style.scss */
+/* line 375, ../scss/style.scss */
 
 #preset_selector ul li span {
 	display: block;
@@ -524,7 +533,7 @@ audio:hover {
 	color: #ABABAB;
 }
 
-/* line 380, ../scss/style.scss */
+/* line 383, ../scss/style.scss */
 
 #preset_selector ul li:hover {
 	cursor: pointer;
@@ -532,13 +541,13 @@ audio:hover {
 	opacity: 0.7;
 }
 
-/* line 385, ../scss/style.scss */
+/* line 388, ../scss/style.scss */
 
 #preset_selector ul li.selected {
 	opacity: 0.9;
 }
 
-/* line 392, ../scss/style.scss */
+/* line 395, ../scss/style.scss */
 
 equalizer {
 	display: block;
@@ -551,7 +560,7 @@ equalizer {
 	float: left;
 }
 
-/* line 401, ../scss/style.scss */
+/* line 404, ../scss/style.scss */
 
 equalizer .wrapper {
 	width: 100%;
@@ -560,7 +569,7 @@ equalizer .wrapper {
 	padding: 0;
 }
 
-/* line 407, ../scss/style.scss */
+/* line 410, ../scss/style.scss */
 
 equalizer .wrapper control {
 	display: block;
@@ -574,7 +583,7 @@ equalizer .wrapper control {
 	opacity: 0.7;
 }
 
-/* line 418, ../scss/style.scss */
+/* line 421, ../scss/style.scss */
 
 equalizer .wrapper control .bars {
 	display: block;
@@ -587,7 +596,7 @@ equalizer .wrapper control .bars {
 	cursor: hand;
 }
 
-/* line 428, ../scss/style.scss */
+/* line 431, ../scss/style.scss */
 
 equalizer .wrapper control .bars li {
 	display: block;
@@ -599,19 +608,19 @@ equalizer .wrapper control .bars li {
 	background: rgba(122, 122, 122, 0.35);
 }
 
-/* line 436, ../scss/style.scss */
+/* line 439, ../scss/style.scss */
 
 equalizer .wrapper control .bars li:hover {
 	background: rgba(122, 122, 122, 0.6);
 }
 
-/* line 439, ../scss/style.scss */
+/* line 442, ../scss/style.scss */
 
 equalizer .wrapper control .bars li.controller {
 	background: rgba(255, 0, 0, 0.5);
 }
 
-/* line 446, ../scss/style.scss */
+/* line 449, ../scss/style.scss */
 
 equalizer .wrapper .value {
 	width: 200px;
@@ -620,14 +629,14 @@ equalizer .wrapper .value {
 	margin-left: -100px;
 }
 
-/* line 451, ../scss/style.scss */
+/* line 454, ../scss/style.scss */
 
 equalizer .wrapper .value p {
 	float: left;
 	padding-right: 50px;
 }
 
-/* line 458, ../scss/style.scss */
+/* line 461, ../scss/style.scss */
 
 fader,
 picker {
@@ -643,7 +652,7 @@ picker {
 	background: transparent;
 }
 
-/* line 470, ../scss/style.scss */
+/* line 473, ../scss/style.scss */
 
 fader .wrapper,
 picker .wrapper {
@@ -653,7 +662,7 @@ picker .wrapper {
 	margin: 0px;
 }
 
-/* line 472, ../scss/style.scss */
+/* line 475, ../scss/style.scss */
 
 fader .wrapper .title,
 picker .wrapper .title {
@@ -665,7 +674,7 @@ picker .wrapper .title {
 	top: 120px;
 }
 
-/* line 486, ../scss/style.scss */
+/* line 489, ../scss/style.scss */
 
 fader .wrapper canvas,
 picker .wrapper canvas {
@@ -675,7 +684,7 @@ picker .wrapper canvas {
 	margin: 0px;
 }
 
-/* line 492, ../scss/style.scss */
+/* line 495, ../scss/style.scss */
 
 fader .wrapper .close,
 picker .wrapper .close {
@@ -687,7 +696,7 @@ picker .wrapper .close {
 	background: url(../img/close-red.png);
 }
 
-/* line 500, ../scss/style.scss */
+/* line 503, ../scss/style.scss */
 
 fader .wrapper control.vert,
 picker .wrapper control.vert {
@@ -704,7 +713,7 @@ picker .wrapper control.vert {
 	opacity: 0.7;
 }
 
-/* line 512, ../scss/style.scss */
+/* line 515, ../scss/style.scss */
 
 fader .wrapper control.vert point,
 picker .wrapper control.vert point {
@@ -718,14 +727,14 @@ picker .wrapper control.vert point {
 	opacity: 0.7;
 }
 
-/* line 524, ../scss/style.scss */
+/* line 527, ../scss/style.scss */
 
 fader .wrapper control.vert.controlled .point,
 picker .wrapper control.vert.controlled .point {
 	background: #f00;
 }
 
-/* line 529, ../scss/style.scss */
+/* line 532, ../scss/style.scss */
 
 fader .wrapper control.hor,
 picker .wrapper control.hor {
@@ -742,7 +751,7 @@ picker .wrapper control.hor {
 	opacity: 0.7;
 }
 
-/* line 541, ../scss/style.scss */
+/* line 544, ../scss/style.scss */
 
 fader .wrapper control.hor point,
 picker .wrapper control.hor point {
@@ -755,7 +764,7 @@ picker .wrapper control.hor point {
 	left: 20px;
 }
 
-/* line 551, ../scss/style.scss */
+/* line 554, ../scss/style.scss */
 
 fader .wrapper .value,
 picker .wrapper .value {
@@ -769,14 +778,14 @@ picker .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 564, ../scss/style.scss */
+/* line 567, ../scss/style.scss */
 
 fader.h {
 	width: 360px;
 	height: 40px;
 }
 
-/* line 572, ../scss/style.scss */
+/* line 575, ../scss/style.scss */
 
 fader.hue {
 	background: url(../img/hue.png);
@@ -784,7 +793,7 @@ fader.hue {
 	background-repeat: no-repeat;
 }
 
-/* line 577, ../scss/style.scss */
+/* line 580, ../scss/style.scss */
 
 fader.sat {
 	background: url(../img/saturation.png);
@@ -792,7 +801,7 @@ fader.sat {
 	background-repeat: no-repeat;
 }
 
-/* line 582, ../scss/style.scss */
+/* line 585, ../scss/style.scss */
 
 fader.opacity {
 	background: url(../img/opacity.png);
@@ -800,7 +809,7 @@ fader.opacity {
 	background-repeat: no-repeat;
 }
 
-/* line 587, ../scss/style.scss */
+/* line 590, ../scss/style.scss */
 
 joystick {
 	display: block;
@@ -814,7 +823,7 @@ joystick {
 	margin-left: 0px;
 }
 
-/* line 598, ../scss/style.scss */
+/* line 601, ../scss/style.scss */
 
 joystick .wrapper {
 	height: 100%;
@@ -823,7 +832,7 @@ joystick .wrapper {
 	margin: 0px;
 }
 
-/* line 603, ../scss/style.scss */
+/* line 606, ../scss/style.scss */
 
 joystick .wrapper .title {
 	position: relative;
@@ -831,7 +840,7 @@ joystick .wrapper .title {
 	top: 6px;
 }
 
-/* line 609, ../scss/style.scss */
+/* line 612, ../scss/style.scss */
 
 joystick .wrapper .close {
 	position: relative;
@@ -842,7 +851,7 @@ joystick .wrapper .close {
 	background: url(../img/close-red.png);
 }
 
-/* line 618, ../scss/style.scss */
+/* line 621, ../scss/style.scss */
 
 joystick .wrapper control.xy {
 	display: block;
@@ -860,13 +869,13 @@ joystick .wrapper control.xy {
 	opacity: 0.7;
 }
 
-/* line 633, ../scss/style.scss */
+/* line 636, ../scss/style.scss */
 
 joystick .wrapper control.xy point {
 	display: none;
 }
 
-/* line 637, ../scss/style.scss */
+/* line 640, ../scss/style.scss */
 
 joystick .wrapper .value {
 	display: block;
@@ -879,7 +888,7 @@ joystick .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 650, ../scss/style.scss */
+/* line 653, ../scss/style.scss */
 
 .togglefarm {
 	display: block;
@@ -889,7 +898,7 @@ joystick .wrapper .value {
 	float: left;
 }
 
-/* line 656, ../scss/style.scss */
+/* line 659, ../scss/style.scss */
 
 .togglefarm .title {
 	position: relative;
@@ -897,7 +906,7 @@ joystick .wrapper .value {
 	left: 6px;
 }
 
-/* line 663, ../scss/style.scss */
+/* line 666, ../scss/style.scss */
 
 toggle {
 	display: block;
@@ -919,19 +928,19 @@ toggle {
 	color: #ABABAB;
 }
 
-/* line 681, ../scss/style.scss */
+/* line 684, ../scss/style.scss */
 
 toggle.active {
 	background: rgba(122, 122, 122, 0.3);
 }
 
-/* line 684, ../scss/style.scss */
+/* line 687, ../scss/style.scss */
 
 toggle:hover {
 	opacity: 0.6;
 }
 
-/* line 689, ../scss/style.scss */
+/* line 692, ../scss/style.scss */
 
 #play_button {
 	display: none;

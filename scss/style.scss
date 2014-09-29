@@ -288,7 +288,7 @@ audio{
 	width:100%;
 	height:20px;
 	a:link, a:visited {
-	color:#FFF;
+	color:#BCBCBC;
 	font-size:10px;
 	padding-top:4px;
 	padding-bottom:8px;
@@ -298,6 +298,9 @@ audio{
 		opacity: 0.5;
 	}
 	&:hover{
+		a:link,a:visited{
+		color:#FFFFFF;
+	  }
 		background: rgba(122, 122, 122, 0.3);
 	}
 
