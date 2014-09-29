@@ -538,7 +538,7 @@ Synth.prototype = {
     //	$(img).load(function(){
     //		canvas.drawImage(img,0,0,40,$('#bgpicker').height());
     //	});
-
+    var keylistener = new window.keypress.Listener();
     $('#gui_container').show(); //make more dynamic
     $('#container').show();
 
@@ -829,6 +829,20 @@ Synth.prototype = {
       $('#preset_selector ul').append('<li class="save"><span>Save</span></li>');
       $('#preset_selector ul').append('<li class="clear"><span>Clear</span></li>');
 
+      $('#preset_selector ul li.preset').on('click', function() {
+        that.setPreset($(this).index());
+      });
+
+      $('#preset_selector ul li.save').on('click', function() {
+        if (Modernizr.filesystem) {
+          that.saveOverPresets();
+        }
+      });
+
+      $('#preset_selector ul li.clear').on('click', function() {
+        that.removePresets();
+      });
+
       $('#close_drop').on('click', function() {
         $(this).toggleClass('active');
         $('header').fadeOut(8000);
@@ -873,49 +887,113 @@ Synth.prototype = {
 
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
-    keypress.combo("1", function() {
+
+    // make current settings a preset
+    keylistener.simple_combo("1", function() {
+      that.setPreset(0);
+    });
+    keylistener.simple_combo("2", function() {
+      that.setPreset(1);
+    });
+    keylistener.simple_combo("3", function() {
+      that.setPreset(2);
+    });
+    keylistener.simple_combo("4", function() {
+      that.setPreset(3);
+    });
+    keylistener.simple_combo("5", function() {
+      that.setPreset(4);
+    });
+    keylistener.simple_combo("6", function() {
+      that.setPreset(5);
+    });
+    keylistener.simple_combo("7", function() {
+      that.setPreset(6);
+    });
+    keylistener.simple_combo("8", function() {
+      that.setPreset(7);
+    });
+    keylistener.simple_combo("9", function() {
+      that.setPreset(8);
+    });
+
+    // save presets to a slot
+    keylistener.simple_combo("option 1", function() {
+      console.log("You pressed option and 1");
+      that.savePresetAtIndex(0);
+    });
+    keylistener.simple_combo("option 2", function() {
+      that.savePresetAtIndex(1);
+    });
+    keylistener.simple_combo("option 3", function() {
+      console.log("You pressed option and 3");
+      that.savePresetAtIndex(2);
+    });
+    keylistener.simple_combo("option 4", function() {
+      that.savePresetAtIndex(3);
+    });
+    keylistener.simple_combo("option 5", function() {
+      that.savePresetAtIndex(4);
+    });
+    keylistener.simple_combo("option 6", function() {
+      that.savePresetAtIndex(5);
+    });
+    keylistener.simple_combo("option 7", function() {
+      that.savePresetAtIndex(6);
+    });
+    keylistener.simple_combo("option 8", function() {
+      that.savePresetAtIndex(7);
+    });
+    keylistener.simple_combo("option 9", function() {
+      that.savePresetAtIndex(8);
+    });
+
+    // playback video based on order of list
+    keylistener.simple_combo("ctrl 1", function() {
+      console.log("You pressed ctrl and 1");
       that.playVideo(0);
     });
-    keypress.combo("2", function() {
+    keylistener.simple_combo("ctrl 2", function() {
       that.playVideo(1);
     });
-    keypress.combo("3", function() {
+    keylistener.simple_combo("ctrl 3", function() {
       that.playVideo(2);
     });
-    keypress.combo("4", function() {
+    keylistener.simple_combo("ctrl 4", function() {
+      console.log("You pressed ctrl and 4");
       that.playVideo(3);
     });
-    keypress.combo("5", function() {
+    keylistener.simple_combo("ctrl 5", function() {
       that.playVideo(4);
     });
-    keypress.combo("6", function() {
+    keylistener.simple_combo("ctrl 6", function() {
       that.playVideo(5);
     });
-    keypress.combo("7", function() {
+    keylistener.simple_combo("ctrl 7", function() {
       that.playVideo(6);
     });
-    keypress.combo("8", function() {
+    keylistener.simple_combo("ctrl 8", function() {
       that.playVideo(7);
     });
-    keypress.combo("9", function() {
+    keylistener.simple_combo("ctrl 9", function() {
       that.playVideo(8);
     });
-    keypress.combo("`", function() {
+    keylistener.simple_combo("`", function() {
       if (that.webcam === false) {
         that.channel = true;
       }
     });
-    keypress.combo("0", function() {
+    keylistener.simple_combo("0", function() {
       that.cameraPos = '0,0,1000';
       $('.joycam .control').css('top', '50%');
       $('.joycam .control').css('left', '50%');
     });
-    keypress.combo(")", function() {
+    keylistener.simple_combo(")", function() {
       that.originPos = '0,0,0';
       $('.joywarp .control').css('top', '50%');
       $('.joywarp .control').css('left', '50%');
     });
-    keypress.combo("l", function() {
+    keylistener.simple_combo("l", function() {
       if (that.videoInput.loop == false) {
         that.videoInput.loop = true;
       } else {
@@ -924,27 +1002,27 @@ Synth.prototype = {
     });
 
     var mouseView = true;
-    keypress.combo("y", function() {
+    keylistener.simple_combo("y", function() {
       $('.toggle.model.plane').trigger('click');
     });
-    keypress.combo("u", function() {
+    keylistener.simple_combo("u", function() {
       $('.toggle.model.cube').trigger('click');
     });
-    keypress.combo("i", function() {
+    keylistener.simple_combo("i", function() {
       $('.toggle.model.sphere').trigger('click');
     });
-    keypress.combo("o", function() {
+    keylistener.simple_combo("o", function() {
       $('.toggle.model.cylinder').trigger('click');
     });
-    keypress.combo("p", function() {
+    keylistener.simple_combo("p", function() {
       $('.toggle.model.torus').trigger('click');
     });
-    keypress.combo("x", function() {
+    keylistener.simple_combo("x", function() {
       $('#close_drop').trigger('click');
       $('#gui_drop').trigger('click');
 
     });
-    keypress.combo("m", function() {
+    keylistener.simple_combo("m", function() {
 
       if (that.menu = true) {
         that.menu(false);
@@ -1356,6 +1434,9 @@ Synth.prototype = {
     that.saturate = json.saturation;
     that.bg = json.bgColor;
 
+    $('#preset_selector ul li').removeClass('selected');
+    $('#preset_selector ul li:eq(' + index + ')').addClass('selected');
+
   },
 
   savePreset: function() {
@@ -1369,6 +1450,7 @@ Synth.prototype = {
   removePresets: function() {
     var that = this;
     that.presets = [];
+    $('#preset_selector ul li').removeClass('selected');
   },
 
   savePresetAtIndex: function(index) {
