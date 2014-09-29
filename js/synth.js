@@ -742,8 +742,6 @@ Synth.prototype = {
     $('.toggle.wire').on('click', function() {
 
       if (!$(this).hasClass('active')) {
-
-
         $(this).addClass('active');
         eval("that.wire = true");
 
@@ -919,14 +917,12 @@ Synth.prototype = {
 
     // save presets to a slot
     keylistener.simple_combo("option 1", function() {
-      console.log("You pressed option and 1");
       that.savePresetAtIndex(0);
     });
     keylistener.simple_combo("option 2", function() {
       that.savePresetAtIndex(1);
     });
     keylistener.simple_combo("option 3", function() {
-      console.log("You pressed option and 3");
       that.savePresetAtIndex(2);
     });
     keylistener.simple_combo("option 4", function() {
@@ -950,7 +946,6 @@ Synth.prototype = {
 
     // playback video based on order of list
     keylistener.simple_combo("ctrl 1", function() {
-      console.log("You pressed ctrl and 1");
       that.playVideo(0);
     });
     keylistener.simple_combo("ctrl 2", function() {
@@ -960,7 +955,6 @@ Synth.prototype = {
       that.playVideo(2);
     });
     keylistener.simple_combo("ctrl 4", function() {
-      console.log("You pressed ctrl and 4");
       that.playVideo(3);
     });
     keylistener.simple_combo("ctrl 5", function() {
