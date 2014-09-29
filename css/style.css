@@ -6,6 +6,7 @@ body {
 	background-color: #000;
 	color: #fff;
 	margin: 0px;
+	padding: 0px;
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
@@ -65,11 +66,10 @@ a:active {
 header {
 	color: #FFF;
 	position: absolute;
-	top: 45%;
+	top: 2%;
 	left: 50%;
-	width: 30%;
-	margin-top: -250px;
-	margin-left: -250px;
+	width: 300px;
+	margin-left: -150px;
 	padding: 5px;
 	z-index: 1000;
 	opacity: 0.95;
@@ -160,7 +160,7 @@ header p,
 header a:link,
 header a:visited {
 	text-align: center;
-	padding-top: 40px;
+	padding-top: 20px;
 	font-size: 14px;
 }
 
@@ -324,7 +324,7 @@ article {
 
 #gui_drop {
 	position: absolute;
-	bottom: 35%;
+	bottom: 36%;
 	left: 50%;
 	display: block;
 	width: 100%;
@@ -497,7 +497,7 @@ audio:hover {
 	left: 50%;
 	display: block;
 	width: 100%;
-	height: 2%;
+	height: 3%;
 	background: rgba(0, 0, 0, 0.6);
 }
 
@@ -520,20 +520,21 @@ audio:hover {
 	padding: 0;
 	margin: 0;
 	opacity: 0.3;
+	border-right: 1px solid rgba(200, 200, 200, 0.1);
 }
 
-/* line 375, ../scss/style.scss */
+/* line 376, ../scss/style.scss */
 
 #preset_selector ul li span {
 	display: block;
 	width: 100%;
 	height: 100%;
 	font-size: 10px;
-	margin-top: -12px;
+	margin-top: -8px;
 	color: #ABABAB;
 }
 
-/* line 383, ../scss/style.scss */
+/* line 384, ../scss/style.scss */
 
 #preset_selector ul li:hover {
 	cursor: pointer;
@@ -541,13 +542,13 @@ audio:hover {
 	opacity: 0.7;
 }
 
-/* line 388, ../scss/style.scss */
+/* line 389, ../scss/style.scss */
 
 #preset_selector ul li.selected {
 	opacity: 0.9;
 }
 
-/* line 395, ../scss/style.scss */
+/* line 396, ../scss/style.scss */
 
 equalizer {
 	display: block;
@@ -560,7 +561,7 @@ equalizer {
 	float: left;
 }
 
-/* line 404, ../scss/style.scss */
+/* line 405, ../scss/style.scss */
 
 equalizer .wrapper {
 	width: 100%;
@@ -569,7 +570,7 @@ equalizer .wrapper {
 	padding: 0;
 }
 
-/* line 410, ../scss/style.scss */
+/* line 411, ../scss/style.scss */
 
 equalizer .wrapper control {
 	display: block;
@@ -583,7 +584,7 @@ equalizer .wrapper control {
 	opacity: 0.7;
 }
 
-/* line 421, ../scss/style.scss */
+/* line 422, ../scss/style.scss */
 
 equalizer .wrapper control .bars {
 	display: block;
@@ -596,7 +597,7 @@ equalizer .wrapper control .bars {
 	cursor: hand;
 }
 
-/* line 431, ../scss/style.scss */
+/* line 432, ../scss/style.scss */
 
 equalizer .wrapper control .bars li {
 	display: block;
@@ -608,19 +609,19 @@ equalizer .wrapper control .bars li {
 	background: rgba(122, 122, 122, 0.35);
 }
 
-/* line 439, ../scss/style.scss */
+/* line 440, ../scss/style.scss */
 
 equalizer .wrapper control .bars li:hover {
 	background: rgba(122, 122, 122, 0.6);
 }
 
-/* line 442, ../scss/style.scss */
+/* line 443, ../scss/style.scss */
 
 equalizer .wrapper control .bars li.controller {
 	background: rgba(255, 0, 0, 0.5);
 }
 
-/* line 449, ../scss/style.scss */
+/* line 450, ../scss/style.scss */
 
 equalizer .wrapper .value {
 	width: 200px;
@@ -629,14 +630,14 @@ equalizer .wrapper .value {
 	margin-left: -100px;
 }
 
-/* line 454, ../scss/style.scss */
+/* line 455, ../scss/style.scss */
 
 equalizer .wrapper .value p {
 	float: left;
 	padding-right: 50px;
 }
 
-/* line 461, ../scss/style.scss */
+/* line 462, ../scss/style.scss */
 
 fader,
 picker {
@@ -652,7 +653,7 @@ picker {
 	background: transparent;
 }
 
-/* line 473, ../scss/style.scss */
+/* line 474, ../scss/style.scss */
 
 fader .wrapper,
 picker .wrapper {
@@ -662,7 +663,7 @@ picker .wrapper {
 	margin: 0px;
 }
 
-/* line 475, ../scss/style.scss */
+/* line 476, ../scss/style.scss */
 
 fader .wrapper .title,
 picker .wrapper .title {
@@ -674,7 +675,7 @@ picker .wrapper .title {
 	top: 120px;
 }
 
-/* line 489, ../scss/style.scss */
+/* line 490, ../scss/style.scss */
 
 fader .wrapper canvas,
 picker .wrapper canvas {
@@ -684,7 +685,7 @@ picker .wrapper canvas {
 	margin: 0px;
 }
 
-/* line 495, ../scss/style.scss */
+/* line 496, ../scss/style.scss */
 
 fader .wrapper .close,
 picker .wrapper .close {
@@ -696,7 +697,7 @@ picker .wrapper .close {
 	background: url(../img/close-red.png);
 }
 
-/* line 503, ../scss/style.scss */
+/* line 504, ../scss/style.scss */
 
 fader .wrapper control.vert,
 picker .wrapper control.vert {
@@ -713,7 +714,7 @@ picker .wrapper control.vert {
 	opacity: 0.7;
 }
 
-/* line 515, ../scss/style.scss */
+/* line 516, ../scss/style.scss */
 
 fader .wrapper control.vert point,
 picker .wrapper control.vert point {
@@ -727,14 +728,14 @@ picker .wrapper control.vert point {
 	opacity: 0.7;
 }
 
-/* line 527, ../scss/style.scss */
+/* line 528, ../scss/style.scss */
 
 fader .wrapper control.vert.controlled .point,
 picker .wrapper control.vert.controlled .point {
 	background: #f00;
 }
 
-/* line 532, ../scss/style.scss */
+/* line 533, ../scss/style.scss */
 
 fader .wrapper control.hor,
 picker .wrapper control.hor {
@@ -751,7 +752,7 @@ picker .wrapper control.hor {
 	opacity: 0.7;
 }
 
-/* line 544, ../scss/style.scss */
+/* line 545, ../scss/style.scss */
 
 fader .wrapper control.hor point,
 picker .wrapper control.hor point {
@@ -764,7 +765,7 @@ picker .wrapper control.hor point {
 	left: 20px;
 }
 
-/* line 554, ../scss/style.scss */
+/* line 555, ../scss/style.scss */
 
 fader .wrapper .value,
 picker .wrapper .value {
@@ -778,14 +779,14 @@ picker .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 567, ../scss/style.scss */
+/* line 568, ../scss/style.scss */
 
 fader.h {
 	width: 360px;
 	height: 40px;
 }
 
-/* line 575, ../scss/style.scss */
+/* line 576, ../scss/style.scss */
 
 fader.hue {
 	background: url(../img/hue.png);
@@ -793,7 +794,7 @@ fader.hue {
 	background-repeat: no-repeat;
 }
 
-/* line 580, ../scss/style.scss */
+/* line 581, ../scss/style.scss */
 
 fader.sat {
 	background: url(../img/saturation.png);
@@ -801,7 +802,7 @@ fader.sat {
 	background-repeat: no-repeat;
 }
 
-/* line 585, ../scss/style.scss */
+/* line 586, ../scss/style.scss */
 
 fader.opacity {
 	background: url(../img/opacity.png);
@@ -809,7 +810,7 @@ fader.opacity {
 	background-repeat: no-repeat;
 }
 
-/* line 590, ../scss/style.scss */
+/* line 591, ../scss/style.scss */
 
 joystick {
 	display: block;
@@ -823,7 +824,7 @@ joystick {
 	margin-left: 0px;
 }
 
-/* line 601, ../scss/style.scss */
+/* line 602, ../scss/style.scss */
 
 joystick .wrapper {
 	height: 100%;
@@ -832,7 +833,7 @@ joystick .wrapper {
 	margin: 0px;
 }
 
-/* line 606, ../scss/style.scss */
+/* line 607, ../scss/style.scss */
 
 joystick .wrapper .title {
 	position: relative;
@@ -840,7 +841,7 @@ joystick .wrapper .title {
 	top: 6px;
 }
 
-/* line 612, ../scss/style.scss */
+/* line 613, ../scss/style.scss */
 
 joystick .wrapper .close {
 	position: relative;
@@ -851,7 +852,7 @@ joystick .wrapper .close {
 	background: url(../img/close-red.png);
 }
 
-/* line 621, ../scss/style.scss */
+/* line 622, ../scss/style.scss */
 
 joystick .wrapper control.xy {
 	display: block;
@@ -869,13 +870,13 @@ joystick .wrapper control.xy {
 	opacity: 0.7;
 }
 
-/* line 636, ../scss/style.scss */
+/* line 637, ../scss/style.scss */
 
 joystick .wrapper control.xy point {
 	display: none;
 }
 
-/* line 640, ../scss/style.scss */
+/* line 641, ../scss/style.scss */
 
 joystick .wrapper .value {
 	display: block;
@@ -888,7 +889,7 @@ joystick .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 653, ../scss/style.scss */
+/* line 654, ../scss/style.scss */
 
 .togglefarm {
 	display: block;
@@ -898,7 +899,7 @@ joystick .wrapper .value {
 	float: left;
 }
 
-/* line 659, ../scss/style.scss */
+/* line 660, ../scss/style.scss */
 
 .togglefarm .title {
 	position: relative;
@@ -906,7 +907,7 @@ joystick .wrapper .value {
 	left: 6px;
 }
 
-/* line 666, ../scss/style.scss */
+/* line 667, ../scss/style.scss */
 
 toggle {
 	display: block;
@@ -928,27 +929,27 @@ toggle {
 	color: #ABABAB;
 }
 
-/* line 684, ../scss/style.scss */
+/* line 685, ../scss/style.scss */
 
 toggle.active {
 	background: rgba(122, 122, 122, 0.3);
 }
 
-/* line 687, ../scss/style.scss */
+/* line 688, ../scss/style.scss */
 
 toggle:hover {
 	opacity: 0.6;
 }
 
-/* line 692, ../scss/style.scss */
+/* line 693, ../scss/style.scss */
 
 #play_button {
 	display: none;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	margin-top: -50px;
-	margin-left: -50px;
+	margin-top: -100px;
+	margin-left: -25px;
 	width: 50px;
 	height: 50px;
 	background: url("../img/play-button-png.png");

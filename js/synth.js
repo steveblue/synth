@@ -815,57 +815,56 @@ Synth.prototype = {
       } else {
         // fallback goes here.
       }
-
-      $('<div id="preset_selector"><ul></ul></div>').insertBefore('#container');
-      $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#preset_selector');
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
-
-      for (var pre = 0; pre < 9; pre++) {
-        var number = pre + 1;
-        $('#preset_selector ul').append('<li class="preset" data-index="' + pre + '"><span>' + number + '</span></li>');
-      }
-      $('#preset_selector ul').append('<li class="save"><span>Save</span></li>');
-      $('#preset_selector ul').append('<li class="clear"><span>Clear</span></li>');
-
-      $('#preset_selector ul li.preset').on('click', function() {
-        that.setPreset($(this).index());
-      });
-
-      $('#preset_selector ul li.save').on('click', function() {
-        if (Modernizr.filesystem) {
-          that.saveOverPresets();
-        }
-      });
-
-      $('#preset_selector ul li.clear').on('click', function() {
-        that.removePresets();
-      });
-
-      $('#close_drop').on('click', function() {
-        $(this).toggleClass('active');
-        $('header').fadeOut(8000);
-        if ($(this).is('.active')) {
-          $('#drop_zone').hide();
-          $('#video_drop').hide();
-          $('audio').css('top', '20px');
-          $('audio').hide();
-          $(this).css('top', '0px');
-          $(this).children('p').text('Open Playlist');
-        } else if ($(this).not('.active')) {
-          $('#drop_zone').show();
-          $('#video_drop').show();
-          $('audio').show();
-          $('audio').css('top', '318px');
-          $(this).css('top', '298px');
-          $(this).children('p').text('Close Playlist');
-        }
-      });
-
-      $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
     } else {
       $('#close_drop,#video_drop,#drop_zone,audio,.equalizer').hide();
-      $('#container,#gui_drop,#preset_selector').css('width', '1024px').css('margin-left', '-512px');
     }
+
+    $('<div id="preset_selector"><ul></ul></div>').insertBefore('#container');
+    $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#preset_selector');
+
+    for (var pre = 0; pre < 9; pre++) {
+      var number = pre + 1;
+      $('#preset_selector ul').append('<li class="preset" data-index="' + pre + '"><span>' + number + '</span></li>');
+    }
+    $('#preset_selector ul').append('<li class="save"><span>Save</span></li>');
+    $('#preset_selector ul').append('<li class="clear"><span>Clear</span></li>');
+
+    $('#preset_selector ul li.preset').on('click', function() {
+      that.setPreset($(this).index());
+    });
+
+    $('#preset_selector ul li.save').on('click', function() {
+      if (Modernizr.filesystem) {
+        that.saveOverPresets();
+      }
+    });
+
+    $('#preset_selector ul li.clear').on('click', function() {
+      that.removePresets();
+    });
+
+
+
+    $('#close_drop').on('click', function() {
+      $(this).toggleClass('active');
+      $('header').fadeOut(8000);
+      if ($(this).is('.active')) {
+        $('#drop_zone').hide();
+        $('#video_drop').hide();
+        $('audio').css('top', '20px');
+        $('audio').hide();
+        $(this).css('top', '0px');
+        $(this).children('p').text('Open Playlist');
+      } else if ($(this).not('.active')) {
+        $('#drop_zone').show();
+        $('#video_drop').show();
+        $('audio').show();
+        $('audio').css('top', '318px');
+        $(this).css('top', '298px');
+        $(this).children('p').text('Close Playlist');
+      }
+    });
 
     $('#gui_drop').on('click', function() {
       $(this).toggleClass('active');
@@ -882,6 +881,14 @@ Synth.prototype = {
         $(this).children('p').text('Close Controls');
       }
     });
+
+    $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
+
+    if (that.res.device === 'ipad' || window.innerWidth <= 1024) {
+      $('#container,#gui_drop,#preset_selector').css('width', '1024px').css('margin-left', '-512px');
+    } else {
+      $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
+    }
 
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
@@ -1140,15 +1147,6 @@ Synth.prototype = {
 
     var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
     var index = nodeList.indexOf(0);
-    //todo
-    if (this.res.device === 'ipad' || this.res.device === 'iphone') {
-      $('#play_button').show();
-      $('#play_button').on('touchend', function() {
-        that.videoInput.current = 0;
-        that.playVideo(0);
-        $('#play_button').hide();
-      });
-    }
 
     li.onclick = function() {
       that.videoInput.current = 0;
