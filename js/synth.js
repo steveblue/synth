@@ -247,7 +247,6 @@ Synth.prototype = {
   set bg(val) {
     var that = this;
     this.bgColor = val;
-    console.log(this.bgColor);
     $('#canvas').css('background-color', that.bgColor);
     var newhex = parseInt(that.bgColor.replace('#', '0x'));
     this.renderer.setClearColor(newhex, 1.0);
@@ -437,7 +436,7 @@ Synth.prototype = {
       this.initWebcam();
     }
 
-    that.setDefaults(json);
+    that.setDefaults(json, 0);
 
     that.initComplete = true;
 
@@ -812,9 +811,8 @@ Synth.prototype = {
       }
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
-        window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-        //that.fetchPresets();
-      }
+
+      } else {}
 
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
 
@@ -1309,10 +1307,10 @@ Synth.prototype = {
     });
   },
 
-  setDefaults: function(obj) {
+  setDefaults: function(obj, index) {
     var that = this;
     // TODO: setDefaults from filesystem return
-    var json = obj[0];
+    var json = obj[index];
     that.originPos = json.origin;
     that.cameraPos = json.camera;
     that.meshChange(json.shape, 480, 270);
@@ -1347,7 +1345,14 @@ Synth.prototype = {
   savePreset: function() {
     var that = this;
     that.presets.push(that.settings);
-    that.saveOverPresets();
+    if (Modernizr.filesystem) {
+      that.saveOverPresets();
+    }
+  },
+
+  removePresets: function() {
+    var that = this;
+    that.presets = [];
   },
 
   savePresetAtIndex: function(index) {
@@ -1403,9 +1408,21 @@ Synth.prototype = {
 
   },
 
-  fetchPresets: function() {
-    var that = this;
+  fetchDefaults: function() { //fallback for browsers that don't support filsystem API
 
+    var that = this;
+    $.getJSON("js/default.json", function(data) {
+      var items = [];
+      $.each(data, function(key, val) {
+        that.presets.push(val);
+      });
+    });
+
+  },
+
+  fetchPresets: function() {
+
+    var that = this;
     window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
       console.log('Opened file system: ', fs.name);
       fs.root.getFile('presets.json', {}, function(fileEntry) {

@@ -1,0 +1,28 @@
+[
+    {
+        "camera": "0,-1130,1680",
+        "shape": "plane",
+        "scale": 10,
+        "wireframe": false,
+        "multiplier": 15,
+        "displace": 3.3,
+        "origin": "0,0,-2000",
+        "opacity": 0.3,
+        "hue": 0,
+        "saturation": 0.7,
+        "bgColor": "#FFFFFF"
+    },
+    {
+        "camera": "0,-1130,1680",
+        "shape": "plane",
+        "scale": 10,
+        "wireframe": false,
+        "multiplier": 15,
+        "displace": 3.3,
+        "origin": "0,0,-2000",
+        "opacity": 0.3,
+        "hue": 0,
+        "saturation": 0.7,
+        "bgColor": "#000"
+    }
+]
