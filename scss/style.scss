@@ -144,7 +144,7 @@ article{
 	display:block;
 	width:297px;
 	height:297px;
-	border:1px solid #101010;
+	border-right:1px solid rgba(200, 200, 200, 0.1);
 	z-index: 1000;
 	background: url('img/dropzone.png');
 	background-size: cover;
@@ -172,7 +172,6 @@ article{
 	display:block;
 	width:297px;
 	height:297px;
-	border:1px solid #101010;
 	z-index: 1000;
 	background: url('img/dropvid.png');
 	background-size: cover;
@@ -225,7 +224,7 @@ article{
 	top: 297px;
 	left:0px;
 	display:block;
-	width:597px;
+	width:595px;
 	height:20px;
 	background:rgba(0,0,0,0.3);
 	text-align:center;
@@ -612,7 +611,7 @@ joystick{
 	float:left;
 	.title{
 			position:relative;
-			top: -2px;
+			top: 3px;
 			left:6px;
 
 	}
@@ -626,14 +625,15 @@ toggle{
 	border: 1px solid rgba(200,200,200,0.3);
 	clear:both;
 	text-align:center;
-	padding-top:14px;
+	padding-top:16px;
 	font-family: 'Lato', sans-serif;
-	font-size:12px;
+	font-size:10px;
 	opacity:0.5;
 	font-weight: 300;
 	letter-spacing: 0.2em;
 	cursor:pointer;
-    cursor:hand;
+  cursor:hand;
+  color:#ABABAB;
 	&.active{
 		background:rgba(122,122,122,0.3);
 	}
