@@ -785,7 +785,7 @@ Synth.prototype = {
       }
     });
 
-    $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
+
     // if(this.res.os != 'ios')
     if (Modernizr.filesystem) {
       this.dropZone.context = this;
@@ -814,9 +814,20 @@ Synth.prototype = {
 
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
-      } else {}
+      } else {
+        // fallback goes here.
+      }
 
+      $('<div id="preset_selector"><ul></ul></div>').insertBefore('#container');
+      $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#preset_selector');
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
+
+      for (var pre = 0; pre < 9; pre++) {
+        var number = pre + 1;
+        $('#preset_selector ul').append('<li class="preset" data-index="' + pre + '"><span>' + number + '</span></li>');
+      }
+      $('#preset_selector ul').append('<li class="save"><span>Save</span></li>');
+      $('#preset_selector ul').append('<li class="clear"><span>Clear</span></li>');
 
       $('#close_drop').on('click', function() {
         $(this).toggleClass('active');
@@ -838,10 +849,10 @@ Synth.prototype = {
         }
       });
 
-      $('#container,#gui_drop').css('width', '1386px').css('margin-left', '-693px');
+      $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
     } else {
       $('#close_drop,#video_drop,#drop_zone,audio,.equalizer').hide();
-      $('#container,#gui_drop').css('width', '1024px').css('margin-left', '-512px');
+      $('#container,#gui_drop,#preset_selector').css('width', '1024px').css('margin-left', '-512px');
     }
 
     $('#gui_drop').on('click', function() {
@@ -849,11 +860,13 @@ Synth.prototype = {
       $('header').fadeOut(8000);
       if ($(this).is('.active')) {
         $('#container').hide();
+        $('#preset_selector').hide();
         $(this).css('bottom', '0px');
         $(this).children('p').text('Open Controls');
       } else if ($(this).not('.active')) {
         $('#container').show();
-        $(this).css('bottom', '33%');
+        $('#preset_selector').show();
+        $(this).css('bottom', '35%');
         $(this).children('p').text('Close Controls');
       }
     });
@@ -1167,10 +1180,12 @@ Synth.prototype = {
     });
     if (type === 'video') {
       document.querySelector('#videoplaylist').appendChild(fragment);
+      $('#video_drop').css('background', 'rgba(0, 0, 0, 0.6)');
 
     }
     if (type === 'audio') {
       document.querySelector('#playlist').appendChild(fragment);
+      $('#drop_zone').css('background', 'rgba(0, 0, 0, 0.6)');
 
     }
     //$('#video_drop').css('background', 'transparent');
@@ -1224,9 +1239,6 @@ Synth.prototype = {
       if (type === 'audio') {
         that.aplaylist.push(fileEntry.toURL());
       }
-      if (type === 'json') {
-
-      }
       that.readFileSelect(evt, type);
     }
     window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
@@ -1254,7 +1266,6 @@ Synth.prototype = {
 
                 loadEndHandler(context, fileEntry);
 
-
                 var li = document.createElement('li');
                 var name = unescape(fileEntry.name);
                 var correctName = unescape(fileEntry.name);
@@ -1270,6 +1281,8 @@ Synth.prototype = {
                     that.playVideo(index);
                     $('#close_drop').trigger('click');
                   }
+                  $('#video_drop').css('background', 'rgba(0, 0, 0, 0.6)');
+
                 }
                 if (type === 'audio') {
                   document.getElementById('playlist').insertBefore(li, null);
@@ -1279,6 +1292,7 @@ Synth.prototype = {
                     that.playAudio(index);
                     $('#close_drop').trigger('click');
                   }
+                  $('#drop_zone').css('background', 'rgba(0, 0, 0, 0.6)');
                 }
 
 
