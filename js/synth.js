@@ -1,4 +1,5 @@
-/*synth v188*/
+/*synth v190*/
+
 var Synth = function(container, control, json) {
   var that = this;
   this.control = control;
@@ -48,9 +49,9 @@ var Synth = function(container, control, json) {
   this.trigger = false;
   this.mousex = that.mouseX;
   this.mousey = that.mouseY;
-  this.shape = json.shape;
+  this.shape = '';
   this.meshUpdate = false;
-  this.wireframe = json.wireframe;
+  this.wireframe = false;
   this.camerax = 0.0;
   this.cameray = -1130.0;
   this.cameraz = 1680.0;
@@ -66,6 +67,7 @@ var Synth = function(container, control, json) {
   this.bgColor = '#000000';
   this.guiContainer;
   this.setting.current = 0;
+  this.presets = [];
   for (var pointers = 0; pointers < 16; pointers++) {
     this.pointer.push(0);
   }
@@ -118,19 +120,19 @@ var Synth = function(container, control, json) {
 Synth.prototype = {
   get settings() {
     var that = this;
-    return  {
-              "camera": this.camerax+','+this.cameray+','+this.cameraz,
-              "shape": this.shape,
-              "scale" : this.scale,
-              "wireframe": this.wireframe,
-              "multiplier": this.multiplier,
-              "displace": this.displace,
-              "origin": this.originX+','+this.originY+','+this.originZ,
-              "opacity": this.transparency,
-              "hue": this.hue,
-              "saturation": this.saturation,
-              "bgColor": this.bgColor
-            }
+    return {
+      "camera": this.camerax + ',' + this.cameray + ',' + this.cameraz,
+      "shape": this.shape,
+      "scale": this.scale,
+      "wireframe": this.wireframe,
+      "multiplier": this.multiplier,
+      "displace": this.displace,
+      "origin": this.originX + ',' + this.originY + ',' + this.originZ,
+      "opacity": this.transparency,
+      "hue": this.hue,
+      "saturation": this.saturation,
+      "bgColor": this.bgColor
+    }
   },
   get displacement() {
     return this.displace;
@@ -174,12 +176,14 @@ Synth.prototype = {
     return this.originX + ',' + this.originY + ',' + this.originZ;
 
   },
+  get originArray() {
+    return [this.originX, this.originY, this.originZ];
+  },
   set originPos(pos) {
     var coords = pos.split(',');
     this.originX = parseFloat(coords[0]);
     this.originY = parseFloat(coords[1]);
     this.originZ = parseFloat(coords[2]);
-
   },
   get camX() {
     return this.camera.position.x;
@@ -201,6 +205,9 @@ Synth.prototype = {
   },
   get cameraPos() {
     return this.camera.position.x + ',' + this.camera.position.y + ',' + this.camera.position.z;
+  },
+  get cameraArray() {
+    return [this.camera.position.x, this.camera.position.y, this.camera.position.z];
   },
   set cameraPos(pos) {
     var coords = pos.split(',');
@@ -331,27 +338,27 @@ Synth.prototype = {
         },
         "multiplier": {
           type: "f",
-          value: 66.6
+          value: that.multiplier
         },
         "displace": {
           type: "f",
-          value: 33.3
+          value: that.displace
         },
         "opacity": {
           type: "f",
-          value: 1.0
+          value: that.opacity
         },
         "originX": {
           type: "f",
-          value: 0.0
+          value: that.originArray[0]
         },
         "originY": {
           type: "f",
-          value: 0.0
+          value: that.originArray[1]
         },
         "originZ": {
           type: "f",
-          value: -2000.0
+          value: that.originArray[2]
         }
       },
       vertexShader: RuttEtraShader.vertexShader,
@@ -363,14 +370,14 @@ Synth.prototype = {
       overdraw: false
 
     });
+
     this.videoMaterial.renderToScreen = false;
     this.videoMaterial.wireframe = that.wireframe;
-
-    //that.meshChange(that.shape, 480, 270);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true
     });
+
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.autoClear = false;
     this.container.appendChild(that.renderer.domElement);
@@ -382,8 +389,8 @@ Synth.prototype = {
     this.composer.addPass(that.renderModel);
 
     //this.effectBloom = new THREE.BloomPass(3.3, 20, 4.0, 256);
-    // this.effectBloom = new THREE.BloomPass(1.4, 20, 1.4, 256);
-    //  this.composer.addPass(that.effectBloom);
+    //this.effectBloom = new THREE.BloomPass(1.5, 5.0, 1.4, 256);
+    //this.composer.addPass(that.effectBloom);
 
     this.effectHue = new THREE.ShaderPass(THREE.HueSaturationShader);
     this.effectHue.renderToScreen = true;
@@ -420,6 +427,7 @@ Synth.prototype = {
       that.composer.reset();
 
     }
+
     window.addEventListener('resize', onWindowResize, false);
 
     if (this.control === true) {
@@ -429,7 +437,7 @@ Synth.prototype = {
       this.initWebcam();
     }
 
-    that.setSettings(json);
+    that.setDefaults(json);
 
     that.initComplete = true;
 
@@ -780,7 +788,7 @@ Synth.prototype = {
 
     $('<div id="gui_drop"><p>Close Controls</p></div>').insertBefore('#container');
     // if(this.res.os != 'ios')
-    if (Modernizr.filesystem) { // possible bug in ios8
+    if (Modernizr.filesystem) {
       this.dropZone.context = this;
       this.readFiles.context = this;
       this.dropZoneVideo.context = this;
@@ -805,6 +813,7 @@ Synth.prototype = {
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        //that.fetchPresets();
       }
 
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');
@@ -940,20 +949,8 @@ Synth.prototype = {
         $('.close-button').removeClass('active');
       }
     });
-  },
 
-  setSettings: function(json) {
-    var that = this;
-    that.originPos = json.origin;
-    that.cameraPos = json.camera;
-    that.meshChange(json.shape, 480, 270);
-    that.wire = json.wireframe;
-    that.scaler = json.scale;
-    that.multiply = json.multiplier;
-    that.displacement = json.displace;
-    that.opacity = json.opacity;
-    that.saturate = json.saturation;
-    that.bg = json.bgColor;
+
   },
 
   playAudio: function(playlistId) {
@@ -1039,38 +1036,6 @@ Synth.prototype = {
     $('#videoplaylist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
 
-  toArray: function(list) {
-    return Array.prototype.slice.call(list || [], 0);
-  },
-
-  errorHandler: function(err) {
-    var msg = 'An error occured: ';
-
-    switch (err.code) {
-      case FileError.NOT_FOUND_ERR:
-        msg += 'File or directory not found';
-        break;
-
-      case FileError.NOT_READABLE_ERR:
-        msg += 'File or directory not readable';
-        break;
-
-      case FileError.PATH_EXISTS_ERR:
-        msg += 'File or directory already exists';
-        break;
-
-      case FileError.TYPE_MISMATCH_ERR:
-        msg += 'Invalid filetype';
-        break;
-
-      default:
-        msg += 'Unknown Error';
-        break;
-    };
-
-    console.log(msg);
-  },
-
   defaultVideo: function(url) {
     //vplaylist.push( url );
     var that = this;
@@ -1107,6 +1072,44 @@ Synth.prototype = {
       that.videoInput.addEventListener('ended', that.continueVideoPlay, false);
       $('#close_drop').trigger('click');
     }
+  },
+
+  toArray: function(list) {
+    return Array.prototype.slice.call(list || [], 0);
+  },
+
+  handleDragOver: function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  },
+
+  errorHandler: function(err) {
+    var msg = 'An error occured: ';
+
+    switch (err.code) {
+      case FileError.NOT_FOUND_ERR:
+        msg += 'File or directory not found';
+        break;
+
+      case FileError.NOT_READABLE_ERR:
+        msg += 'File or directory not readable';
+        break;
+
+      case FileError.PATH_EXISTS_ERR:
+        msg += 'File or directory already exists';
+        break;
+
+      case FileError.TYPE_MISMATCH_ERR:
+        msg += 'Invalid filetype';
+        break;
+
+      default:
+        msg += 'Unknown Error';
+        break;
+    };
+
+    console.log(msg);
   },
 
   listResults: function(entries, type, context) {
@@ -1182,7 +1185,6 @@ Synth.prototype = {
 
     window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
 
-
       fs.root.getDirectory(type, {}, function(dirEntry) {
         var dirReader = dirEntry.createReader();
         var entries = [];
@@ -1228,11 +1230,13 @@ Synth.prototype = {
       that.readFileSelect(evt, type);
     }
     window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
+
       fs.root.getDirectory(type, {
         create: true
       }, function(dirEntry) {
 
       }, that.errorHandler);
+
       for (var i = 0, file; file = files[i]; ++i) {
         (function(f) {
           fs.root.getFile('/' + type + '/' + f.name, {
@@ -1291,10 +1295,140 @@ Synth.prototype = {
     });
   },
 
-  handleDragOver: function(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  // Delete the named file, calling the optional callback when done
+  deleteFile: function(name, callback) {
+    var that = this;
+    window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
+      fs.root.getFile(name, {
+        create: false
+      }, function(fileEntry) {
+        //console.log(callback);
+        var fn = callback;
+        fileEntry.remove(fn, that.errorHandler);
+      }, that.errorHandler);
+    });
+  },
+
+  setDefaults: function(obj) {
+    var that = this;
+    // TODO: setDefaults from filesystem return
+    var json = obj[0];
+    that.originPos = json.origin;
+    that.cameraPos = json.camera;
+    that.meshChange(json.shape, 480, 270);
+    that.wire = json.wireframe;
+    that.scaler = json.scale;
+    that.multiply = json.multiplier;
+    that.displacement = json.displace;
+    that.opacity = json.opacity;
+    that.saturate = json.saturation;
+    that.bg = json.bgColor;
+
+  },
+
+  setPreset: function(index) {
+
+    var that = this;
+    var json = that.presets[index];
+
+    that.originPos = json.origin;
+    that.cameraPos = json.camera;
+    that.meshChange(json.shape, 480, 270);
+    that.wire = json.wireframe;
+    that.scaler = json.scale;
+    that.multiply = json.multiplier;
+    that.displacement = json.displace;
+    that.opacity = json.opacity;
+    that.saturate = json.saturation;
+    that.bg = json.bgColor;
+
+  },
+
+  savePreset: function() {
+    var that = this;
+    that.presets.push(that.settings);
+    that.saveOverPresets();
+  },
+
+  savePresetAtIndex: function(index) {
+    var that = this;
+    that.presets[index] = that.settings;
+    that.saveOverPresets();
+  },
+
+  saveOverPresets: function() {
+    var that = this;
+    that.deleteFile('/presets.json', that.savePresets());
+  },
+
+  savePresets: function() {
+    var that = this;
+
+    window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
+      console.log('Opened file system: ', fs.name);
+      fs.root.getFile('presets.json', {
+        create: true
+      }, function(fileEntry) {
+
+        // Create a FileWriter object for our FileEntry (log.txt).
+        fileEntry.createWriter(function(fileWriter) {
+          console.log(fileWriter);
+
+          //fileWriter.seek(fileWriter.length);
+
+          fileWriter.onwriteend = function(e) {
+            console.log('Write completed.');
+          };
+
+          fileWriter.onerror = function(e) {
+            console.log('Write failed: ' + e.toString());
+          };
+
+          //var json = JSON.stringify(that.settings);
+          var json = JSON.stringify(that.presets);
+          //json = json + ',';
+          // Create a new Blob and write it to log.txt.
+          var blob = new Blob([json], {
+            type: 'application/json'
+          });
+
+          fileWriter.write(blob);
+
+        }, that.errorHandler);
+
+
+      }, that.errorHandler);
+
+    });
+
+  },
+
+  fetchPresets: function() {
+    var that = this;
+
+    window.requestFileSystem(window.TEMPORARY, 800 * 1024 * 1024, function(fs) {
+      console.log('Opened file system: ', fs.name);
+      fs.root.getFile('presets.json', {}, function(fileEntry) {
+        fileEntry.file(function(file) {
+          var reader = new FileReader();
+
+          reader.onloadend = function(e) {
+            console.log(this.result);
+            that.presets = JSON.parse(this.result || "[]");
+            if (this.result.length > 0) {
+              that.setPreset(0);
+            }
+          };
+
+          reader.readAsText(file);
+
+        }, that.errorHandler);
+
+
+      }, that.errorHandler);
+
+    });
+
   },
 
   paramsChange: function() {

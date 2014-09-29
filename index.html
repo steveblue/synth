@@ -101,7 +101,7 @@
 	<script>
 
 	 // TODO: Check for .json file in filesystem, if found load a specified preset.
-   var s = new Synth(document.getElementById( 'canvas' ),true,{
+   var s = new Synth(document.getElementById( 'canvas' ),true,[{
         "camera": "0.0,-1130.0,1680.0",
         "shape": "plane",
         "scale" : 10.0,
@@ -112,8 +112,8 @@
         "opacity": 0.3,
         "hue": 0,
         "saturation": 0.7,
-        "bgColor": "#FFFFFF"
-    });
+        "bgColor": "#000"
+    }]);
 
 		s.defaultVideo('vid/kinetic-light.mp4');
 		$('.toggle.wire').addClass('active'); // temp
