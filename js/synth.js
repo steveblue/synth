@@ -812,6 +812,8 @@ Synth.prototype = {
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
 
+        window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+
       } else {}
 
       $('<div id="close_drop"><p>Close Playlist</p></div>').insertAfter('audio');

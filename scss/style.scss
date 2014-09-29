@@ -6,7 +6,7 @@ html,body {
     overflow: hidden;
     width:100%;
     height:100%;
-  
+
 }
 a:link, a:visited {
 	display:block;
@@ -46,7 +46,7 @@ a:active{
 header {
     color:#FFF;
     position: absolute;
-    top: 45%; 
+    top: 45%;
     left:50%;
     width: 30%;
     margin-top: -250px;
@@ -82,7 +82,7 @@ h5{
     font-weight: 300;
     font-size:12px;
     letter-spacing: 0.2em;
- 
+
 }
 p,li{
 	color:#FFF;
@@ -151,7 +151,7 @@ article{
 	background-repeat: repeat;
 
 	p{
-	  display:block; 
+	  display:block;
       position: relative;
       left:50%;
 	  margin-left: -300px;
@@ -179,7 +179,7 @@ article{
 	background-repeat: repeat;
 
 	p{
-	  display:block; 
+	  display:block;
       position: relative;
       left:50%;
 	  margin-left: -300px;
@@ -190,7 +190,7 @@ article{
 		padding-top:2px;
 	}
 	li:first-child{
-		padding-top:6px;
+		//padding-top:6px;
 	}
 }
 #topfill{
@@ -200,7 +200,7 @@ article{
 	width:100%;
 	display:block;
 	height:20px;
-	background:#010101; 
+	background:#010101;
 }
 #read_files{
 	position: relative;
@@ -225,15 +225,15 @@ article{
 	top: 297px;
 	left:0px;
 	display:block;
-	width:598px;
+	width:597px;
 	height:20px;
-	background:rgba(0,0,0,0.7);
+	background:rgba(0,0,0,0.3);
 	text-align:center;
 	opacity:0.5;
 }
-#close_drop,#read_video{
+#read_video, #read_files{
 	&:hover{
-		opacity:0.8;
+		opacity:0.65;
 	}
 }
 #gui_drop{
@@ -243,24 +243,24 @@ article{
 	display:block;
 	width:100%;
 	height:20px;
-	background:rgba(0,0,0,0.7);
+	background:rgba(0,0,0,0.3);
 	text-align:center;
 }
 #close_drop:hover,#gui_drop:hover{
-	cursor:pointer; 
+	cursor:pointer;
 	cursor:hand;
 }
 #close_drop, #gui_drop {
 	p{
-		  color:rgb(171, 171, 171);
-		  opacity: 0.8;
+		  color:#ABABAB;
+		  opacity: 0.5;
 		  position:relative;
 		  top: -7px;
 		  font-size:10px;
-		 
+
 	}
 	p:hover{
-		color:#FFF;
+		color:#ABABAB;
 		opacity: 1.0;
 		text-transform: none;
 	}
@@ -284,16 +284,19 @@ audio{
 	display:block;
 	width:100%;
 	height:20px;
-	background:rgba(10,10,10,0.8);
-
+	background:rgba(0,0,0,0.3);
 	a:link, a:visited {
-	color:#ABABAB;
+	color:#FFF;
 	font-size:10px;
-	padding-top:6px;
+	padding-top:4px;
+	padding-bottom:8px;
 	padding-left:6px;
 	}
 	h5{
 		opacity: 0.5;
+	}
+	&:hover{
+		background: rgba(122, 122, 122, 0.3);
 	}
 
 	}
@@ -314,12 +317,12 @@ audio{
 	display:block;
 	width:100%;
 	height:33%;
-	
+
 	position:absolute;
 	left:50%;
 	bottom:0;
 	background:rgba(0,0,0,0.6);
-	display:none;	
+	display:none;
 	  -webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -357,7 +360,7 @@ equalizer{
 		height:100%;
 		margin:0;
 		padding:0;
-		
+
 		control{
 				display: block;
 		 		width:100%;
@@ -377,8 +380,8 @@ equalizer{
 		 		margin:0;
 		 		padding:0;
 		 		cursor:pointer;
-		 		cursor:hand;			 		
-		 		
+		 		cursor:hand;
+
 		 		li{
 		 			display: block;
 			 		width:10%;
@@ -386,11 +389,14 @@ equalizer{
 			 		position:relative;
 			 		top:0;
 			 		float:left;
-			 		background:rgba(200,200,200,0.5);
+			 		background:rgba(122,122,122,0.35);
+			 		&:hover{
+			 		background:rgba(122,122,122,0.6);
+			 		}
 			 		&.controller{
-					background:#f00;
+					 background:rgba(255,0,0,0.5);
 					}
-			 		
+
 		 		}
 		 		}
 		}
@@ -403,7 +409,7 @@ equalizer{
 				float:left;
 				padding-right:50px;
 			}
-		}		
+		}
 	}
 }
 fader,picker{
@@ -419,7 +425,7 @@ fader,picker{
 	margin-left:0px;
 	background:transparent;
 	.wrapper{
-	
+
 	.title{
 
 	-webkit-transform: rotate(-90deg);
@@ -428,7 +434,7 @@ fader,picker{
 	-o-transform: rotate(-90deg);
 	position: relative;
 	top: 120px;
-	
+
 	}
 		height:100%;
 		width:100%;
@@ -442,16 +448,17 @@ fader,picker{
 		}
 		.close{
 			position:relative;
-			top:-40px;
+			top:0px;
 			width:40px;
 			height:40px;
+			opacity:0.65;
 			background:url(../img/close-red.png);
 		}
 		control.vert{
 			display:block;
 			width:40px;
 			height:40px;
-			position:relative;		
+			position:relative;
 			top:85%;
 			left:0;
 			-webkit-transform-origin:50% 50%;
@@ -480,7 +487,7 @@ fader,picker{
 			display:block;
 			width:40px;
 			height:40px;
-			position:relative;		
+			position:relative;
 			top:0;
 			left:0;
 			-webkit-transform-origin:50% 50%;
@@ -497,7 +504,7 @@ fader,picker{
 				top:0px;
 				left:20px;
 			}
-		}		
+		}
 		.value{
 		    display:block;
 		    position:absolute;
@@ -520,17 +527,17 @@ fader.v{
 
 }
 fader.hue{
-	background: url(../img/hue.jpg);
+	background: url(../img/hue.png);
 	background-size: 100% 100%;
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
 }
 fader.sat{
-	background: url(../img/saturation.jpg);
+	background: url(../img/saturation.png);
 	background-size: 100% 100%;
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
 }
 fader.opacity{
-	background: url(../img/opacity.jpg);
+	background: url(../img/opacity.png);
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }
@@ -555,22 +562,23 @@ joystick{
 			left: 6px;
 			top: 6px;
 		}
-		
+
 		.close{
 			position:relative;
-			top:-40px;
+			top:0px;
 			width:40px;
 			height:40px;
+			opacity:0.65;
 			background:url(../img/close-red.png);
 		}
-		
+
 		control.xy{
 			display:block;
 			width:40px;
 			height:40px;
 			margin-left:-20px;
 			margin-top:-20px;
-			position:relative;		
+			position:relative;
 			top:50%;
 			left:50%;
 			-webkit-transform-origin:50% 50%;
@@ -578,7 +586,7 @@ joystick{
 			cursor:pointer;
 			cursor:hand;
 			opacity:0.7;
-			
+
 			point{
 				display:none;
 			}
@@ -606,7 +614,7 @@ joystick{
 			position:relative;
 			top: -2px;
 			left:6px;
-		
+
 	}
 }
 toggle{
@@ -627,10 +635,10 @@ toggle{
 	cursor:pointer;
     cursor:hand;
 	&.active{
-		background:rgba(200,200,200,0.45);
+		background:rgba(122,122,122,0.3);
 	}
 	&:hover{
-		opacity:0.8;
+		opacity:0.6;
 	}
 }
 
