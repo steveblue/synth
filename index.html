@@ -87,12 +87,15 @@
 		<fader class="fader v"><div class="wrapper"><div class="title">Zoom</div><control class="vert draggable control ui-widget-content" data-index="" data-key="camZ" data-value="0.0" data-start="4000.0" data-end="-4000.0"><point></point></control><div class="value"></div></div></fader>
 	    <fader class="fader v"><div class="wrapper"><div class="title">Scale</div><control class="vert draggable control ui-widget-content" data-index="" data-key="scaler" data-value="0.0" data-start="20.0" data-end="0.0"><point></point></control><div class="value"></div></div></fader>
 		<div class="togglefarm">
+		<input id="detail_value" class="input number" type="text">
+
 		<toggle class="toggle model plane"><control class="control" data-key="plane" data-value="true"><img src="img/shapes-plane.png"></control></toggle>
 		<toggle class="toggle model cube"><control class="control" data-key="cube" data-value="false"><img src="img/shapes-cube.png"></control></toggle>
 		<toggle class="toggle model sphere"><control class="control" data-key="sphere" data-value="false"><img src="img/shapes-sphere.png"></control></toggle>
 		<toggle class="toggle model cylinder"><control class="control" data-key="cylinder" data-value="false"><img src="img/shapes-cylinder.png"></control></toggle>
 		<toggle class="toggle model torus"><control class="control" data-key="torus" data-value="false"><img src="img/shapes-torus.png"></control></toggle>
 		<toggle class="toggle wire"><control class="control" data-key="wire" data-value="false">W</control></toggle>
+
 		</div>
 	</div>
 
@@ -103,6 +106,7 @@
    var s = new Synth(document.getElementById( 'canvas' ),true,true,[{
         "camera": "0.0,-1130.0,1680.0",
         "shape": "plane",
+        "detail": 480,
         "scale" : 10.0,
         "wireframe": false,
         "multiplier": 15.0,
@@ -113,6 +117,7 @@
         "saturation": 0.7,
         "bgColor": "#000"
     }]);
+
    	s.fetchDefaults();
 
    	if(s.res.browser === 'firefox'){
@@ -125,8 +130,7 @@
 	  	if (s.res.device === 'ipad' || s.res.device === 'iphone') {
     	  $('#play_button').show();
     	  $('#play_button').on('touchend', function() {
-    	    s.videoInput.current = 0;
-    	    s.playVideo(0);
+    	    $('video')[0].play();
     	    $('#play_button').hide();
     	  });
     	  $(document).on('touchmove', function(e) {

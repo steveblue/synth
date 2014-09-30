@@ -11,6 +11,8 @@ var Synth = function(container, control, cam, json) {
   this.texture;
   this.material;
   this.mesh;
+  this.detail = 480;
+  this.hd = true;
   this.back;
   this.fill;
   this.key;
@@ -124,6 +126,7 @@ Synth.prototype = {
     return {
       "camera": this.camerax + ',' + this.cameray + ',' + this.cameraz,
       "shape": this.shape,
+      "detail": this.detail,
       "scale": this.scale,
       "wireframe": this.wireframe,
       "multiplier": this.multiplier,
@@ -221,7 +224,7 @@ Synth.prototype = {
   },
   set model(shape) {
     if (shape === 'plane' || shape === 'cube' || shape === 'torus' || shape === 'sphere' || shape === 'cylinder') {
-      this.meshChange(shape);
+      this.meshChange(shape, that.detail, that.detail);
     }
   },
   get color() {
@@ -764,8 +767,9 @@ Synth.prototype = {
 
         $('.toggle.model').removeClass('active');
         $(this).addClass('active');
+        that.detail = $('input#detail_value').val();
         //  console.log("that.meshChange('" + $(this).children('control').data('key') + "',64,64)");
-        eval("that.meshChange('" + $(this).children('control').data('key') + "',140,140)");
+        eval("that.meshChange('" + $(this).children('control').data('key') + "','" + that.detail + "','" + that.detail + "')");
 
       }
     });
@@ -814,7 +818,6 @@ Synth.prototype = {
       }
     });
 
-
     // if(this.res.os != 'ios')
     if (Modernizr.filesystem) {
       this.dropZone.context = this;
@@ -842,6 +845,7 @@ Synth.prototype = {
       if (window.File && window.FileReader && window.FileList && window.Blob) {
 
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        that.fetchPresets();
 
       } else {
         // fallback goes here.
@@ -875,7 +879,15 @@ Synth.prototype = {
       that.removePresets();
     });
 
-
+    $('.close-button').on('click', function() {
+      if (that.controls === false) {
+        that.controls = true;
+        $('.close-button').addClass('active');
+      } else {
+        that.controls = false;
+        $('.close-button').removeClass('active');
+      }
+    });
 
     $('#close_drop').on('click', function() {
       $(this).toggleClass('active');
@@ -916,6 +928,34 @@ Synth.prototype = {
         $(this).children('p').text('Close Controls');
       }
     });
+
+    $('input#detail_value').on('focus', function() {
+      keylistener.stop_listening();
+    });
+
+    $('input#detail_value').on('blur', function() {
+      keylistener.listen();
+      that.detail = $(this).val();
+    });
+
+    $('input').on('keyup', function(e) {
+      if (e.keyCode == 13) {
+        $(this).blur();
+      }
+    });
+
+    $('input.number').keydown(function(event) {
+      // Allow special chars + arrows
+      if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39)) {
+        return;
+      } else {
+        // If it's not a number stop the keypress
+        if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
+          event.preventDefault();
+        }
+      }
+    });
+
 
     if (that.res.device === 'ipad') {
       $('#container,#gui_drop,#preset_selector').css('width', '864px').css('margin-left', '-432px');
@@ -964,67 +1004,40 @@ Synth.prototype = {
     });
 
     // save presets to a slot
-    keylistener.simple_combo("option 1", function() {
+    keylistener.simple_combo("ctrl 1", function() {
       that.savePresetAtIndex(0);
     });
-    keylistener.simple_combo("option 2", function() {
+    keylistener.simple_combo("ctrl 2", function() {
       that.savePresetAtIndex(1);
     });
-    keylistener.simple_combo("option 3", function() {
+    keylistener.simple_combo("ctrl 3", function() {
       that.savePresetAtIndex(2);
     });
-    keylistener.simple_combo("option 4", function() {
+    keylistener.simple_combo("ctrl 4", function() {
       that.savePresetAtIndex(3);
     });
-    keylistener.simple_combo("option 5", function() {
+    keylistener.simple_combo("ctrl 5", function() {
       that.savePresetAtIndex(4);
     });
-    keylistener.simple_combo("option 6", function() {
+    keylistener.simple_combo("ctrl 6", function() {
       that.savePresetAtIndex(5);
     });
-    keylistener.simple_combo("option 7", function() {
+    keylistener.simple_combo("ctrl 7", function() {
       that.savePresetAtIndex(6);
     });
-    keylistener.simple_combo("option 8", function() {
+    keylistener.simple_combo("ctrl 8", function() {
       that.savePresetAtIndex(7);
     });
-    keylistener.simple_combo("option 9", function() {
+    keylistener.simple_combo("ctrl 9", function() {
       that.savePresetAtIndex(8);
     });
 
-    // playback video based on order of list
-    keylistener.simple_combo("ctrl 1", function() {
-      that.playVideo(0);
-    });
-    keylistener.simple_combo("ctrl 2", function() {
-      that.playVideo(1);
-    });
-    keylistener.simple_combo("ctrl 3", function() {
-      that.playVideo(2);
-    });
-    keylistener.simple_combo("ctrl 4", function() {
-      that.playVideo(3);
-    });
-    keylistener.simple_combo("ctrl 5", function() {
-      that.playVideo(4);
-    });
-    keylistener.simple_combo("ctrl 6", function() {
-      that.playVideo(5);
-    });
-    keylistener.simple_combo("ctrl 7", function() {
-      that.playVideo(6);
-    });
-    keylistener.simple_combo("ctrl 8", function() {
-      that.playVideo(7);
-    });
-    keylistener.simple_combo("ctrl 9", function() {
-      that.playVideo(8);
-    });
     keylistener.simple_combo("`", function() {
       if (that.webcam === false) {
         that.channel = true;
       }
     });
+
     keylistener.simple_combo("0", function() {
       that.cameraPos = '0,0,1000';
       $('.joycam .control').css('top', '50%');
@@ -1072,15 +1085,6 @@ Synth.prototype = {
         that.menu(true);
       }
 
-    });
-    $('.close-button').on('click', function() {
-      if (that.controls === false) {
-        that.controls = true;
-        $('.close-button').addClass('active');
-      } else {
-        that.controls = false;
-        $('.close-button').removeClass('active');
-      }
     });
 
 
@@ -1440,7 +1444,8 @@ Synth.prototype = {
     var json = obj[index];
     that.originPos = json.origin;
     that.cameraPos = json.camera;
-    that.meshChange(json.shape, 480, 270);
+    that.detail = json.detail;
+    that.meshChange(json.shape, json.detail, json.detail);
     that.wire = json.wireframe;
     that.scaler = json.scale;
     that.multiply = json.multiplier;
@@ -1458,7 +1463,8 @@ Synth.prototype = {
 
     that.originPos = json.origin;
     that.cameraPos = json.camera;
-    that.meshChange(json.shape, 480, 270);
+    that.detail = json.detail;
+    that.meshChange(json.shape, json.detail, json.detail);
     that.wire = json.wireframe;
     that.scaler = json.scale;
     that.multiply = json.multiplier;
@@ -1667,20 +1673,33 @@ Synth.prototype = {
       s = 64;
     }
 
+    if (x >= 480) {
+      x = 480;
+      $('input#detail_value').val(480);
+    } else {
+      $('input#detail_value').val(that.detail);
+    }
+    if (s >= 480) {
+      s = 480;
+    }
+
     if (that.meshUpdate === true) {
-      that.scene.remove(that.mesh);
       that.geometry.verticesNeedUpdate = false;
       that.geometry.dynamic = false;
       that.geometry = null;
       that.videoMaterial.renderToScreen = false;
+      that.scene.remove(that.mesh);
     }
 
     switch (shape) {
       case 'plane':
-
-        that.geometry = new THREE.PlaneGeometry(x, s, x, s);
+        if (that.hd === true) {
+          var y = (9 * x) / 16;
+          that.geometry = new THREE.PlaneGeometry(x, x, y, y);
+        } else {
+          that.geometry = new THREE.PlaneGeometry(x, s, x, s);
+        }
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
-
         break;
 
       case 'sphere':
@@ -1727,9 +1746,13 @@ Synth.prototype = {
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
         break;
 
-
       default:
-        that.geometry = new THREE.PlaneGeometry(x, s, x, s);
+        if (that.hd === true) {
+          var y = (9 * x) / 16;
+          that.geometry = new THREE.PlaneGeometry(x, x, y, y);
+        } else {
+          that.geometry = new THREE.PlaneGeometry(x, s, x, s);
+        }
         that.mesh = new THREE.Mesh(that.geometry, that.videoMaterial);
 
     }

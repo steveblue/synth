@@ -2,6 +2,7 @@
     {
         "camera": "0,-1130,1680",
         "shape": "plane",
+        "detail": 480,
         "scale": 10,
         "wireframe": false,
         "multiplier": 15,
@@ -15,12 +16,27 @@
     {
         "camera": "0,-1130,1680",
         "shape": "plane",
+        "detail": 480,
         "scale": 10,
         "wireframe": false,
         "multiplier": 15,
         "displace": 3.3,
         "origin": "0,0,-2000",
         "opacity": 0.3,
+        "hue": 0,
+        "saturation": 0.7,
+        "bgColor": "#000"
+    },
+    {
+        "camera": "0,-100,100",
+        "shape": "torus",
+        "detail": 32,
+        "scale": 10,
+        "wireframe": true,
+        "multiplier": 15,
+        "displace": 3.3,
+        "origin": "0,0,0",
+        "opacity": 0.7,
         "hue": 0,
         "saturation": 0.7,
         "bgColor": "#000"
