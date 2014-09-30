@@ -65,7 +65,7 @@ header {
 }
 h1{
     font-family: 'Exo', sans-serif;
-    font-size:96px;
+    font-size:72px;
     color:#FFF;
     font-weight: 100;
     text-rendering: optimizeLegibility;
@@ -365,7 +365,7 @@ audio{
 		width:100%;
 		height:100%;
 		li{
-			width:9.0909090909%;
+			width:8.5%;
 			height:100%;
 			float:left;
 			position:relative;
@@ -373,6 +373,7 @@ audio{
 			margin:0;
 			opacity:0.3;
 			border-right: 1px solid rgba(200,200,200,0.1);
+			text-align:center;
 			span{
 				display:block;
 				width:100%;
@@ -655,7 +656,7 @@ joystick{
 	display:block;
 	position:relative;
 	height:240px;
-	width:202px;
+	width:42px;
 	float:left;
 	.title{
 			position:relative;
@@ -668,9 +669,9 @@ toggle{
 	display:block;
 	position:relative;
 	top:6px;
-	width:100%;
+	width:40px;
 	height:30px;
-	border: 1px solid rgba(200,200,200,0.3);
+	//border-right: 1px solid rgba(200,200,200,0.3);
 	clear:both;
 	text-align:center;
 	padding-top:16px;
@@ -682,6 +683,12 @@ toggle{
 	cursor:pointer;
   cursor:hand;
   color:#ABABAB;
+  img{
+  	height:26px;
+  	width:26px;
+  	margin-top:-8px;
+  	opacity:0.3;
+  }
 	&.active{
 		background:rgba(122,122,122,0.3);
 	}
@@ -697,8 +704,8 @@ toggle{
   left:50%;
   margin-top:-100px;
   margin-left:-25px;
-  width:50px;
   height:50px;
+  width:50px;
   background:url('../img/play-button-png.png');
   background-size: cover;
   background-repeat: none;

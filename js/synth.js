@@ -489,7 +489,7 @@ Synth.prototype = {
           $('header h2').text('Video playback is not supported inline on iPhone.');
         }
         if (this.res.device === 'android') {
-          $('header h2').text('Your browser is not supported. Use Chrome on a desktop instead.');
+          $('header h2').text('Your browser is not supported. Please try again with Google Chrome on a desktop computer.');
         }
 
       }
@@ -877,18 +877,25 @@ Synth.prototype = {
       } else if ($(this).not('.active')) {
         $('#container').show();
         $('#preset_selector').show();
-        $(this).css('bottom', '35%');
+        if (that.res.device === 'ipad') {
+          $(this).css('bottom', '43%');
+        } else {
+          $(this).css('bottom', '36%');
+        }
         $(this).children('p').text('Close Controls');
       }
     });
 
-    $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
-
-    if (that.res.device === 'ipad' || window.innerWidth <= 1024) {
-      $('#container,#gui_drop,#preset_selector').css('width', '1024px').css('margin-left', '-512px');
+    if (that.res.device === 'ipad') {
+      $('#container,#gui_drop,#preset_selector').css('width', '864px').css('margin-left', '-432px');
+      $('#container').css('height', '40%');
+      $('#preset_selector').css('bottom', '40%');
+      $('#gui_drop').css('bottom', '43%');
     } else {
-      $('#container,#gui_drop,#preset_selector').css('width', '1386px').css('margin-left', '-693px');
+      $('#container,#gui_drop,#preset_selector').css('width', '1226px').css('margin-left', '-613px');
     }
+
+
 
     document.addEventListener('mousemove', that.onDocumentMouseMove, false);
 
