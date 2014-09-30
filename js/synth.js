@@ -128,7 +128,7 @@ Synth.prototype = {
       "shape": this.shape,
       "detail": this.detail,
       "scale": this.scale,
-      "wireframe": this.wireframe,
+      "wireframe": this.videoMaterial.wireframe,
       "multiplier": this.multiplier,
       "displace": this.displace,
       "origin": this.originX + ',' + this.originY + ',' + this.originZ,
@@ -1446,12 +1446,13 @@ Synth.prototype = {
     that.cameraPos = json.camera;
     that.detail = json.detail;
     that.meshChange(json.shape, json.detail, json.detail);
-    that.wire = json.wireframe;
+    that.wireframe = json.wireframe;
     that.scaler = json.scale;
     that.multiply = json.multiplier;
     that.displacement = json.displace;
     that.opacity = json.opacity;
     that.saturate = json.saturation;
+    that.hue = json.hue;
     that.bg = json.bgColor;
 
   },
@@ -1465,12 +1466,14 @@ Synth.prototype = {
     that.cameraPos = json.camera;
     that.detail = json.detail;
     that.meshChange(json.shape, json.detail, json.detail);
-    that.wire = json.wireframe;
+    that.wireframe = json.wireframe;
+    that.videoMaterial.wireframe = json.wireframe;
     that.scaler = json.scale;
     that.multiply = json.multiplier;
     that.displacement = json.displace;
     that.opacity = json.opacity;
     that.saturate = json.saturation;
+    that.hue = json.hue;
     that.bg = json.bgColor;
 
     $('#preset_selector ul li').removeClass('selected');
