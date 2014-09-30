@@ -99,7 +99,7 @@
 	<script>
 
 	 // TODO: Check for .json file in filesystem, if found load a specified preset.
-   var s = new Synth(document.getElementById( 'canvas' ),true,[{
+   var s = new Synth(document.getElementById( 'canvas' ),true,true,[{
         "camera": "0.0,-1130.0,1680.0",
         "shape": "plane",
         "scale" : 10.0,
@@ -116,7 +116,6 @@
 		s.defaultVideo('vid/kinetic-light.mp4');
 
 		$('header').delay(7500).fadeOut("slow",function(){
-			console.log(s.res);
 	  	if (s.res.device === 'ipad' || s.res.device === 'iphone') {
     	  $('#play_button').show();
     	  $('#play_button').on('touchend', function() {

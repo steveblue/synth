@@ -1,8 +1,9 @@
 /*synth v190*/
 
-var Synth = function(container, control, json) {
+var Synth = function(container, control, cam, json) {
   var that = this;
   this.control = control;
+  this.cam = cam;
   this.container = container;
   this.camera;
   this.scene;
@@ -449,13 +450,35 @@ Synth.prototype = {
 
 
   },
+  createWebcamItem: function() {
+    var that = this;
+    var li = document.createElement('li');
+    var name = 'camera';
+    var correctName = 'camera';
+    if (correctName.length > 30) correctName = correctName.substring(0, 30);
+    li.innerHTML = ['<a class="track" href="#" data-href="', '#',
+      '" data-title="', correctName, '">', correctName, '</a>'
+    ].join('');
+    document.getElementById('videoplaylist').insertBefore(li, null);
+
+    var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
+    var index = nodeList.indexOf(0);
+
+    li.onclick = function() {
+      if (that.webcam === false) {
+        that.channel = true;
+        $('#close_drop').trigger('click');
+      }
+    }
+  },
   initWebcam: function() {
     var that = this;
+    console.log('init Webcam!');
     if (Modernizr.getusermedia) {
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       navigator.getUserMedia({
         video: true,
-        audio: false
+        audio: true
       }, function(stream) {
         //on webcam enabled
         if (navigator.mozGetUserMedia) {
@@ -465,6 +488,7 @@ Synth.prototype = {
           that.webcam = true;
           that.videoObject = vendorURL.createObjectURL(stream);
           that.videoInput.src = that.videoObject;
+          that.createWebcamItem();
         }
 
       }, function(error) {
@@ -1139,29 +1163,29 @@ Synth.prototype = {
     //vplaylist.push( url );
     var that = this;
     $('video').attr('src', url);
-    this.vplaylist.push(url);
+    //this.vplaylist.push(url);
     this.videoInput.load();
     this.videoInput.loop = true;
 
-    var li = document.createElement('li');
-    var name = 'default-video.mp4';
-    var correctName = 'default-video.mp4';
-    if (correctName.length > 30) correctName = correctName.substring(0, 30);
-    li.innerHTML = ['<a class="track" href="#" data-href="', url,
-      '" data-title="', correctName, '">', correctName, '</a>'
-    ].join('');
-    document.getElementById('videoplaylist').insertBefore(li, null);
+    // var li = document.createElement('li');
+    // var name = 'default-video.mp4';
+    // var correctName = 'default-video.mp4';
+    // if (correctName.length > 30) correctName = correctName.substring(0, 30);
+    // li.innerHTML = ['<a class="track" href="#" data-href="', url,
+    //   '" data-title="', correctName, '">', correctName, '</a>'
+    // ].join('');
+    // document.getElementById('videoplaylist').insertBefore(li, null);
 
-    var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
-    var index = nodeList.indexOf(0);
+    // var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
+    // var index = nodeList.indexOf(0);
 
-    li.onclick = function() {
-      that.videoInput.current = 0;
-      that.playVideo(0);
+    // li.onclick = function() {
+    //   that.videoInput.current = 0;
+    //   that.playVideo(0);
 
-      that.videoInput.addEventListener('ended', that.continueVideoPlay, false);
-      $('#close_drop').trigger('click');
-    }
+    //   that.videoInput.addEventListener('ended', that.continueVideoPlay, false);
+    //   $('#close_drop').trigger('click');
+    // }
   },
 
   toArray: function(list) {
