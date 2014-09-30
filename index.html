@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Synth v.189</title>
+		<title>Synth v.190 </title>
 		<meta charset="utf-8">
+    <meta name="description" content="Synth is an open source video synthesizer for the internet by electronic artist Steve Belovarich. Create your own visuals by uploading music and video, saving presets, and experimenting with distorting 3D objects. Video art inspired by the rutt/etra and paik/abe wobbulator.">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link href='http://fonts.googleapis.com/css?family=Exo:100,200,400,500,700italic' rel='stylesheet' type='text/css'>
 		<link href='css/style.css' rel='stylesheet' type='text/css'>
@@ -30,7 +31,7 @@
 	<body>
 	<header>
 	    <h1>Synth</h1>
-	    <h2>A video synthesizer for the web.</h2>
+	    <h2>The screen is all you need.</h2>
 		<a href="info/index.php">Learn More</a>
 	</header>
 	<!--<div id="topfill"></div>-->
@@ -113,9 +114,14 @@
         "bgColor": "#000"
     }]);
    	s.fetchDefaults();
-		s.defaultVideo('vid/kinetic-light.mp4');
 
-		$('header').delay(7500).fadeOut("slow",function(){
+   	if(s.res.browser === 'firefox'){
+    	s.defaultVideo('vid/kinetic-light.webm');
+   	}else{
+			s.defaultVideo('vid/kinetic-light.mp4');
+	  }
+
+		$('header').delay(7000).fadeOut("slow",function(){
 	  	if (s.res.device === 'ipad' || s.res.device === 'iphone') {
     	  $('#play_button').show();
     	  $('#play_button').on('touchend', function() {

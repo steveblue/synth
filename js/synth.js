@@ -473,16 +473,17 @@ Synth.prototype = {
   },
   initWebcam: function() {
     var that = this;
+    var message = '';
     console.log('init Webcam!');
-    if (Modernizr.getusermedia) {
+    if (Modernizr.getusermedia && that.res.browser !== 'firefox') {
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       navigator.getUserMedia({
         video: true,
-        audio: true
+        audio: false
       }, function(stream) {
         //on webcam enabled
         if (navigator.mozGetUserMedia) {
-          that.videoInput.mozSrcObject = stream;
+          //that.videoInput.mozSrcObject = stream;
         } else {
           var vendorURL = window.URL || window.webkitURL;
           that.webcam = true;
@@ -492,32 +493,38 @@ Synth.prototype = {
         }
 
       }, function(error) {
-        $('header h2').text('Unable to capture WebCam. Please reload the page or try with Google Chrome.');
+        message = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
       });
     } else {
       if (this.res.device === 'desktop') {
-        if (this.res.browser === 'chrome') {
-          $('header h2').text('Use your webcam, upload music and video, use the controls to distort the video.');
-        }
         if (this.res.browser === 'firefox') {
-          $('header h2').text('Use the controls to distort the video.');
+          message = 'Use the controls to distort the video.';
         }
         if (this.res.browser === 'safari') {
-          $('header h2').text('Use the controls to distort the video.');
+          message = 'Use the controls to distort the video.';
         }
       } else {
         if (this.res.device === 'ipad') {
-          $('header h2').text('Use the controls to distort the video.');
+          message = 'Use the controls to distort the video.';
         }
         if (this.res.device === 'iphone') {
-          $('header h2').text('Video playback is not supported inline on iPhone.');
+          message = 'Video playback is not supported inline on iPhone.';
         }
         if (this.res.device === 'android') {
-          $('header h2').text('Your browser is not supported. Please try again with Google Chrome on a desktop computer.');
+          message = 'Your browser is not supported. Please try again with Google Chrome on a desktop computer.';
         }
 
       }
     }
+    if (this.res.browser === 'chrome') {
+      message = 'Drag and drop music and video, use the controls to distort the video.';
+    }
+    if (this.res.browser === 'firefox') {
+      message = 'Use the controls to distort the video.';
+    }
+    setTimeout(function() {
+      $('header h2').text(message);
+    }, 3800);
 
     if (that.webcam === false) {
       that.playVideo(0);
@@ -917,6 +924,9 @@ Synth.prototype = {
       $('#gui_drop').css('bottom', '43%');
     } else {
       $('#container,#gui_drop,#preset_selector').css('width', '1226px').css('margin-left', '-613px');
+    }
+    if (Modernizr.filesystem === false) {
+      $('#container,#gui_drop,#preset_selector').css('width', '864px').css('margin-left', '-432px');
     }
 
 
