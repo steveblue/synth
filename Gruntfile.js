@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   watch: {
       js: {
         files: ['js/*.js'],
-        tasks: ['jsbeautifier','uglify'],
+        tasks: ['jsbeautifier','concat','uglify'],
         options: {
           livereload: true,
         }
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
           'css': ['css/style.css']
         }
       }
-    },  
+    },
     jsbeautifier: {
       files: ['js/*.js'],
       options: {
@@ -68,40 +68,46 @@ module.exports = function(grunt) {
           }
       }
     },
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: [
+          'js/libs/jquery.min.js',
+          'js/libs/jquery.ui.min.js',
+          'js/libs/jquery.ui.touch-punch.js',
+          'js/libs/modernizr.custom.js',
+          'js/libs/res.min.js',
+          'js/libs/three.min.js',
+          'js/libs/dancer.js',
+          'js/libs/keypress-2.0.3.min.js',
+          'js/Detector.js',
+          'js/shaders/RuttShader.js',
+          'js/shaders/HueSaturationShader.js',
+          'js/shaders/ConvolutionShader.js',
+          'js/shaders/CopyShader.js',
+          'js/postprocessing/EffectComposer.js',
+          'js/postprocessing/RenderPass.js',
+          'js/postprocessing/MaskPass.js',
+          'js/postprocessing/BloomPass.js',
+          'js/postprocessing/HueSaturationPass.js',
+          'js/postprocessing/ShaderPass.js',
+          'js/synth.js'],
+        dest: 'js/dist/synth.js',
+      },
+    },
     uglify: {
       options: {
         mangle: false,
-        sourceMap: false,
+        sourceMap: true,
         sourceMapName: 'js/dist/synth.min.map'
       },
       my_target: {
         files: {
-          'js/dist/synth.min.js': [
-          'js/synth.js'
-          
-          ],
-       
-          'js/dist/synth.dep.js': [
-		  		'js/libs/jquery.min.js',
-		  		'js/libs/jquery.ui.min.js',
-		  		'js/libs/modernizr.custom.js',
-		  		'js/libs/three.min.js',
-		  		'js/libs/dancer.js',
-		  		'js/libs/keypress-1.0.8.min.js',
-		  		'js/Detector.js',
-		  		'js/shaders/RuttShader.js',
-		  		'js/shaders/HueSaturationShader.js',
-		  		'js/shaders/ConvolutionShader.js',
-		  		'js/shaders/CopyShader.js',   
-		  		'js/postprocessing/EffectComposer.js',
-		  		'js/postprocessing/RenderPass.js',
-		  		'js/postprocessing/MaskPass.js',
-		  		'js/postprocessing/BloomPass.js',
-		  		'js/postprocessing/HueSaturationPass.js',
-		  		'js/postprocessing/ShaderPass.js',
-            ]
+          'js/dist/synth.min.js': ['js/dist/synth.js']
         }
-     } 
+     }
     },
     prettysass: {
     options: {
