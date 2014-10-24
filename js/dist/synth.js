@@ -2239,6 +2239,49 @@ var Detector = {
   }
 
 };
+;/**
+ * Make all faces use unique vertices
+ * so that each face can be separated from others
+ *
+ * @author alteredq / http://alteredqualia.com/
+ */
+
+THREE.ExplodeModifier = function () {
+
+};
+
+THREE.ExplodeModifier.prototype.modify = function ( geometry ) {
+
+	var vertices = [];
+
+	for ( var i = 0, il = geometry.faces.length; i < il; i ++ ) {
+
+		var n = vertices.length;
+
+		var face = geometry.faces[ i ];
+
+		var a = face.a;
+		var b = face.b;
+		var c = face.c;
+
+		var va = geometry.vertices[ a ];
+		var vb = geometry.vertices[ b ];
+		var vc = geometry.vertices[ c ];
+
+		vertices.push( va.clone() );
+		vertices.push( vb.clone() );
+		vertices.push( vc.clone() );
+
+		face.a = n;
+		face.b = n + 1;
+		face.c = n + 2;
+
+	}
+
+	geometry.vertices = vertices;
+	delete geometry.__tmpVertices;
+
+}
 ;RuttEtraShader = {
 
     	uniforms: {
@@ -3031,11 +3074,17 @@ var Synth = function(container, control, cam, json) {
   this.videoisplaying = false;
   this.vplaylist = [];
   this.aplaylist = [];
+  this.audioContext = new webkitAudioContext();
+  this.audioContext.fftSize = 1024;
+  this.audioAnalyzer = this.audioContext.createAnalyser();
+  this.audioSource;
+  this.freqBars = document.getElementsByClassName('audio-input');
   this.audioInput = document.getElementById('audio');
   this.audioInput.current = 0;
   this.audioisplaying = false;
   this.audiostream = [];
-  this.dancer = new Dancer();
+  this.frequencyData = new Uint8Array(this.audioAnalyzer.frequencyBinCount);
+  console.log(this.audioAnalyzer, this.frequencyData);
   this.dropZone = document.getElementById('drop_zone');
   this.readFiles = document.getElementById('read_files');
   this.dropZoneVideo = document.getElementById('video_drop');
@@ -3115,6 +3164,7 @@ var Synth = function(container, control, cam, json) {
     "margin": 160,
     "gutter": 40
   }]);
+  console.log(this.freqBars);
   this.init(json);
 }
 
@@ -3435,7 +3485,7 @@ Synth.prototype = {
       this.initControls();
     }
     if (this.cam === true) {
-      this.initWebcam();
+      this.initStream();
     }
 
     that.setDefaults(json, 0);
@@ -3472,7 +3522,7 @@ Synth.prototype = {
       }
     }
   },
-  initWebcam: function() {
+  initStream: function() {
     var that = this;
     var message = '';
     console.log('init Webcam!');
@@ -3480,7 +3530,7 @@ Synth.prototype = {
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       navigator.getUserMedia({
         video: true,
-        audio: false
+        audio: true
       }, function(stream) {
         //on webcam enabled
         if (navigator.mozGetUserMedia) {
@@ -3488,8 +3538,17 @@ Synth.prototype = {
         } else {
           var vendorURL = window.URL || window.webkitURL;
           that.webcam = true;
+          that.audioin = true;
+
+
           that.videoObject = vendorURL.createObjectURL(stream);
           that.videoInput.src = that.videoObject;
+
+          that.audioInput = that.audioContext.createMediaStreamSource(stream);
+          that.audioInput.connect(that.audioAnalyzer);
+          that.audioInput.connect(that.audioContext.destination);
+          that.audioisplaying = true;
+
           that.createWebcamItem();
         }
 
@@ -4090,39 +4149,34 @@ Synth.prototype = {
 
   playAudio: function(playlistId) {
     var that = this;
-    this.audioisplaying = false;
-    this.audioInput.pause();
-    this.audioInput.remove();
-    this.audioInput = that.container.appendChild(document.createElement("audio"));
+    that.audioisplaying = false;
+    that.audioInput.pause();
+    that.audioInput.remove();
+    that.audioInput = that.container.appendChild(document.createElement("audio"));
     if ($('#close_drop').is('.active')) {
       $('audio').hide();
     } else {
       $('audio').show();
     }
 
-    this.audioInput.id = 'audio';
-    this.audioInput.controls = true;
-    this.audioInput.src = this.aplaylist[playlistId];
-    this.dancer.after(0, function() {
-      // After 0s, let's get this real and map a frequency to displacement of mesh
-      // Note that the instance of dancer is bound to "this"
 
-      that.audiostream[0] = Math.round(this.getFrequency(30) * 5000);
-      that.audiostream[1] = Math.round(this.getFrequency(60) * 5000);
-      that.audiostream[2] = Math.round(this.getFrequency(90) * 5000);
-      that.audiostream[3] = Math.round(this.getFrequency(120) * 5000);
-      that.audiostream[4] = Math.round(this.getFrequency(150) * 5000);
-      that.audiostream[5] = Math.round(this.getFrequency(180) * 5000);
-      that.audiostream[6] = Math.round(this.getFrequency(210) * 5000);
-      that.audiostream[7] = Math.round(this.getFrequency(240) * 5000);
-      that.audiostream[8] = Math.round(this.getFrequency(270) * 5000);
-      that.audiostream[9] = Math.round(this.getFrequency(300) * 5000);
-      that.audiostream[10] = Math.round(this.getFrequency(330) * 5000);
 
-    }).load(that.audioInput);
-    this.audioInput.play();
-    this.dancer.play();
-    this.audioisplaying = true;
+    that.audioInput.addEventListener("canplay", function() {
+      that.audioSource = that.audioContext.createMediaElementSource(that.audioInput);
+
+      // Connect the output of the source to the input of the analyser
+      that.audioSource.connect(that.audioAnalyzer);
+
+      // Connect the output of the analyser to the destination
+      that.audioAnalyzer.connect(that.audioContext.destination);
+    });
+
+    that.audioInput.id = 'audio';
+    that.audioInput.controls = true;
+    that.audioInput.src = that.aplaylist[playlistId];
+
+    that.audioInput.play();
+    that.audioisplaying = true;
     $('#playlist').children('li').css('background-color', 'rgba(10,10,10,0.7)');
     $('#playlist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
@@ -4620,26 +4674,17 @@ Synth.prototype = {
     that.renderer.setClearColor(newhex, 1.0);
 
     if (that.audioisplaying === true) {
-      $('.in1').css('height', that.audiostream[0] + '%');
-      eval(that.pointer[$('.in1').index()] = $('.in1').height());
-      $('.in2').css('height', that.audiostream[1] + '%');
-      eval(that.pointer[$('.in2').index()] = $('.in2').height());
-      $('.in3').css('height', that.audiostream[2] + '%');
-      eval(that.pointer[$('.in3').index()] = $('.in3').height());
-      $('.in4').css('height', that.audiostream[3] + '%');
-      eval(that.pointer[$('.in4').index()] = $('.in4').height());
-      $('.in5').css('height', that.audiostream[4] + '%');
-      eval(that.pointer[$('.in5').index()] = $('.in5').height());
-      $('.in6').css('height', that.audiostream[5] + '%');
-      eval(that.pointer[$('.in6').index()] = $('.in6').height());
-      $('.in7').css('height', that.audiostream[6] + '%');
-      eval(that.pointer[$('.in7').index()] = $('.in7').height());
-      $('.in8').css('height', that.audiostream[7] + '%');
-      eval(that.pointer[$('.in8').index()] = $('.in8').height());
-      $('.in9').css('height', that.audiostream[8] + '%');
-      eval(that.pointer[$('.in9').index()] = $('.in9').height());
-      $('.in10').css('height', that.audiostream[9] + '%');
-      eval(that.pointer[$('.in10').index()] = $('.in10').height());
+
+      that.audioAnalyzer.getByteFrequencyData(that.frequencyData);
+
+      var f;
+      for (var i = 0; i < that.freqBars.length; i++) {
+        f = i * 64 - 1;
+        that.freqBars[i].style.height = that.frequencyData[f] + 'px';
+        that.pointer[$('.in' + i).index()] = $('.in' + i).height();
+        console.log(that.frequencyData);
+      };
+
       $('.control.controlled').each(function() {
 
         var control = $(this).position();
@@ -4793,7 +4838,7 @@ Synth.prototype = {
       if (this.texture) this.texture.needsUpdate = true;
       if (this.videoMaterial) this.videoMaterial.needsUpdate = true;
     }
-    this.camera.lookAt(that.scene.position);
+    this.camera.lookAt(this.scene.position);
     this.paramsChange();
     //renderer.clear();
     this.composer.render();

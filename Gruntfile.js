@@ -83,6 +83,7 @@ module.exports = function(grunt) {
           'js/libs/dancer.js',
           'js/libs/keypress-2.0.3.min.js',
           'js/Detector.js',
+          'js/modifiers/ExplodeModifier.js',
           'js/shaders/RuttShader.js',
           'js/shaders/HueSaturationShader.js',
           'js/shaders/ConvolutionShader.js',
