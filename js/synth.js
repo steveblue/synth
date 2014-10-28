@@ -28,16 +28,26 @@ var Synth = function(container, control, cam, json) {
   this.videoPlayer = document.getElementById('videoplayer');
   this.videoInput = document.getElementById('video');
   this.videoInput.current = 0;
+  this.vendorURL = window.URL || window.webkitURL;
   this.canvasInput = document.getElementById('compare');
   this.videoObject;
   this.videoisplaying = false;
   this.vplaylist = [];
   this.aplaylist = [];
+  this.audioin = false;
+  this.audioContext = new webkitAudioContext();
+  this.audioContext.fftSize = 1024;
+  this.gainNode = this.audioContext.createGain();
+  this.audioAnalyzer = this.audioContext.createAnalyser();
+  this.audioSource;
+  this.freqBars = document.getElementsByClassName('audio-input');
   this.audioInput = document.getElementById('audio');
   this.audioInput.current = 0;
   this.audioisplaying = false;
-  this.audiostream = [];
-  this.dancer = new Dancer();
+  this.videoStream;
+  this.audioStream;
+  this.frequencyData = new Uint8Array(this.audioAnalyzer.frequencyBinCount);
+  //console.log(this.audioAnalyzer, this.frequencyData);
   this.dropZone = document.getElementById('drop_zone');
   this.readFiles = document.getElementById('read_files');
   this.dropZoneVideo = document.getElementById('video_drop');
@@ -117,6 +127,7 @@ var Synth = function(container, control, cam, json) {
     "margin": 160,
     "gutter": 40
   }]);
+  //console.log(this.freqBars);
   this.init(json);
 }
 
@@ -437,7 +448,7 @@ Synth.prototype = {
       this.initControls();
     }
     if (this.cam === true) {
-      this.initWebcam();
+      this.initStream();
     }
 
     that.setDefaults(json, 0);
@@ -464,17 +475,57 @@ Synth.prototype = {
     ].join('');
     document.getElementById('videoplaylist').insertBefore(li, null);
 
+
     var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
     var index = nodeList.indexOf(0);
 
     li.onclick = function() {
       if (that.webcam === false) {
         that.channel = true;
-        $('#close_drop').trigger('click');
+        that.streamVideo(that.videoStream);
       }
     }
   },
-  initWebcam: function() {
+  createAudioItem: function() {
+    var that = this;
+    var li = document.createElement('li');
+    var name = 'mic';
+    var correctName = 'audio input';
+    if (correctName.length > 30) correctName = correctName.substring(0, 30);
+    li.innerHTML = ['<a class="track" href="#" data-href="', '#',
+      '" data-title="', correctName, '">', correctName, '</a>'
+    ].join('');
+    document.getElementById('playlist').insertBefore(li, null);
+
+    var nodeList = Array.prototype.slice.call(document.getElementById('playlist').children);
+    var index = nodeList.indexOf(0);
+
+    li.onclick = function() {
+      that.audioisplaying = false;
+      that.streamAudio(that.audioStream);
+    }
+  },
+  streamVideo: function(stream) {
+    var that = this;
+    that.webcam = true;
+    that.videoObject = that.vendorURL.createObjectURL(stream);
+    that.videoInput.src = that.videoObject;
+  },
+  streamAudio: function(stream) {
+    var that = this;
+    // Create a gain node.
+
+    that.audioInput.pause();
+    that.audioInput.src = "";
+    that.audioSource = that.audioContext.createMediaStreamSource(stream);
+    that.audioSource.connect(that.gainNode);
+    that.audioSource.connect(that.audioAnalyzer);
+    that.gainNode.connect(that.audioContext.destination);
+    that.gainNode.gain.value = 0.0;
+    that.audioin = true;
+    that.audioisplaying = true;
+  },
+  initStream: function() {
     var that = this;
     var message = '';
     console.log('init Webcam!');
@@ -488,16 +539,30 @@ Synth.prototype = {
         if (navigator.mozGetUserMedia) {
           //that.videoInput.mozSrcObject = stream;
         } else {
-          var vendorURL = window.URL || window.webkitURL;
-          that.webcam = true;
-          that.videoObject = vendorURL.createObjectURL(stream);
-          that.videoInput.src = that.videoObject;
+          that.videoStream = stream;
           that.createWebcamItem();
         }
 
       }, function(error) {
         message = 'Unable to capture WebCam. Please reload the page or try with Google Chrome.';
       });
+      navigator.getUserMedia({
+        video: false,
+        audio: true
+      }, function(stream) {
+        //on webcam enabled
+        if (navigator.mozGetUserMedia) {
+          //that.videoInput.mozSrcObject = stream;
+        } else {
+          that.audioStream = stream;
+          that.createAudioItem();
+        }
+
+      }, function(error) {
+        message = 'Unable to capture audio input. Please reload the page or try with Google Chrome.';
+      });
+
+
     } else {
       if (this.res.device === 'desktop') {
         if (this.res.browser === 'firefox') {
@@ -687,7 +752,7 @@ Synth.prototype = {
           //round = round.toString();
           json = '{ "' + key + '" : ' + value + ' }';
           // console.log('that.'+key+'='+value+'');
-          eval('that.' + key + '=' + value + '');
+          that.controlMap(key,value);
           // console.log('that.'+key+'='+value+'');
 
         }
@@ -699,7 +764,7 @@ Synth.prototype = {
         // round = round.toString();
         json = '{ "' + key + '" : ' + value + ' }';
         // console.log('that.'+key+'='+value+'');
-        eval('that.' + key + '=' + value + '');
+        that.controlMap(key,value);
 
       }
     });
@@ -743,7 +808,7 @@ Synth.prototype = {
           //round = round.toString();
           json = '{ "' + key + '" : ' + value + ' }';
           // console.log('that.'+key+'='+value+'');
-          eval('that.' + key + '=' + value + '');
+          that.controlMap(key,value);
 
         }
       },
@@ -755,7 +820,7 @@ Synth.prototype = {
           //round = round.toString();
           json = '{ "' + key + '" : ' + value + ' }';
           // console.log('that.'+key+'='+value+'');
-          eval('that.' + key + '=' + value + '');
+          that.controlMap(key,value);
 
         }
       }
@@ -811,6 +876,7 @@ Synth.prototype = {
         $(this).parent().prepend('<div class="close red"></div>');
         $(this).parent().children('.close').on('click', function() {
           $(this).parent().children('.control').removeClass('controlled');
+          $(this).parent().children('.audio-control').css('height', '0px');
           $('.bars li:eq(' + $(this).parent().children('.control').data("index") + ')').removeClass('controller');
           $(this).remove();
         });
@@ -913,18 +979,16 @@ Synth.prototype = {
       $(this).toggleClass('active');
       $('header').fadeOut(8000);
       if ($(this).is('.active')) {
-        $('#container').hide();
+        $('#container').css('opacity','0');
+        $('#container').css('z-index','0');
         $('#preset_selector').hide();
         $(this).css('bottom', '0px');
         $(this).children('p').text('Open Controls');
       } else if ($(this).not('.active')) {
-        $('#container').show();
+        $('#container').css('opacity','1');
+        $('#container').css('z-index','1000');
         $('#preset_selector').show();
-        if (that.res.device === 'ipad') {
-          $(this).css('bottom', '43%');
-        } else {
-          $(this).css('bottom', '36%');
-        }
+        $(this).css('bottom', '330px');
         $(this).children('p').text('Close Controls');
       }
     });
@@ -1092,39 +1156,40 @@ Synth.prototype = {
 
   playAudio: function(playlistId) {
     var that = this;
-    this.audioisplaying = false;
-    this.audioInput.pause();
-    this.audioInput.remove();
-    this.audioInput = that.container.appendChild(document.createElement("audio"));
+    that.audioisplaying = false;
+    that.audioInput.pause();
+
+    if (that.audioin === true) {
+      that.audioSource.disconnect(that.gainNode);
+      that.audioSource.disconnect(that.audioAnalyzer);
+      that.gainNode.disconnect(that.audioContext.destination);
+      that.gainNode.gain.value = 0.7;
+    }
+
     if ($('#close_drop').is('.active')) {
       $('audio').hide();
     } else {
       $('audio').show();
     }
 
-    this.audioInput.id = 'audio';
-    this.audioInput.controls = true;
-    this.audioInput.src = this.aplaylist[playlistId];
-    this.dancer.after(0, function() {
-      // After 0s, let's get this real and map a frequency to displacement of mesh
-      // Note that the instance of dancer is bound to "this"
+    that.audioInput.addEventListener("canplay", function() {
+      that.audioSource = that.audioContext.createMediaElementSource(that.audioInput);
+      that.audioSource.connect(that.gainNode);
+      that.audioSource.connect(that.audioAnalyzer);
+      that.gainNode.connect(that.audioContext.destination);
+      setTimeout(function() {
+        that.gainNode.gain.value = 0.7;
+      }, 100);
+    });
 
-      that.audiostream[0] = Math.round(this.getFrequency(30) * 5000);
-      that.audiostream[1] = Math.round(this.getFrequency(60) * 5000);
-      that.audiostream[2] = Math.round(this.getFrequency(90) * 5000);
-      that.audiostream[3] = Math.round(this.getFrequency(120) * 5000);
-      that.audiostream[4] = Math.round(this.getFrequency(150) * 5000);
-      that.audiostream[5] = Math.round(this.getFrequency(180) * 5000);
-      that.audiostream[6] = Math.round(this.getFrequency(210) * 5000);
-      that.audiostream[7] = Math.round(this.getFrequency(240) * 5000);
-      that.audiostream[8] = Math.round(this.getFrequency(270) * 5000);
-      that.audiostream[9] = Math.round(this.getFrequency(300) * 5000);
-      that.audiostream[10] = Math.round(this.getFrequency(330) * 5000);
+    that.audioInput.id = 'audio';
+    that.audioInput.controls = true;
+    that.audioInput.src = that.aplaylist[playlistId];
 
-    }).load(that.audioInput);
-    this.audioInput.play();
-    this.dancer.play();
-    this.audioisplaying = true;
+    that.audioInput.play();
+    that.audioisplaying = true;
+
+
     $('#playlist').children('li').css('background-color', 'rgba(10,10,10,0.7)');
     $('#playlist').children('li').eq(playlistId).css('background-color', 'rgba(10,10,10,0.9)');
   },
@@ -1174,32 +1239,10 @@ Synth.prototype = {
   },
 
   defaultVideo: function(url) {
-    //vplaylist.push( url );
     var that = this;
     $('video').attr('src', url);
-    //this.vplaylist.push(url);
     this.videoInput.load();
     this.videoInput.loop = true;
-
-    // var li = document.createElement('li');
-    // var name = 'default-video.mp4';
-    // var correctName = 'default-video.mp4';
-    // if (correctName.length > 30) correctName = correctName.substring(0, 30);
-    // li.innerHTML = ['<a class="track" href="#" data-href="', url,
-    //   '" data-title="', correctName, '">', correctName, '</a>'
-    // ].join('');
-    // document.getElementById('videoplaylist').insertBefore(li, null);
-
-    // var nodeList = Array.prototype.slice.call(document.getElementById('videoplaylist').children);
-    // var index = nodeList.indexOf(0);
-
-    // li.onclick = function() {
-    //   that.videoInput.current = 0;
-    //   that.playVideo(0);
-
-    //   that.videoInput.addEventListener('ended', that.continueVideoPlay, false);
-    //   $('#close_drop').trigger('click');
-    // }
   },
 
   toArray: function(list) {
@@ -1587,10 +1630,15 @@ Synth.prototype = {
     });
 
   },
-
+  controlMap: function(key,value){
+    var that = this;
+    if(key!==undefined && value!==NaN){
+      that[key]=value;
+    }
+  },
   paramsChange: function() {
     var that = this;
-
+    var f;
     that.mesh.scale.x = that.mesh.scale.y = that.mesh.scale.z = parseFloat(that.scale);
 
     that.mousex = that.mouseX;
@@ -1622,34 +1670,23 @@ Synth.prototype = {
     that.renderer.setClearColor(newhex, 1.0);
 
     if (that.audioisplaying === true) {
-      $('.in1').css('height', that.audiostream[0] + '%');
-      eval(that.pointer[$('.in1').index()] = $('.in1').height());
-      $('.in2').css('height', that.audiostream[1] + '%');
-      eval(that.pointer[$('.in2').index()] = $('.in2').height());
-      $('.in3').css('height', that.audiostream[2] + '%');
-      eval(that.pointer[$('.in3').index()] = $('.in3').height());
-      $('.in4').css('height', that.audiostream[3] + '%');
-      eval(that.pointer[$('.in4').index()] = $('.in4').height());
-      $('.in5').css('height', that.audiostream[4] + '%');
-      eval(that.pointer[$('.in5').index()] = $('.in5').height());
-      $('.in6').css('height', that.audiostream[5] + '%');
-      eval(that.pointer[$('.in6').index()] = $('.in6').height());
-      $('.in7').css('height', that.audiostream[6] + '%');
-      eval(that.pointer[$('.in7').index()] = $('.in7').height());
-      $('.in8').css('height', that.audiostream[7] + '%');
-      eval(that.pointer[$('.in8').index()] = $('.in8').height());
-      $('.in9').css('height', that.audiostream[8] + '%');
-      eval(that.pointer[$('.in9').index()] = $('.in9').height());
-      $('.in10').css('height', that.audiostream[9] + '%');
-      eval(that.pointer[$('.in10').index()] = $('.in10').height());
+
+      that.audioAnalyzer.getByteFrequencyData(that.frequencyData);
+
+      for (var i = 0; i <= that.freqBars.length - 1; i++) {
+        f = i * 64;
+        that.freqBars[i].style.height = that.frequencyData[f] + 'px';
+        that.pointer[$('.in' + i).index()] = $('.in' + i).height();
+      };
+
       $('.control.controlled').each(function() {
 
         var control = $(this).position();
+        var inputBar = $(this).siblings('.audio-control');
         control.top = $('.bars li:eq(' + $(this).data('index') + ')').height();
-        var value = that.convertToRange(control.top, [0, $(this).parent('.wrapper').parent('.fader').height() - $(this).height()], [$(this).data('start'), $(this).data('end')]);
-        var key = $(this).data('key');
-        eval('that.' + key + '=' + value + '');
-
+        inputBar.css('height', $('.bars li:eq(' + $(this).data('index') + ')').height());
+        var value = that.convertToRange(control.top, [0, $(this).parent('.wrapper').parent('.fader').height() - $(this).height()], [$(this).data('end'), $(this).data('start')]);
+        that.controlMap($(this).data('key'),value);
       });
     }
 
@@ -1795,7 +1832,7 @@ Synth.prototype = {
       if (this.texture) this.texture.needsUpdate = true;
       if (this.videoMaterial) this.videoMaterial.needsUpdate = true;
     }
-    this.camera.lookAt(that.scene.position);
+    this.camera.lookAt(this.scene.position);
     this.paramsChange();
     //renderer.clear();
     this.composer.render();
