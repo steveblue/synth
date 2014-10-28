@@ -19,9 +19,20 @@ With version .185 Synth now utilizes a prototypal archtiecture that allows anyon
 To use Synth, you must create a new Object that inherits the properties of the Synth.prototype.
 
 ```
-		var s = new Synth(document.getElementById( 'canvas' ),true,false,"plane",true,16.0,36.9,1.1,0.25,0,0.6,"#000000");
-			s.defaultVideo('/path/to/default-video.mp4');
-		   /* Note: synth now initialized and video set */
+var s = new Synth(document.getElementById( 'canvas' ),true,true,[{
+        "camera": "0.0,-1130.0,1680.0",
+        "shape": "plane",
+        "detail": 480,
+        "scale" : 10.0,
+        "wireframe": false,
+        "multiplier": 15.0,
+        "displace": 3.3,
+        "origin": "0,0,-2000.0",
+        "opacity": 0.3,
+        "hue": 0,
+        "saturation": 0.7,
+        "bgColor": "#000"
+    }]);
 ```
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
@@ -29,7 +40,7 @@ Where the two attributes initialize the controls and optional webcam support, wh
 Various properties of Synth can be set dynamically including container, control init, webcam init, shape, wireframe, scale, multiplier, displacement, opacity, hue, sat, and background color. In the example above, the default video is set with the defaultVideo method. Another example woud be to change the background color of Synth (which is currently not supported in the gui).
 
 ```
-s.hex = '#FF0000';
+s.bgColor = '#FF0000';
 
 ```
 
