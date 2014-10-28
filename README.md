@@ -10,11 +10,13 @@ Webcam + Music + HTML5 + WebGL = Synth
 
 Synth is a HTML5 video synthesizer that distorts 3d geometry with video and amplifies that distortion using audio.
 
+Synth distorts 3D geometries with a live video feed and then amplifies that distortion with audio. The current release is an alpha build of the project and over the next year Synth will gain more features as I continue to develop it. Anyone with Google Chrome and a webcam on a desktop computer can use this synthesizer. Synth is free and licensed under GNU.
 
-Synth underwent a complete refactor with release v.185. Before this release, Synth was a proof of concept and used a modified dat.gui to control the interface. A whole new GUI was written from the ground up for this release. The core of Synth was completely rewritten and given a Prototypal architecture that allows the video synthesizer to be extended with greater ease. This allows anyone to create custom controllers for the 3D effects. I have included a default interface that in subsequent releases will be refined.
+For a guide and complete changelog visit http://kineticvideo.co/info/
 
-With version .185 Synth now utilizes a prototypal archtiecture that allows anyone familiar with Javscript to extend Synth much easier than before.
+Recently, audio input was added and the audio analysis was refactored to use the Web Audio API. Synth also leverages WebGL, WebRTC, and GLSL. 
 
+Synth underwent a complete refactor with release v.185. A whole new GUI was written from the ground up for this release. The core of Synth was completely rewritten and given a Prototypal architecture that allows the video synthesizer to be extended with greater ease. This allows anyone to create custom controllers for the 3D effects. I have included a default interface that in subsequent releases will be refined.
 
 To use Synth, you must create a new Object that inherits the properties of the Synth.prototype.
 
@@ -37,7 +39,7 @@ var s = new Synth(document.getElementById( 'canvas' ),true,true,[{
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
 
-Various properties of Synth can be set dynamically including container, control init, webcam init, shape, wireframe, scale, multiplier, displacement, opacity, hue, sat, and background color. In the example above, the default video is set with the defaultVideo method. Another example woud be to change the background color of Synth (which is currently not supported in the gui).
+Various properties of Synth can be set dynamically after the video synthesizer initializes. 
 
 ```
 s.bgColor = '#FF0000';
@@ -45,8 +47,19 @@ s.bgColor = '#FF0000';
 ```
 
 
-To instantiate Synth, the source must currently follow strict conventions. Plans are in place to abstract the container and display properties of Synth. Would you like to see a feature or report a bug in Synth? Tweet to @iplayitofflegit.
+Would you like to see a feature or report a bug in Synth? Tweet to @iplayitofflegit.
 
+Project Roadmap:
 
-Synth is a modern day Rutt Etra. After getting to use a Wobbulator at the Experimental Television Center, I became fascinated with the ethos behind Nam June Paik's work. I wanted to make something that was accessible for everyone, like how Paik's performances were accessible to anyone watching PBS. I don't see any sense in trying to reproduce the original aesthetic of the analog synthesizer in an Internet Browser. Synth is referential of the Analog synthesizers, but technically it it much different.  Synth distorts 3D geometries with a live video feed and then amplifies that distortion with audio. The current release is an alpha build of the project and over the next year Synth will gain more features as I continue to develop it. Anyone with Google Chrome and a webcam on a desktop computer can use this synthesizer. Synth is free and licensed under GNU.
+- Add ability to limit the effect of audio analysis to a range.
+- Buffer audio using Web Audio API and create a Timer.
+- Add BPM detection.
+- Add step sequencer for video / presets.
+- Add feature to link video source with preset.
+- Refine UI/UX of playlist, generate thumbnail previews.
+- Create tablet controller using Web Sockets for Desktop web app.
+- Refactor app to utilize Famo.us Mixed Mode Rendering / Physic Engine.
+- Remove jQuery / jQuery UI dependencies.
+
+Synth is a modern day Rutt Etra. After getting to use a Wobbulator at the Experimental Television Center, I became fascinated with the ethos behind Nam June Paik's work. I wanted to make something that was accessible for everyone, like how Paik's performances were accessible to anyone watching PBS. I don't see any sense in trying to reproduce the original aesthetic of the analog synthesizer in an Internet Browser. Synth is referential of the Analog synthesizers, but technically it is much different.
 
