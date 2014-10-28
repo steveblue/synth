@@ -53,12 +53,11 @@ Project Roadmap:
 
 - Add ability to limit the effect of audio analysis to a range.
 - Buffer audio using Web Audio API and create a Timer.
-- Add BPM detection.
 - Add step sequencer for video / presets.
 - Add feature to link video source with preset.
 - Refine UI/UX of playlist, generate thumbnail previews.
 - Create tablet controller using Web Sockets for Desktop web app.
-- Refactor app to utilize Famo.us Mixed Mode Rendering / Physic Engine.
+- Refactor app to utilize Famo.us Mixed Mode Rendering / Physics Engine.
 - Remove jQuery / jQuery UI dependencies.
 
 Synth is a modern day Rutt Etra. After getting to use a Wobbulator at the Experimental Television Center, I became fascinated with the ethos behind Nam June Paik's work. I wanted to make something that was accessible for everyone, like how Paik's performances were accessible to anyone watching PBS. I don't see any sense in trying to reproduce the original aesthetic of the analog synthesizer in an Internet Browser. Synth is referential of the Analog synthesizers, but technically it is much different.
