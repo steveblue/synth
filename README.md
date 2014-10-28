@@ -1,4 +1,4 @@
-Synth v.188
+Synth v.191
 
 
 For news and changelog visit http://kineticvideo.co/info/
