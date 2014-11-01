@@ -1,1066 +1,870 @@
 /* line 1, ../scss/style.scss */
-
-html,
-body {
-	display: block;
-	background-color: #000;
-	color: #fff;
-	margin: 0px;
-	padding: 0px;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
+html, body {
+  display: block;
+  background-color: #000;
+  color: #fff;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 /* line 12, ../scss/style.scss */
-
-a:link,
-a:visited {
-	display: block;
-	color: #FFF;
-	opacity: 0.8;
-	font-family: 'Lato', sans-serif;
-	font-size: 14px;
-	font-weight: 300;
-	letter-spacing: 0.2em;
-	text-transform: none;
-	text-decoration: none;
-	text-align: left;
-	padding: 4px 0px 4px 4px;
-	-webkit-transition: all 0.5s ease-in-out;
+a:link, a:visited {
+  display: block;
+  color: #FFF;
+  opacity: 0.8;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: none;
+  text-decoration: none;
+  text-align: left;
+  padding: 4px 0px 4px 4px;
+  -webkit-transition: all 0.5s ease-in-out;
 }
 
 /* line 27, ../scss/style.scss */
-
 a:hover {
-	color: #FFF;
-	opacity: 1.0em;
-	text-transform: none;
+  color: #FFF;
+  opacity: 1.0em;
+  text-transform: none;
 }
 
 /* line 33, ../scss/style.scss */
-
 a:active {
-	color: #FEE;
-	opacity: 1.0em;
-	text-transform: none;
+  color: #FEE;
+  opacity: 1.0em;
+  text-transform: none;
 }
 
 /* line 39, ../scss/style.scss */
-
-.dg,
-.dg li.title,
-.dg.main .close-button {
-	color: #ABABAB;
-	font-family: 'Lato', sans-serif;
-	font-size: 12px;
-	font-weight: 100;
-	letter-spacing: 0.1em;
-	text-transform: none;
-	text-decoration: none;
-	opacity: 50%;
+.dg, .dg li.title, .dg.main .close-button {
+  color: #ABABAB;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 100;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  text-decoration: none;
+  opacity: 50%;
 }
 
 /* line 50, ../scss/style.scss */
-
 header {
-	color: #FFF;
-	position: absolute;
-	top: 2%;
-	left: 50%;
-	width: 300px;
-	margin-left: -150px;
-	padding: 5px;
-	z-index: 1000;
-	opacity: 0.95;
+  color: #FFF;
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  width: 300px;
+  margin-left: -150px;
+  padding: 5px;
+  z-index: 1000;
+  opacity: 0.95;
 }
 
 /* line 63, ../scss/style.scss */
-
 .title {
-	font-family: 'Lato', sans-serif;
-	font-size: 8px;
-	letter-spacing: 0.12em;
-	font-weight: 100;
-	opacity: 0.3;
+  font-family: 'Lato', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  font-weight: 100;
+  opacity: 0.3;
 }
 
 /* line 71, ../scss/style.scss */
-
 h1 {
-	font-family: 'Exo', sans-serif;
-	font-size: 72px;
-	color: #FFF;
-	font-weight: 100;
-	text-rendering: optimizeLegibility;
+  font-family: 'Exo', sans-serif;
+  font-size: 72px;
+  color: #FFF;
+  font-weight: 100;
+  text-rendering: optimizeLegibility;
 }
 
 /* line 79, ../scss/style.scss */
-
 h2 {
-	font-family: 'Exo', sans-serif;
-	color: #FFF;
-	font-weight: 300;
+  font-family: 'Exo', sans-serif;
+  color: #FFF;
+  font-weight: 300;
 }
 
 /* line 85, ../scss/style.scss */
-
 h5 {
-	font-family: 'Exo', sans-serif;
-	color: #FFF;
-	font-weight: 300;
-	font-size: 12px;
-	letter-spacing: 0.2em;
+  font-family: 'Exo', sans-serif;
+  color: #FFF;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.2em;
 }
 
 /* line 93, ../scss/style.scss */
-
-p,
-li {
-	color: #FFF;
-	font-family: 'Lato', sans-serif;
-	font-size: 12px;
-	font-weight: 300;
-	letter-spacing: 0.2em;
-	text-transform: none;
-	text-decoration: none;
-	padding-bottom: 18px;
-	letter-spacing: 2px;
+p, li {
+  color: #FFF;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: none;
+  text-decoration: none;
+  padding-bottom: 18px;
+  letter-spacing: 2px;
 }
 
 /* line 105, ../scss/style.scss */
-
 select {
-	background: #303030;
-	width: auto;
-	padding: 5px;
-	font-family: 'Lato', sans-serif;
-	font-size: 8px;
-	color: #ABABAB;
-	letter-spacing: 0.2em;
-	text-transform: none;
-	text-decoration: none;
-	border: 0;
-	border-radius: 0;
-	-webkit-appearance: none;
-	cursor: pointer;
-	cursor: hand;
+  background: #303030;
+  width: auto;
+  padding: 5px;
+  font-family: 'Lato', sans-serif;
+  font-size: 8px;
+  color: #ABABAB;
+  letter-spacing: 0.2em;
+  text-transform: none;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  cursor: pointer;
+  cursor: hand;
 }
 
 /* line 122, ../scss/style.scss */
-
-article p,
-article li {
-	font-size: 16px;
+article p, article li {
+  font-size: 16px;
 }
 
 /* line 126, ../scss/style.scss */
-
 header {
-	z-index: 1500;
+  z-index: 1500;
 }
-
 /* line 128, ../scss/style.scss */
-
-header p,
-header a:link,
-header a:visited {
-	text-align: center;
-	padding-top: 20px;
-	font-size: 14px;
+header p, header a:link, header a:visited {
+  text-align: center;
+  padding-top: 20px;
+  font-size: 14px;
 }
-
 /* line 132, ../scss/style.scss */
-
-header p img,
-header a:link img,
-header a:visited img {
-	width: 100%;
-	height: auto;
+header p img, header a:link img, header a:visited img {
+  width: 100%;
+  height: auto;
 }
-
 /* line 137, ../scss/style.scss */
-
-header h1,
-header h2 {
-	text-align: center;
+header h1, header h2 {
+  text-align: center;
 }
 
 /* line 142, ../scss/style.scss */
-
 article {
-	display: block;
-	width: 60%;
-	height: auto;
-	clear: both;
-	position: relative;
-	margin: 0 auto;
-	padding-bottom: 60px;
+  display: block;
+  width: 60%;
+  height: auto;
+  clear: both;
+  position: relative;
+  margin: 0 auto;
+  padding-bottom: 60px;
 }
 
 /* line 151, ../scss/style.scss */
-
 #canvas {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
 }
 
 /* line 159, ../scss/style.scss */
-
 #drop_zone {
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: block;
-	width: 297px;
-	height: 297px;
-	border-right: 1px solid rgba(200, 200, 200, 0.1);
-	z-index: 1000;
-	background: url("http://kineticvideo.co/img/dropzone.png");
-	background-size: cover;
-	background-repeat: repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 297px;
+  height: 297px;
+  border-right: 1px solid rgba(200, 200, 200, 0.1);
+  z-index: 1000;
+  background: url("http://kineticvideo.co/img/dropzone.png");
+  background-size: cover;
+  background-repeat: repeat;
 }
-
 /* line 171, ../scss/style.scss */
-
 #drop_zone p {
-	display: block;
-	position: relative;
-	left: 50%;
-	margin-left: -300px;
-	margin-top: 0px;
+  display: block;
+  position: relative;
+  left: 50%;
+  margin-left: -300px;
+  margin-top: 0px;
 }
-
 /* line 178, ../scss/style.scss */
-
 #drop_zone li {
-	padding-bottom: 2px;
-	padding-top: 2px;
+  padding-bottom: 2px;
+  padding-top: 2px;
 }
-
 /* line 182, ../scss/style.scss */
-
 #drop_zone li:first-child {
-	padding-top: 6px;
+  padding-top: 6px;
 }
-
 /* line 185, ../scss/style.scss */
-
 #drop_zone fader {
-	position: relative;
-	top: 320px;
-	width: 100%;
-	height: 40px;
+  position: relative;
+  top: 317px;
+  width: 100%;
+  height: 40px;
 }
 
 /* line 193, ../scss/style.scss */
-
 #video_drop {
-	position: absolute;
-	top: 0px;
-	left: 298px;
-	display: block;
-	width: 297px;
-	height: 297px;
-	z-index: 1000;
-	background: url("http://kineticvideo.co/img/dropvid.png");
-	background-size: cover;
-	background-repeat: repeat;
+  position: absolute;
+  top: 0px;
+  left: 298px;
+  display: block;
+  width: 297px;
+  height: 297px;
+  z-index: 1000;
+  background: url("http://kineticvideo.co/img/dropvid.png");
+  background-size: cover;
+  background-repeat: repeat;
 }
-
 /* line 204, ../scss/style.scss */
-
 #video_drop p {
-	display: block;
-	position: relative;
-	left: 50%;
-	margin-left: -300px;
-	margin-top: 0px;
+  display: block;
+  position: relative;
+  left: 50%;
+  margin-left: -300px;
+  margin-top: 0px;
 }
-
 /* line 211, ../scss/style.scss */
-
 #video_drop li {
-	padding-bottom: 2px;
-	padding-top: 2px;
+  padding-bottom: 2px;
+  padding-top: 2px;
 }
 
 /* line 221, ../scss/style.scss */
-
 #topfill {
-	position: absolute;
-	top: 0;
-	left: 297px;
-	width: 100%;
-	display: block;
-	height: 20px;
-	background: #010101;
-	z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 297px;
+  width: 100%;
+  display: block;
+  height: 20px;
+  background: #010101;
+  z-index: 1000;
 }
 
 /* line 232, ../scss/style.scss */
-
 #read_files {
-	position: absolute;
-	bottom: 0px;
-	left: 50%;
-	margin-left: -59px;
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.5;
-	z-index: 1000;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  margin-left: -59px;
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.5;
+  z-index: 1000;
 }
 
 /* line 243, ../scss/style.scss */
-
 #read_video {
-	position: absolute;
-	bottom: 0px;
-	left: 50%;
-	margin-left: -60px;
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.5;
-	z-index: 1000;
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  margin-left: -60px;
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.5;
+  z-index: 1000;
 }
 
 /* line 254, ../scss/style.scss */
-
 #close_drop {
-	position: absolute;
-	top: 297px;
-	left: 0px;
-	display: block;
-	width: 595px;
-	height: 20px;
-	background: rgba(0, 0, 0, 0.3);
-	text-align: center;
-	opacity: 0.5;
-	z-index: 1000;
+  position: absolute;
+  top: 297px;
+  left: 0px;
+  display: block;
+  width: 595px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  opacity: 0.5;
+  z-index: 1000;
 }
 
 /* line 267, ../scss/style.scss */
-
-#read_video,
-#read_files {
-	z-index: 1000;
-	opacity: 0.5;
+#read_video, #read_files {
+  z-index: 1000;
+  opacity: 0.5;
 }
-
 /* line 270, ../scss/style.scss */
-
-#read_video:hover,
-#read_files:hover {
-	opacity: 0.75;
+#read_video:hover, #read_files:hover {
+  opacity: 0.75;
 }
 
 /* line 275, ../scss/style.scss */
-
 #gui_drop {
-	position: absolute;
-	bottom: 330px;
-	left: 50%;
-	display: block;
-	width: 100%;
-	height: 20px;
-	background: rgba(0, 0, 0, 0.3);
-	text-align: center;
-	z-index: 1000;
+  position: absolute;
+  bottom: 330px;
+  left: 50%;
+  display: block;
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
 }
 
 /* line 287, ../scss/style.scss */
-
-#close_drop:hover,
-#gui_drop:hover {
-	cursor: pointer;
-	cursor: hand;
+#close_drop:hover, #gui_drop:hover {
+  cursor: pointer;
+  cursor: hand;
 }
 
 /* line 292, ../scss/style.scss */
-
-#close_drop,
-#gui_drop {
-	z-index: 1000;
+#close_drop, #gui_drop {
+  z-index: 1000;
 }
-
 /* line 294, ../scss/style.scss */
-
-#close_drop p,
-#gui_drop p {
-	color: #ABABAB;
-	opacity: 0.5;
-	position: relative;
-	top: -7px;
-	font-size: 10px;
+#close_drop p, #gui_drop p {
+  color: #ABABAB;
+  opacity: 0.5;
+  position: relative;
+  top: -7px;
+  font-size: 10px;
 }
-
 /* line 301, ../scss/style.scss */
-
-#close_drop p:hover,
-#gui_drop p:hover {
-	color: #ABABAB;
-	opacity: 1.0;
-	text-transform: none;
+#close_drop p:hover, #gui_drop p:hover {
+  color: #ABABAB;
+  opacity: 1.0;
+  text-transform: none;
 }
 
 /* line 307, ../scss/style.scss */
-
 audio {
-	position: absolute;
-	top: 318px;
-	left: 0;
-	opacity: 0.3;
-	display: none;
+  position: absolute;
+  top: 318px;
+  left: 0;
+  opacity: 0.3;
+  display: none;
 }
-
 /* line 313, ../scss/style.scss */
-
 audio:hover {
-	opacity: 0.7;
+  opacity: 0.7;
 }
 
 /* line 318, ../scss/style.scss */
-
-#playlist,
-#videoplaylist {
-	list-style-type: none;
-	display: block;
-	width: 100%;
-	height: 100%;
-	overflow-y: scroll;
-	margin: 0;
-	padding: 0;
-	position: absolute;
-	z-index: 1000;
+#playlist, #videoplaylist {
+  list-style-type: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 1000;
 }
-
 /* line 328, ../scss/style.scss */
-
-#playlist li,
-#videoplaylist li {
-	list-style-type: none;
-	display: block;
-	width: 100%;
-	height: 20px;
+#playlist li, #videoplaylist li {
+  list-style-type: none;
+  display: block;
+  width: 100%;
+  height: 20px;
 }
-
 /* line 333, ../scss/style.scss */
-
-#playlist li a:link,
-#playlist li a:visited,
-#videoplaylist li a:link,
-#videoplaylist li a:visited {
-	color: #BCBCBC;
-	font-size: 10px;
-	padding-top: 4px;
-	padding-bottom: 8px;
-	padding-left: 6px;
+#playlist li a:link, #playlist li a:visited, #videoplaylist li a:link, #videoplaylist li a:visited {
+  color: #BCBCBC;
+  font-size: 10px;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  padding-left: 6px;
 }
-
 /* line 340, ../scss/style.scss */
-
-#playlist li h5,
-#videoplaylist li h5 {
-	opacity: 0.5;
+#playlist li h5, #videoplaylist li h5 {
+  opacity: 0.5;
 }
-
 /* line 343, ../scss/style.scss */
-
-#playlist li:hover,
-#videoplaylist li:hover {
-	background: rgba(122, 122, 122, 0.3);
+#playlist li:hover, #videoplaylist li:hover {
+  background: rgba(122, 122, 122, 0.3);
 }
-
 /* line 344, ../scss/style.scss */
-
-#playlist li:hover a:link,
-#playlist li:hover a:visited,
-#videoplaylist li:hover a:link,
-#videoplaylist li:hover a:visited {
-	color: #FFFFFF;
+#playlist li:hover a:link, #playlist li:hover a:visited, #videoplaylist li:hover a:link, #videoplaylist li:hover a:visited {
+  color: #FFFFFF;
 }
 
 /* line 352, ../scss/style.scss */
-
 #gui_container {
-	position: absolute;
-	display: block;
-	top: 0;
-	left: 0px;
-	background: #010101;
-	display: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0px;
+  background: #010101;
+  display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 /* line 364, ../scss/style.scss */
-
 #container {
-	display: block;
-	width: 100%;
-	height: 300px;
-	position: absolute;
-	left: 50%;
-	bottom: 0;
-	background: rgba(0, 0, 0, 0.6);
-	display: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	z-index: 1000;
+  display: block;
+  width: 100%;
+  height: 300px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  z-index: 1000;
 }
 
 /* line 379, ../scss/style.scss */
-
 .cancel {
-	display: block;
-	width: 4%;
-	height: 20px;
-	background: #F00;
-	opacity: 0.5;
-	position: relative;
-	float: right;
-	top: 0px;
-	z-index: 9999;
+  display: block;
+  width: 4%;
+  height: 20px;
+  background: #F00;
+  opacity: 0.5;
+  position: relative;
+  float: right;
+  top: 0px;
+  z-index: 9999;
 }
 
 /* line 391, ../scss/style.scss */
-
 .play {
-	width: 100px;
-	height: 100px;
-	float: left;
-	background: #ABABAB;
+  width: 100px;
+  height: 100px;
+  float: left;
+  background: #ABABAB;
 }
 
 /* line 398, ../scss/style.scss */
-
 #preset_selector {
-	position: absolute;
-	bottom: 300px;
-	left: 50%;
-	display: block;
-	width: 100%;
-	height: 30px;
-	background: rgba(0, 0, 0, 0.6);
-	z-index: 1000;
+  position: absolute;
+  bottom: 300px;
+  left: 50%;
+  display: block;
+  width: 100%;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
 }
-
 /* line 407, ../scss/style.scss */
-
 #preset_selector ul {
-	list-style-type: none;
-	display: block;
-	width: 100%;
-	height: 100%;
+  list-style-type: none;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
-
 /* line 412, ../scss/style.scss */
-
 #preset_selector ul li {
-	width: 8.5%;
-	height: 100%;
-	float: left;
-	position: relative;
-	padding: 0;
-	margin: 0;
-	opacity: 0.3;
-	border-right: 1px solid rgba(200, 200, 200, 0.1);
-	text-align: center;
+  width: 8.5%;
+  height: 100%;
+  float: left;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  opacity: 0.3;
+  border-right: 1px solid rgba(200, 200, 200, 0.1);
+  text-align: center;
 }
-
 /* line 422, ../scss/style.scss */
-
 #preset_selector ul li span {
-	display: block;
-	width: 100%;
-	height: 100%;
-	font-size: 10px;
-	margin-top: -8px;
-	color: #ABABAB;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 10px;
+  margin-top: -8px;
+  color: #ABABAB;
 }
-
 /* line 430, ../scss/style.scss */
-
 #preset_selector ul li:hover {
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.7;
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.7;
 }
-
 /* line 435, ../scss/style.scss */
-
 #preset_selector ul li.selected {
-	opacity: 0.9;
+  opacity: 0.9;
 }
 
 /* line 442, ../scss/style.scss */
-
 equalizer {
-	display: block;
-	position: relative;
-	width: 360px;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	border: 1px solid rgba(200, 200, 200, 0.1);
-	float: left;
+  display: block;
+  position: relative;
+  width: 360px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(200, 200, 200, 0.1);
+  float: left;
 }
-
 /* line 451, ../scss/style.scss */
-
 equalizer .wrapper {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-
 /* line 456, ../scss/style.scss */
-
 equalizer .wrapper control {
-	display: block;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	-webkit-transform-origin: 50% 50%;
-	-webkit-transform: rotate(180deg);
-	overflow: hidden;
-	opacity: 0.7;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-transform: rotate(180deg);
+  overflow: hidden;
+  opacity: 0.7;
 }
-
 /* line 466, ../scss/style.scss */
-
 equalizer .wrapper control .bars {
-	display: block;
-	list-style-type: none;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	cursor: pointer;
-	cursor: hand;
+  display: block;
+  list-style-type: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  cursor: hand;
 }
-
 /* line 475, ../scss/style.scss */
-
 equalizer .wrapper control .bars li {
-	display: block;
-	width: 10%;
-	height: 0;
-	position: relative;
-	top: 0;
-	float: left;
-	background: rgba(122, 122, 122, 0.35);
+  display: block;
+  width: 10%;
+  height: 0;
+  position: relative;
+  top: 0;
+  float: left;
+  background: rgba(122, 122, 122, 0.35);
 }
-
 /* line 483, ../scss/style.scss */
-
 equalizer .wrapper control .bars li:hover {
-	background: rgba(122, 122, 122, 0.6);
+  background: rgba(122, 122, 122, 0.6);
 }
-
 /* line 486, ../scss/style.scss */
-
 equalizer .wrapper control .bars li.controller {
-	background: rgba(255, 0, 0, 0.5);
+  background: rgba(255, 0, 0, 0.5);
 }
-
 /* line 492, ../scss/style.scss */
-
 equalizer .wrapper .value {
-	width: 200px;
-	position: relative;
-	left: 50%;
-	margin-left: -100px;
+  width: 200px;
+  position: relative;
+  left: 50%;
+  margin-left: -100px;
 }
-
 /* line 497, ../scss/style.scss */
-
 equalizer .wrapper .value p {
-	float: left;
-	padding-right: 50px;
+  float: left;
+  padding-right: 50px;
 }
 
 /* line 505, ../scss/style.scss */
-
-fader,
-picker {
-	display: block;
-	position: relative;
-	height: 100%;
-	width: 40px;
-	margin: 0;
-	float: left;
-	border: 1px solid rgba(200, 200, 200, 0.1);
-	z-index: 9999;
-	margin-left: 0px;
-	background: transparent;
+fader, picker {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 40px;
+  margin: 0;
+  float: left;
+  border: 1px solid rgba(200, 200, 200, 0.1);
+  z-index: 9999;
+  margin-left: 0px;
+  background: transparent;
 }
-
 /* line 518, ../scss/style.scss */
-
-fader.v .title,
-picker.v .title {
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	position: relative;
-	top: 120px;
+fader.v .title, picker.v .title {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  position: relative;
+  top: 120px;
 }
-
 /* line 528, ../scss/style.scss */
-
-fader.h .title,
-picker.h .title {
-	position: relative;
-	top: 0px;
+fader.h .title, picker.h .title {
+  position: relative;
+  top: 0px;
 }
-
 /* line 533, ../scss/style.scss */
-
-fader .wrapper,
-picker .wrapper {
-	height: 100%;
-	width: 100%;
-	padding: 0px;
-	margin: 0px;
+fader .wrapper, picker .wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
-
 /* line 539, ../scss/style.scss */
-
-fader canvas,
-picker canvas {
-	height: 100%;
-	width: 100%;
-	padding: 0px;
-	margin: 0px;
+fader canvas, picker canvas {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
-
 /* line 545, ../scss/style.scss */
-
-fader .close,
-picker .close {
-	position: relative;
-	top: 0px;
-	width: 40px;
-	height: 40px;
-	opacity: 0.65;
-	background: url(http://kineticvideo.co/img/close-red.png);
+fader .close, picker .close {
+  position: relative;
+  top: 0px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.65;
+  background: url(http://kineticvideo.co/img/close-red.png);
 }
-
 /* line 553, ../scss/style.scss */
-
-fader .audio-control,
-picker .audio-control {
-	display: block;
-	width: 40px;
-	position: absolute;
-	bottom: 0;
-	z-index: 10;
-	background: rgba(122, 122, 122, 0.35);
+fader .audio-control, picker .audio-control {
+  display: block;
+  width: 40px;
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(122, 122, 122, 0.35);
 }
-
 /* line 560, ../scss/style.scss */
-
-fader .audio-control:hover,
-picker .audio-control:hover {
-	background: rgba(122, 122, 122, 0.6);
+fader .audio-control:hover, picker .audio-control:hover {
+  background: rgba(122, 122, 122, 0.6);
 }
-
 /* line 564, ../scss/style.scss */
-
-fader control.vert,
-picker control.vert {
-	display: block;
-	width: 40px;
-	height: 40px;
-	position: relative;
-	top: 85%;
-	left: 0;
-	-webkit-transform-origin: 50% 50%;
-	background: transparent;
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.7;
-	z-index: 50;
+fader control.vert, picker control.vert {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: 85%;
+  left: 0;
+  -webkit-transform-origin: 50% 50%;
+  background: transparent;
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.7;
+  z-index: 50;
 }
-
 /* line 577, ../scss/style.scss */
-
-fader control.vert point,
-picker control.vert point {
-	display: block;
-	width: 40px;
-	height: 1px;
-	background: #fff;
-	position: relative;
-	top: 20px;
-	left: 0px;
-	opacity: 0.7;
+fader control.vert point, picker control.vert point {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #fff;
+  position: relative;
+  top: 20px;
+  left: 0px;
+  opacity: 0.7;
 }
-
 /* line 588, ../scss/style.scss */
-
-fader control.vert.controlled .point,
-picker control.vert.controlled .point {
-	background: #f00;
+fader control.vert.controlled .point, picker control.vert.controlled .point {
+  background: #f00;
 }
-
 /* line 593, ../scss/style.scss */
-
-fader control.hor,
-picker control.hor {
-	display: block;
-	width: 40px;
-	height: 40px;
-	position: relative;
-	top: -10px;
-	left: 0;
-	-webkit-transform-origin: 50% 50%;
-	background: transparent;
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.7;
+fader control.hor, picker control.hor {
+  display: block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: -10px;
+  left: 0;
+  -webkit-transform-origin: 50% 50%;
+  background: transparent;
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.7;
 }
-
 /* line 605, ../scss/style.scss */
-
-fader control.hor point,
-picker control.hor point {
-	display: block;
-	width: 1px;
-	height: 40px;
-	background: #fff;
-	position: relative;
-	top: 0px;
-	left: 20px;
+fader control.hor point, picker control.hor point {
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: #fff;
+  position: relative;
+  top: 0px;
+  left: 20px;
 }
-
 /* line 615, ../scss/style.scss */
-
-fader .value,
-picker .value {
-	display: block;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	text-align: center;
-	z-index: 100;
-	font-size: 8px;
-	color: #ABABAB;
+fader .value, picker .value {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  font-size: 8px;
+  color: #ABABAB;
 }
 
 /* line 628, ../scss/style.scss */
-
 fader.h {
-	width: 360px;
-	height: 40px;
+  width: 360px;
+  height: 40px;
 }
 
 /* line 636, ../scss/style.scss */
-
 fader.hue {
-	background: url(http://kineticvideo.co/img/hue.png);
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
+  background: url(http://kineticvideo.co/img/hue.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 /* line 642, ../scss/style.scss */
-
 fader.sat {
-	background: url(http://kineticvideo.co/img/saturation.png);
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
+  background: url(http://kineticvideo.co/img/saturation.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 /* line 648, ../scss/style.scss */
-
 fader.opacity {
-	background: url(http://kineticvideo.co/img/opacity.png);
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
+  background: url(http://kineticvideo.co/img/opacity.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 /* line 654, ../scss/style.scss */
-
 joystick {
-	display: block;
-	position: relative;
-	height: 240px;
-	width: 240px;
-	margin: 0;
-	border: 1px solid rgba(200, 200, 200, 0.1);
-	z-index: 9999;
-	float: left;
-	margin-left: 0px;
+  display: block;
+  position: relative;
+  height: 240px;
+  width: 240px;
+  margin: 0;
+  border: 1px solid rgba(200, 200, 200, 0.1);
+  z-index: 9999;
+  float: left;
+  margin-left: 0px;
 }
-
 /* line 664, ../scss/style.scss */
-
 joystick .wrapper {
-	height: 100%;
-	width: 100%;
-	padding: 0px;
-	margin: 0px;
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
-
 /* line 669, ../scss/style.scss */
-
 joystick .wrapper .title {
-	position: relative;
-	left: 6px;
-	top: 6px;
+  position: relative;
+  left: 6px;
+  top: 6px;
 }
-
 /* line 674, ../scss/style.scss */
-
 joystick .wrapper .close {
-	position: relative;
-	top: 0px;
-	width: 40px;
-	height: 40px;
-	opacity: 0.65;
-	background: url(http://kineticvideo.co/img/close-red.png);
+  position: relative;
+  top: 0px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.65;
+  background: url(http://kineticvideo.co/img/close-red.png);
 }
-
 /* line 682, ../scss/style.scss */
-
 joystick .wrapper control.xy {
-	display: block;
-	width: 40px;
-	height: 40px;
-	margin-left: -20px;
-	margin-top: -20px;
-	position: relative;
-	top: 50%;
-	left: 50%;
-	-webkit-transform-origin: 50% 50%;
-	background: url(http://kineticvideo.co/img/crosshair.png);
-	cursor: pointer;
-	cursor: hand;
-	opacity: 0.7;
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  -webkit-transform-origin: 50% 50%;
+  background: url(http://kineticvideo.co/img/crosshair.png);
+  cursor: pointer;
+  cursor: hand;
+  opacity: 0.7;
 }
-
 /* line 696, ../scss/style.scss */
-
 joystick .wrapper control.xy point {
-	display: none;
+  display: none;
 }
-
 /* line 700, ../scss/style.scss */
-
 joystick .wrapper .value {
-	display: block;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	text-align: center;
-	z-index: 100;
-	font-size: 8px;
-	color: #ABABAB;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  font-size: 8px;
+  color: #ABABAB;
 }
 
 /* line 713, ../scss/style.scss */
-
 .togglefarm {
-	display: block;
-	position: relative;
-	height: 240px;
-	width: 42px;
-	float: left;
+  display: block;
+  position: relative;
+  height: 240px;
+  width: 42px;
+  float: left;
 }
-
 /* line 719, ../scss/style.scss */
-
 .togglefarm .title {
-	position: relative;
-	top: 3px;
-	left: 6px;
+  position: relative;
+  top: 3px;
+  left: 6px;
 }
 
 /* line 726, ../scss/style.scss */
-
 toggle {
-	display: block;
-	position: relative;
-	top: 6px;
-	width: 40px;
-	height: 28px;
-	clear: both;
-	text-align: center;
-	padding-top: 16px;
-	font-family: 'Lato', sans-serif;
-	font-size: 10px;
-	opacity: 0.5;
-	font-weight: 300;
-	letter-spacing: 0.2em;
-	cursor: pointer;
-	cursor: hand;
-	color: #ABABAB;
+  display: block;
+  position: relative;
+  top: 6px;
+  width: 40px;
+  height: 28px;
+  clear: both;
+  text-align: center;
+  padding-top: 16px;
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  opacity: 0.5;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  cursor: hand;
+  color: #ABABAB;
 }
-
 /* line 744, ../scss/style.scss */
-
 toggle img {
-	height: 26px;
-	width: 26px;
-	margin-top: -8px;
-	opacity: 0.3;
+  height: 26px;
+  width: 26px;
+  margin-top: -8px;
+  opacity: 0.3;
 }
-
 /* line 750, ../scss/style.scss */
-
 toggle.active {
-	background: rgba(122, 122, 122, 0.3);
+  background: rgba(122, 122, 122, 0.3);
 }
-
 /* line 753, ../scss/style.scss */
-
 toggle:hover {
-	opacity: 0.6;
+  opacity: 0.6;
 }
 
 /* line 758, ../scss/style.scss */
-
 #play_button {
-	display: none;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -100px;
-	margin-left: -25px;
-	height: 50px;
-	width: 50px;
-	background: url("http://kineticvideo.co/img/play-button-png.png");
-	background-size: cover;
-	background-repeat: none;
-	z-index: 1000;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -25px;
+  height: 50px;
+  width: 50px;
+  background: url("http://kineticvideo.co/img/play-button-png.png");
+  background-size: cover;
+  background-repeat: none;
+  z-index: 1000;
 }
 
 /* line 773, ../scss/style.scss */
-
 input {
-	background: transparent;
-	opacity: 0.6;
-	font-size: 10px;
-	color: #ABABAB;
-	border: 0 none;
-	width: 32px;
-	height: 30px;
-	padding-left: 12px;
+  background: transparent;
+  opacity: 0.6;
+  font-size: 10px;
+  color: #ABABAB;
+  border: 0 none;
+  width: 32px;
+  height: 30px;
+  padding-left: 12px;
 }
-
 /* line 782, ../scss/style.scss */
-
 input:focus {
-	outline: none;
+  outline: none;
 }
-

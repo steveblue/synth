@@ -1,4 +1,4 @@
-Synth v.191
+Synth v.192
 
 
 For news and changelog visit http://kineticvideo.co/info/
@@ -14,7 +14,7 @@ Synth distorts 3D geometries with a live video feed and then amplifies that dist
 
 For a guide and complete changelog visit http://kineticvideo.co/info/
 
-Recently, audio input was added and the audio analysis was refactored to use the Web Audio API. Synth also leverages WebGL, WebRTC, and GLSL. 
+Recently, audio input was added and the audio analysis was refactored to use the Web Audio API. Synth also leverages WebGL, WebRTC, and GLSL.
 
 Synth underwent a complete refactor with release v.185. A whole new GUI was written from the ground up for this release. The core of Synth was completely rewritten and given a Prototypal architecture that allows the video synthesizer to be extended with greater ease. This allows anyone to create custom controllers for the 3D effects. I have included a default interface that in subsequent releases will be refined.
 
@@ -39,7 +39,7 @@ var s = new Synth(document.getElementById( 'canvas' ),true,true,[{
 
 Where the two attributes initialize the controls and optional webcam support, which by default is set to false.
 
-Various properties of Synth can be set dynamically after the video synthesizer initializes. 
+Various properties of Synth can be set dynamically after the video synthesizer initializes.
 
 ```
 s.bgColor = '#FF0000';

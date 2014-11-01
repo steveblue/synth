@@ -1,4 +1,4 @@
-/*synth v190*/
+/*synth v192*/
 
 var Synth = function(container, control, cam, json) {
   var that = this;
