@@ -248,7 +248,16 @@ article {
 	padding-top: 6px;
 }
 
-/* line 187, ../scss/style.scss */
+/* line 185, ../scss/style.scss */
+
+#drop_zone fader {
+	position: relative;
+	top: 320px;
+	width: 100%;
+	height: 40px;
+}
+
+/* line 193, ../scss/style.scss */
 
 #video_drop {
 	position: absolute;
@@ -263,7 +272,7 @@ article {
 	background-repeat: repeat;
 }
 
-/* line 198, ../scss/style.scss */
+/* line 204, ../scss/style.scss */
 
 #video_drop p {
 	display: block;
@@ -273,14 +282,14 @@ article {
 	margin-top: 0px;
 }
 
-/* line 205, ../scss/style.scss */
+/* line 211, ../scss/style.scss */
 
 #video_drop li {
 	padding-bottom: 2px;
 	padding-top: 2px;
 }
 
-/* line 215, ../scss/style.scss */
+/* line 221, ../scss/style.scss */
 
 #topfill {
 	position: absolute;
@@ -293,7 +302,7 @@ article {
 	z-index: 1000;
 }
 
-/* line 226, ../scss/style.scss */
+/* line 232, ../scss/style.scss */
 
 #read_files {
 	position: absolute;
@@ -306,7 +315,7 @@ article {
 	z-index: 1000;
 }
 
-/* line 237, ../scss/style.scss */
+/* line 243, ../scss/style.scss */
 
 #read_video {
 	position: absolute;
@@ -319,7 +328,7 @@ article {
 	z-index: 1000;
 }
 
-/* line 248, ../scss/style.scss */
+/* line 254, ../scss/style.scss */
 
 #close_drop {
 	position: absolute;
@@ -334,7 +343,7 @@ article {
 	z-index: 1000;
 }
 
-/* line 261, ../scss/style.scss */
+/* line 267, ../scss/style.scss */
 
 #read_video,
 #read_files {
@@ -342,14 +351,14 @@ article {
 	opacity: 0.5;
 }
 
-/* line 264, ../scss/style.scss */
+/* line 270, ../scss/style.scss */
 
 #read_video:hover,
 #read_files:hover {
 	opacity: 0.75;
 }
 
-/* line 269, ../scss/style.scss */
+/* line 275, ../scss/style.scss */
 
 #gui_drop {
 	position: absolute;
@@ -363,7 +372,7 @@ article {
 	z-index: 1000;
 }
 
-/* line 281, ../scss/style.scss */
+/* line 287, ../scss/style.scss */
 
 #close_drop:hover,
 #gui_drop:hover {
@@ -371,14 +380,14 @@ article {
 	cursor: hand;
 }
 
-/* line 286, ../scss/style.scss */
+/* line 292, ../scss/style.scss */
 
 #close_drop,
 #gui_drop {
 	z-index: 1000;
 }
 
-/* line 288, ../scss/style.scss */
+/* line 294, ../scss/style.scss */
 
 #close_drop p,
 #gui_drop p {
@@ -389,7 +398,7 @@ article {
 	font-size: 10px;
 }
 
-/* line 295, ../scss/style.scss */
+/* line 301, ../scss/style.scss */
 
 #close_drop p:hover,
 #gui_drop p:hover {
@@ -398,7 +407,7 @@ article {
 	text-transform: none;
 }
 
-/* line 302, ../scss/style.scss */
+/* line 307, ../scss/style.scss */
 
 audio {
 	position: absolute;
@@ -408,13 +417,13 @@ audio {
 	display: none;
 }
 
-/* line 308, ../scss/style.scss */
+/* line 313, ../scss/style.scss */
 
 audio:hover {
 	opacity: 0.7;
 }
 
-/* line 313, ../scss/style.scss */
+/* line 318, ../scss/style.scss */
 
 #playlist,
 #videoplaylist {
@@ -429,7 +438,7 @@ audio:hover {
 	z-index: 1000;
 }
 
-/* line 323, ../scss/style.scss */
+/* line 328, ../scss/style.scss */
 
 #playlist li,
 #videoplaylist li {
@@ -439,7 +448,7 @@ audio:hover {
 	height: 20px;
 }
 
-/* line 328, ../scss/style.scss */
+/* line 333, ../scss/style.scss */
 
 #playlist li a:link,
 #playlist li a:visited,
@@ -452,21 +461,21 @@ audio:hover {
 	padding-left: 6px;
 }
 
-/* line 335, ../scss/style.scss */
+/* line 340, ../scss/style.scss */
 
 #playlist li h5,
 #videoplaylist li h5 {
 	opacity: 0.5;
 }
 
-/* line 338, ../scss/style.scss */
+/* line 343, ../scss/style.scss */
 
 #playlist li:hover,
 #videoplaylist li:hover {
 	background: rgba(122, 122, 122, 0.3);
 }
 
-/* line 339, ../scss/style.scss */
+/* line 344, ../scss/style.scss */
 
 #playlist li:hover a:link,
 #playlist li:hover a:visited,
@@ -475,7 +484,7 @@ audio:hover {
 	color: #FFFFFF;
 }
 
-/* line 347, ../scss/style.scss */
+/* line 352, ../scss/style.scss */
 
 #gui_container {
 	position: absolute;
@@ -489,7 +498,7 @@ audio:hover {
 	-ms-user-select: none;
 }
 
-/* line 359, ../scss/style.scss */
+/* line 364, ../scss/style.scss */
 
 #container {
 	display: block;
@@ -506,7 +515,7 @@ audio:hover {
 	z-index: 1000;
 }
 
-/* line 374, ../scss/style.scss */
+/* line 379, ../scss/style.scss */
 
 .cancel {
 	display: block;
@@ -520,7 +529,7 @@ audio:hover {
 	z-index: 9999;
 }
 
-/* line 386, ../scss/style.scss */
+/* line 391, ../scss/style.scss */
 
 .play {
 	width: 100px;
@@ -529,7 +538,7 @@ audio:hover {
 	background: #ABABAB;
 }
 
-/* line 393, ../scss/style.scss */
+/* line 398, ../scss/style.scss */
 
 #preset_selector {
 	position: absolute;
@@ -542,7 +551,7 @@ audio:hover {
 	z-index: 1000;
 }
 
-/* line 402, ../scss/style.scss */
+/* line 407, ../scss/style.scss */
 
 #preset_selector ul {
 	list-style-type: none;
@@ -551,7 +560,7 @@ audio:hover {
 	height: 100%;
 }
 
-/* line 407, ../scss/style.scss */
+/* line 412, ../scss/style.scss */
 
 #preset_selector ul li {
 	width: 8.5%;
@@ -565,7 +574,7 @@ audio:hover {
 	text-align: center;
 }
 
-/* line 417, ../scss/style.scss */
+/* line 422, ../scss/style.scss */
 
 #preset_selector ul li span {
 	display: block;
@@ -576,7 +585,7 @@ audio:hover {
 	color: #ABABAB;
 }
 
-/* line 425, ../scss/style.scss */
+/* line 430, ../scss/style.scss */
 
 #preset_selector ul li:hover {
 	cursor: pointer;
@@ -584,13 +593,13 @@ audio:hover {
 	opacity: 0.7;
 }
 
-/* line 430, ../scss/style.scss */
+/* line 435, ../scss/style.scss */
 
 #preset_selector ul li.selected {
 	opacity: 0.9;
 }
 
-/* line 437, ../scss/style.scss */
+/* line 442, ../scss/style.scss */
 
 equalizer {
 	display: block;
@@ -603,7 +612,7 @@ equalizer {
 	float: left;
 }
 
-/* line 446, ../scss/style.scss */
+/* line 451, ../scss/style.scss */
 
 equalizer .wrapper {
 	width: 100%;
@@ -612,7 +621,7 @@ equalizer .wrapper {
 	padding: 0;
 }
 
-/* line 451, ../scss/style.scss */
+/* line 456, ../scss/style.scss */
 
 equalizer .wrapper control {
 	display: block;
@@ -626,7 +635,7 @@ equalizer .wrapper control {
 	opacity: 0.7;
 }
 
-/* line 461, ../scss/style.scss */
+/* line 466, ../scss/style.scss */
 
 equalizer .wrapper control .bars {
 	display: block;
@@ -639,7 +648,7 @@ equalizer .wrapper control .bars {
 	cursor: hand;
 }
 
-/* line 470, ../scss/style.scss */
+/* line 475, ../scss/style.scss */
 
 equalizer .wrapper control .bars li {
 	display: block;
@@ -651,19 +660,19 @@ equalizer .wrapper control .bars li {
 	background: rgba(122, 122, 122, 0.35);
 }
 
-/* line 478, ../scss/style.scss */
+/* line 483, ../scss/style.scss */
 
 equalizer .wrapper control .bars li:hover {
 	background: rgba(122, 122, 122, 0.6);
 }
 
-/* line 481, ../scss/style.scss */
+/* line 486, ../scss/style.scss */
 
 equalizer .wrapper control .bars li.controller {
 	background: rgba(255, 0, 0, 0.5);
 }
 
-/* line 487, ../scss/style.scss */
+/* line 492, ../scss/style.scss */
 
 equalizer .wrapper .value {
 	width: 200px;
@@ -672,14 +681,14 @@ equalizer .wrapper .value {
 	margin-left: -100px;
 }
 
-/* line 492, ../scss/style.scss */
+/* line 497, ../scss/style.scss */
 
 equalizer .wrapper .value p {
 	float: left;
 	padding-right: 50px;
 }
 
-/* line 500, ../scss/style.scss */
+/* line 505, ../scss/style.scss */
 
 fader,
 picker {
@@ -695,7 +704,27 @@ picker {
 	background: transparent;
 }
 
-/* line 512, ../scss/style.scss */
+/* line 518, ../scss/style.scss */
+
+fader.v .title,
+picker.v .title {
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	position: relative;
+	top: 120px;
+}
+
+/* line 528, ../scss/style.scss */
+
+fader.h .title,
+picker.h .title {
+	position: relative;
+	top: 0px;
+}
+
+/* line 533, ../scss/style.scss */
 
 fader .wrapper,
 picker .wrapper {
@@ -705,32 +734,20 @@ picker .wrapper {
 	margin: 0px;
 }
 
-/* line 513, ../scss/style.scss */
+/* line 539, ../scss/style.scss */
 
-fader .wrapper .title,
-picker .wrapper .title {
-	-webkit-transform: rotate(-90deg);
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-o-transform: rotate(-90deg);
-	position: relative;
-	top: 120px;
-}
-
-/* line 525, ../scss/style.scss */
-
-fader .wrapper canvas,
-picker .wrapper canvas {
+fader canvas,
+picker canvas {
 	height: 100%;
 	width: 100%;
 	padding: 0px;
 	margin: 0px;
 }
 
-/* line 531, ../scss/style.scss */
+/* line 545, ../scss/style.scss */
 
-fader .wrapper .close,
-picker .wrapper .close {
+fader .close,
+picker .close {
 	position: relative;
 	top: 0px;
 	width: 40px;
@@ -739,10 +756,10 @@ picker .wrapper .close {
 	background: url(http://kineticvideo.co/img/close-red.png);
 }
 
-/* line 539, ../scss/style.scss */
+/* line 553, ../scss/style.scss */
 
-fader .wrapper .audio-control,
-picker .wrapper .audio-control {
+fader .audio-control,
+picker .audio-control {
 	display: block;
 	width: 40px;
 	position: absolute;
@@ -751,17 +768,17 @@ picker .wrapper .audio-control {
 	background: rgba(122, 122, 122, 0.35);
 }
 
-/* line 546, ../scss/style.scss */
+/* line 560, ../scss/style.scss */
 
-fader .wrapper .audio-control:hover,
-picker .wrapper .audio-control:hover {
+fader .audio-control:hover,
+picker .audio-control:hover {
 	background: rgba(122, 122, 122, 0.6);
 }
 
-/* line 550, ../scss/style.scss */
+/* line 564, ../scss/style.scss */
 
-fader .wrapper control.vert,
-picker .wrapper control.vert {
+fader control.vert,
+picker control.vert {
 	display: block;
 	width: 40px;
 	height: 40px;
@@ -776,10 +793,10 @@ picker .wrapper control.vert {
 	z-index: 50;
 }
 
-/* line 563, ../scss/style.scss */
+/* line 577, ../scss/style.scss */
 
-fader .wrapper control.vert point,
-picker .wrapper control.vert point {
+fader control.vert point,
+picker control.vert point {
 	display: block;
 	width: 40px;
 	height: 1px;
@@ -790,22 +807,22 @@ picker .wrapper control.vert point {
 	opacity: 0.7;
 }
 
-/* line 574, ../scss/style.scss */
+/* line 588, ../scss/style.scss */
 
-fader .wrapper control.vert.controlled .point,
-picker .wrapper control.vert.controlled .point {
+fader control.vert.controlled .point,
+picker control.vert.controlled .point {
 	background: #f00;
 }
 
-/* line 579, ../scss/style.scss */
+/* line 593, ../scss/style.scss */
 
-fader .wrapper control.hor,
-picker .wrapper control.hor {
+fader control.hor,
+picker control.hor {
 	display: block;
 	width: 40px;
 	height: 40px;
 	position: relative;
-	top: 0;
+	top: -10px;
 	left: 0;
 	-webkit-transform-origin: 50% 50%;
 	background: transparent;
@@ -814,10 +831,10 @@ picker .wrapper control.hor {
 	opacity: 0.7;
 }
 
-/* line 591, ../scss/style.scss */
+/* line 605, ../scss/style.scss */
 
-fader .wrapper control.hor point,
-picker .wrapper control.hor point {
+fader control.hor point,
+picker control.hor point {
 	display: block;
 	width: 1px;
 	height: 40px;
@@ -827,10 +844,10 @@ picker .wrapper control.hor point {
 	left: 20px;
 }
 
-/* line 601, ../scss/style.scss */
+/* line 615, ../scss/style.scss */
 
-fader .wrapper .value,
-picker .wrapper .value {
+fader .value,
+picker .value {
 	display: block;
 	position: absolute;
 	bottom: 0;
@@ -841,14 +858,14 @@ picker .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 614, ../scss/style.scss */
+/* line 628, ../scss/style.scss */
 
 fader.h {
 	width: 360px;
 	height: 40px;
 }
 
-/* line 622, ../scss/style.scss */
+/* line 636, ../scss/style.scss */
 
 fader.hue {
 	background: url(http://kineticvideo.co/img/hue.png);
@@ -856,7 +873,7 @@ fader.hue {
 	background-repeat: no-repeat;
 }
 
-/* line 628, ../scss/style.scss */
+/* line 642, ../scss/style.scss */
 
 fader.sat {
 	background: url(http://kineticvideo.co/img/saturation.png);
@@ -864,7 +881,7 @@ fader.sat {
 	background-repeat: no-repeat;
 }
 
-/* line 634, ../scss/style.scss */
+/* line 648, ../scss/style.scss */
 
 fader.opacity {
 	background: url(http://kineticvideo.co/img/opacity.png);
@@ -872,7 +889,7 @@ fader.opacity {
 	background-repeat: no-repeat;
 }
 
-/* line 640, ../scss/style.scss */
+/* line 654, ../scss/style.scss */
 
 joystick {
 	display: block;
@@ -886,7 +903,7 @@ joystick {
 	margin-left: 0px;
 }
 
-/* line 650, ../scss/style.scss */
+/* line 664, ../scss/style.scss */
 
 joystick .wrapper {
 	height: 100%;
@@ -895,7 +912,7 @@ joystick .wrapper {
 	margin: 0px;
 }
 
-/* line 655, ../scss/style.scss */
+/* line 669, ../scss/style.scss */
 
 joystick .wrapper .title {
 	position: relative;
@@ -903,7 +920,7 @@ joystick .wrapper .title {
 	top: 6px;
 }
 
-/* line 660, ../scss/style.scss */
+/* line 674, ../scss/style.scss */
 
 joystick .wrapper .close {
 	position: relative;
@@ -914,7 +931,7 @@ joystick .wrapper .close {
 	background: url(http://kineticvideo.co/img/close-red.png);
 }
 
-/* line 668, ../scss/style.scss */
+/* line 682, ../scss/style.scss */
 
 joystick .wrapper control.xy {
 	display: block;
@@ -932,13 +949,13 @@ joystick .wrapper control.xy {
 	opacity: 0.7;
 }
 
-/* line 682, ../scss/style.scss */
+/* line 696, ../scss/style.scss */
 
 joystick .wrapper control.xy point {
 	display: none;
 }
 
-/* line 686, ../scss/style.scss */
+/* line 700, ../scss/style.scss */
 
 joystick .wrapper .value {
 	display: block;
@@ -951,7 +968,7 @@ joystick .wrapper .value {
 	color: #ABABAB;
 }
 
-/* line 699, ../scss/style.scss */
+/* line 713, ../scss/style.scss */
 
 .togglefarm {
 	display: block;
@@ -961,7 +978,7 @@ joystick .wrapper .value {
 	float: left;
 }
 
-/* line 705, ../scss/style.scss */
+/* line 719, ../scss/style.scss */
 
 .togglefarm .title {
 	position: relative;
@@ -969,7 +986,7 @@ joystick .wrapper .value {
 	left: 6px;
 }
 
-/* line 712, ../scss/style.scss */
+/* line 726, ../scss/style.scss */
 
 toggle {
 	display: block;
@@ -990,7 +1007,7 @@ toggle {
 	color: #ABABAB;
 }
 
-/* line 730, ../scss/style.scss */
+/* line 744, ../scss/style.scss */
 
 toggle img {
 	height: 26px;
@@ -999,19 +1016,19 @@ toggle img {
 	opacity: 0.3;
 }
 
-/* line 736, ../scss/style.scss */
+/* line 750, ../scss/style.scss */
 
 toggle.active {
 	background: rgba(122, 122, 122, 0.3);
 }
 
-/* line 739, ../scss/style.scss */
+/* line 753, ../scss/style.scss */
 
 toggle:hover {
 	opacity: 0.6;
 }
 
-/* line 744, ../scss/style.scss */
+/* line 758, ../scss/style.scss */
 
 #play_button {
 	display: none;
@@ -1028,7 +1045,7 @@ toggle:hover {
 	z-index: 1000;
 }
 
-/* line 759, ../scss/style.scss */
+/* line 773, ../scss/style.scss */
 
 input {
 	background: transparent;
@@ -1041,7 +1058,7 @@ input {
 	padding-left: 12px;
 }
 
-/* line 768, ../scss/style.scss */
+/* line 782, ../scss/style.scss */
 
 input:focus {
 	outline: none;

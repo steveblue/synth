@@ -149,6 +149,12 @@ Synth.prototype = {
       "bgColor": this.bgColor
     }
   },
+  get gain() {
+    return this.gainNode.gain.value;
+  },
+  set gain(val){
+    this.gainNode.gain.value = val;
+  },
   get displacement() {
     return this.displace;
   },
@@ -807,7 +813,7 @@ Synth.prototype = {
           //round = Math.round(value);
           //round = round.toString();
           json = '{ "' + key + '" : ' + value + ' }';
-          // console.log('that.'+key+'='+value+'');
+          console.log('that.'+key+'='+value+'');
           that.controlMap(key,value);
 
         }
